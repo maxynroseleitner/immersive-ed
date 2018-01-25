@@ -42,7 +42,6 @@ namespace Affdex
                 if (listener == null)
                 {
                     listener = (ImageResultsListener)GameObject.FindObjectOfType(typeof(ImageResultsListener));
-
                 }
 
                 return listener;
