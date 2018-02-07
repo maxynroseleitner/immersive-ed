@@ -6,7 +6,10 @@ using UnityEngine.UI;
 using Affdex;
 
 public class PlayerEmotions :  ImageResultsListener {
-    // public float currentSmile;
+    
+	public GameManager gameManager;
+
+	// public float currentSmile;
     // public float currentInterocularDistance;
     // public float currentValence;
 
@@ -20,6 +23,7 @@ public class PlayerEmotions :  ImageResultsListener {
     // public float currentContempt;
 
     public FeaturePoint[] featurePointsList;
+	public Measurements measurementsList;
 
     // UI Variables
     public Camera mainCamera;
@@ -27,12 +31,14 @@ public class PlayerEmotions :  ImageResultsListener {
 
  	// Use this for initialization
 	void Start () {
-		
+		gameManager = FindObjectOfType<GameManager> ();
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		// Update the UI to reflect the emotion currently being detected.
+
+		Color newColor;
 
 		if (currentJoy > currentFear &&
 			currentJoy > currentDisgust &&
@@ -41,7 +47,8 @@ public class PlayerEmotions :  ImageResultsListener {
 			currentJoy > currentSurprise)
 		{
 			currentEmotionText.text = "Joy";
-			mainCamera.backgroundColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);		// green
+			//mainCamera.backgroundColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);		// green
+			newColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);		// green
 		}
 		else if (currentFear > currentDisgust &&
 				 currentFear > currentSadness &&
@@ -49,41 +56,50 @@ public class PlayerEmotions :  ImageResultsListener {
 				 currentFear > currentSurprise)
 		{
 			currentEmotionText.text = "Fear";
-			mainCamera.backgroundColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);		// magenta
+			//mainCamera.backgroundColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);		// magenta
+			newColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);		// magenta
 		}
 		else if (currentDisgust > currentSadness &&
 				 currentDisgust > currentAnger &&
 				 currentDisgust > currentSurprise)
 		{
 			currentEmotionText.text = "Disgust";
-			mainCamera.backgroundColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);		// yellow
+			//mainCamera.backgroundColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);		// yellow
+			newColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);		// yellow
 		}
 		else if (currentSadness > currentAnger &&
 				 currentSadness > currentSurprise)
 		{
 			currentEmotionText.text = "Sadness";
-			mainCamera.backgroundColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);		// blue
+			//mainCamera.backgroundColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);		// blue
+			newColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);		// blue
 		}
 		else if (currentAnger > currentSurprise)
 		{
 			currentEmotionText.text = "Anger";
-			mainCamera.backgroundColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);		// red
+			//mainCamera.backgroundColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);		// red
+			newColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);		// red
 		}
 		else
 		{
 			currentEmotionText.text = "Surprise";
-			mainCamera.backgroundColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);		// white
+			//mainCamera.backgroundColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);		// white
+			newColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);		// white
 		}
+
+		mainCamera.backgroundColor = newColor;
+		gameManager.GetComponent<GameManager> ().SetHealthBarColor (newColor);
+
 	}
 
     public override void onFaceFound(float timestamp, int faceId)
     {
-        Debug.Log("Found the face");
+        //Debug.Log("Found the face");
     }
 
     public override void onFaceLost(float timestamp, int faceId)
     {
-        Debug.Log("Lost the face");
+        //Debug.Log("Lost the face");
     }
 
     public override void onImageResults(Dictionary<int, Face> faces)
@@ -94,6 +110,7 @@ public class PlayerEmotions :  ImageResultsListener {
         {
             int FaceId = pair.Key;  // The Face Unique Id.
             Face face = pair.Value;    // Instance of the face class containing emotions, and facial expression values.
+			//Debug.Log(face);
 
             //Retrieve the Emotions Scores
             // face.Emotions.TryGetValue(Emotions.Contempt, out currentContempt);
@@ -105,18 +122,22 @@ public class PlayerEmotions :  ImageResultsListener {
             face.Emotions.TryGetValue(Emotions.Anger, out currentAnger);
             face.Emotions.TryGetValue(Emotions.Surprise, out currentSurprise);
             
-
-            //Retrieve the Smile Score
-            // face.Expressions.TryGetValue(Expressions.Smile, out currentSmile);
-
-
-            //Retrieve the Interocular distance, the distance between two outer eye corners.
-            // currentInterocularDistance = face.Measurements.interOcularDistance;
-
-
-            //Retrieve the coordinates of the facial landmarks (face feature points)
+			//Retrieve the coordinates of the facial landmarks (face feature points)
             featurePointsList = face.FeaturePoints;
+			measurementsList = face.Measurements;
 
+			float xCoordinate = featurePointsList [1].x;
+			float yCoordinate = featurePointsList [1].y;
+			float interOcularDsitance = measurementsList.interOcularDistance;
+
+			Debug.Log ("x-coordinate: " + xCoordinate);
+			Debug.Log ("y-coordinate: " + yCoordinate);
+			Debug.Log ("Inter-Ocular: " + interOcularDsitance);
+
+			gameManager.SetHealthBarCoordinates (xCoordinate, yCoordinate);
+			gameManager.SetHealthBarSize (interOcularDsitance);
         }
+
+		//Debug.Log (featurePointsList);
     }
 }
