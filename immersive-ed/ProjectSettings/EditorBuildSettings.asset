@@ -4,4 +4,13 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/DefaultScene.unity
+    guid: acc753b9c9bf44dc3b25d6293caa4a50
+  - enabled: 0
+    path: Assets/MiraSDK/Scenes/Tutorials/101_HelloWorld.unity
+    guid: 59aa95f3341fa4ecab82ba46ae6c4a10
+  - enabled: 0
+    path: Assets/MiraSDK/Scenes/MiraLivePreviewApp.unity
+    guid: d0f71a3c2aec64cf2b4370b9d7434771

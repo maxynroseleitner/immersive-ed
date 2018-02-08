@@ -27,7 +27,9 @@ public class PlayerEmotions :  ImageResultsListener {
 
     // UI Variables
     public Camera mainCamera;
-    public Text currentEmotionText;
+    // public Text currentEmotionText;
+
+	public GameObject emotionCube;
 
  	// Use this for initialization
 	void Start () {
@@ -46,7 +48,7 @@ public class PlayerEmotions :  ImageResultsListener {
 			currentJoy > currentAnger && 
 			currentJoy > currentSurprise)
 		{
-			currentEmotionText.text = "Joy";
+			// currentEmotionText.text = "Joy";
 			//mainCamera.backgroundColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);		// green
 			newColor = new Color(0.0f, 1.0f, 0.0f, 1.0f);		// green
 		}
@@ -55,7 +57,7 @@ public class PlayerEmotions :  ImageResultsListener {
 				 currentFear > currentAnger &&
 				 currentFear > currentSurprise)
 		{
-			currentEmotionText.text = "Fear";
+			// currentEmotionText.text = "Fear";
 			//mainCamera.backgroundColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);		// magenta
 			newColor = new Color(1.0f, 0.0f, 1.0f, 1.0f);		// magenta
 		}
@@ -63,31 +65,32 @@ public class PlayerEmotions :  ImageResultsListener {
 				 currentDisgust > currentAnger &&
 				 currentDisgust > currentSurprise)
 		{
-			currentEmotionText.text = "Disgust";
+			// currentEmotionText.text = "Disgust";
 			//mainCamera.backgroundColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);		// yellow
 			newColor = new Color(1.0f, 1.0f, 0.0f, 1.0f);		// yellow
 		}
 		else if (currentSadness > currentAnger &&
 				 currentSadness > currentSurprise)
 		{
-			currentEmotionText.text = "Sadness";
+			// currentEmotionText.text = "Sadness";
 			//mainCamera.backgroundColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);		// blue
 			newColor = new Color(0.0f, 0.0f, 1.0f, 1.0f);		// blue
 		}
 		else if (currentAnger > currentSurprise)
 		{
-			currentEmotionText.text = "Anger";
+			// currentEmotionText.text = "Anger";
 			//mainCamera.backgroundColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);		// red
 			newColor = new Color(1.0f, 0.0f, 0.0f, 1.0f);		// red
 		}
 		else
 		{
-			currentEmotionText.text = "Surprise";
+			// currentEmotionText.text = "Surprise";
 			//mainCamera.backgroundColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);		// white
 			newColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);		// white
 		}
 
 		mainCamera.backgroundColor = newColor;
+		emotionCube.GetComponent<Renderer>().material.color = newColor;
 		gameManager.GetComponent<GameManager> ().SetHealthBarColor (newColor);
 
 	}
