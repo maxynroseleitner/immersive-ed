@@ -85,6 +85,54 @@ public class GameManager : MonoBehaviour {
 			
 	}
 
+	// Returns the strongest emotion present in the current cumulative emotion
+	public float getValueOfStrongestCurrentCumulativeEmotion()
+	{
+		if (currentCumulativeEmotion.joy > currentCumulativeEmotion.fear &&
+			currentCumulativeEmotion.joy > currentCumulativeEmotion.disgust &&
+			currentCumulativeEmotion.joy > currentCumulativeEmotion.sadness && 
+			currentCumulativeEmotion.joy > currentCumulativeEmotion.anger && 
+			currentCumulativeEmotion.joy > currentCumulativeEmotion.surprise &&
+			currentCumulativeEmotion.joy > emotionThreshold)
+		{
+			return currentCumulativeEmotion.joy;
+		}
+		else if (currentCumulativeEmotion.fear > currentCumulativeEmotion.disgust &&
+				 currentCumulativeEmotion.fear > currentCumulativeEmotion.sadness &&
+				 currentCumulativeEmotion.fear > currentCumulativeEmotion.anger &&
+				 currentCumulativeEmotion.fear > currentCumulativeEmotion.surprise &&
+				 currentCumulativeEmotion.fear > emotionThreshold)
+		{
+			return currentCumulativeEmotion.fear;
+		}
+		else if (currentCumulativeEmotion.disgust > currentCumulativeEmotion.sadness &&
+				 currentCumulativeEmotion.disgust > currentCumulativeEmotion.anger &&
+				 currentCumulativeEmotion.disgust > currentCumulativeEmotion.surprise &&
+				 currentCumulativeEmotion.disgust > emotionThreshold)
+		{
+			return currentCumulativeEmotion.disgust;
+		}
+		else if (currentCumulativeEmotion.sadness > currentCumulativeEmotion.anger &&
+				 currentCumulativeEmotion.sadness > currentCumulativeEmotion.surprise &&
+				 currentCumulativeEmotion.sadness > emotionThreshold)
+		{
+			return currentCumulativeEmotion.sadness;
+		}
+		else if (currentCumulativeEmotion.anger > currentCumulativeEmotion.surprise &&
+				 currentCumulativeEmotion.anger > emotionThreshold)
+		{
+			return currentCumulativeEmotion.anger;
+		}
+		else if(currentCumulativeEmotion.surprise > emotionThreshold)
+		{
+			return currentCumulativeEmotion.surprise;
+		}
+		else
+		{
+			return 0.0f;
+		}
+	}
+
 	// Returns a color to be used by the user interface based on the current synthesized emotion
 	public Color getCurrentCumulativeEmotionColor()
 	{

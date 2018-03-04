@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 using Affdex;
 
@@ -22,6 +23,10 @@ public class UIManager : MonoBehaviour {
 	public float colorUpdateTime = 0.5f;	// Update the colors on-screen every X seconds
 	private float lerpTime = 0.25f;
 
+	public Image facialEmotionBar;
+	private float currentEmotionBarWidth;
+	private float previousEmotionBarWidth;
+
 	// Use this for initialization
 	void Start () {
 		gameManagerScript = (GameManager) gameManagerObject.GetComponent(typeof(GameManager));
@@ -35,6 +40,9 @@ public class UIManager : MonoBehaviour {
 		// Initalize the colors
 		previousEmotionColor = new Color();
 		currentEmotionColor = new Color();
+
+		currentEmotionBarWidth = 0.0f;
+		previousEmotionBarWidth = 0.0f;
 
 		// Start the background emotion updater
 		StartCoroutine(RequestEmotionUpdate());
@@ -54,8 +62,16 @@ public class UIManager : MonoBehaviour {
 		while (t < 1)
 		{
 			// Now the loop will execute on every end of frame until the condition is true
-			mainCamera.backgroundColor = Color.Lerp(previousEmotionColor, currentEmotionColor, t);
+			// Update the background color
+			// mainCamera.backgroundColor = Color.Lerp(previousEmotionColor, currentEmotionColor, t);
+
+			// Update the emotion bar
+			facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousEmotionBarWidth, currentEmotionBarWidth, t),
+																   facialEmotionBar.rectTransform.sizeDelta.y);
+			facialEmotionBar.color = Color.Lerp(previousEmotionColor, currentEmotionColor, t);
+
 			t += Time.deltaTime / lerpTime;
+
 			yield return new WaitForEndOfFrame();
 		}
 	}
@@ -68,6 +84,10 @@ public class UIManager : MonoBehaviour {
 			yield return new WaitForSeconds(colorUpdateTime);
 			previousEmotionColor = currentEmotionColor;
 			currentEmotionColor = gameManagerScript.getCurrentCumulativeEmotionColor();
+
+			previousEmotionBarWidth = currentEmotionBarWidth;
+			currentEmotionBarWidth = gameManagerScript.getValueOfStrongestCurrentCumulativeEmotion() * 2;
+
 			StartCoroutine(UpdateBackgroundColor());
 		}
 	}
