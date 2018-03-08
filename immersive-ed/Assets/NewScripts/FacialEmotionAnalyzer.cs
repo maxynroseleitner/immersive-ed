@@ -7,10 +7,21 @@ using Affdex;
 public class FacialEmotionAnalyzer : ImageResultsListener {
 
 	public EmotionStruct currentEmotions;
+    public FaceStruct currentFace;
+    public Affdex.FeaturePoint[] featurePointsList;
+
+    // "Coordinates" for health bar tracking
+    public float a_x = 0.011845f;
+    public float b_x = -6.53954f;
+    public float a_y = -0.01195f;
+    public float b_y = 5.65949f;
 
 	// Use this for initialization
 	void Start () {
 		currentEmotions = new EmotionStruct();
+        currentFace = new FaceStruct();
+        a_x = -0.01195f;
+        b_y = 5.64959f;
 	}
 	
 	// Update is called once per frame
@@ -23,6 +34,11 @@ public class FacialEmotionAnalyzer : ImageResultsListener {
 		Debug.Log("Got current emotions.");
 		return currentEmotions;
 	}
+
+    public FaceStruct getCurrentFace()
+    {
+        return currentFace;
+    }
 
 	public override void onFaceFound(float timestamp, int faceId)
     {
@@ -63,8 +79,11 @@ public class FacialEmotionAnalyzer : ImageResultsListener {
 
 
             //Retrieve the coordinates of the facial landmarks (face feature points)
-            // featurePointsList = face.FeaturePoints;
-
+            featurePointsList = face.FeaturePoints;
+            float rightEyeX = featurePointsList[16].x;
+            float rightEyeY = featurePointsList[16].y;
+            currentFace.rightEye[0] = a_x * rightEyeX + b_x;
+            currentFace.rightEye[1] = a_y * rightEyeY + b_y;
         }
     }
 }

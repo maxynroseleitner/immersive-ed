@@ -25,12 +25,18 @@ public class GameManager : MonoBehaviour {
 	public EmotionStruct currentVocalEmotion;
 	private float emotionThreshold = 10.0f;
 
+	// Emotion bar data
+	public FaceStruct currentFace;
+
 	// Use this for initialization
 	void Start () {
 		// Initialize the current emotion
 		currentFacialEmotion = new EmotionStruct();
 		currentWordSentimentEmotion = new EmotionStruct();
 		currentVocalEmotion = new EmotionStruct();
+
+		// Initialize the face struct
+		currentFace = new FaceStruct();
 
 		// Find the script for facial emotion analysis
 		try
@@ -60,6 +66,7 @@ public class GameManager : MonoBehaviour {
 		// Pull in the most recent emotional state for each of the modalities
 		currentFacialEmotion = facialAnalyzer.getCurrentEmotions();
 		currentWordSentimentEmotion = wordAnalyzer.getCurrentEmotions();
+		currentFace = facialAnalyzer.getCurrentFace();
 	}
 
 	public EmotionStruct getCurrentFacialEmotion()
