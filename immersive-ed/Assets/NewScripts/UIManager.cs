@@ -16,8 +16,11 @@ public class UIManager : MonoBehaviour {
 	private CameraInput camInputScript;
 	private Renderer planeRenderer;
 
-	private Color currentEmotionColor;
-	private Color previousEmotionColor;
+	// Emotion modality colors
+	private Color currentFacialEmotionColor;
+	private Color previousFacialEmotionColor;
+	private Color currentWordSentimentEmotionColor;
+	private Color previousWordSentimentEmotionColor;
 
 	public float colorUpdateTime = 0.5f;	// Update the colors on-screen every X seconds
 	private float lerpTime = 0.25f;
@@ -33,8 +36,8 @@ public class UIManager : MonoBehaviour {
 		webcamRenderPlane.transform.localScale = new Vector3(aspectRatio, 1.0f, 1.0f);
 
 		// Initalize the colors
-		previousEmotionColor = new Color();
-		currentEmotionColor = new Color();
+		previousFacialEmotionColor = new Color();
+		currentFacialEmotionColor = new Color();
 
 		// Start the background emotion updater
 		StartCoroutine(RequestEmotionUpdate());
@@ -54,7 +57,7 @@ public class UIManager : MonoBehaviour {
 		while (t < 1)
 		{
 			// Now the loop will execute on every end of frame until the condition is true
-			mainCamera.backgroundColor = Color.Lerp(previousEmotionColor, currentEmotionColor, t);
+			mainCamera.backgroundColor = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
 			t += Time.deltaTime / lerpTime;
 			yield return new WaitForEndOfFrame();
 		}
@@ -66,8 +69,13 @@ public class UIManager : MonoBehaviour {
 		while (true) 
 		{
 			yield return new WaitForSeconds(colorUpdateTime);
-			previousEmotionColor = currentEmotionColor;
-			currentEmotionColor = gameManagerScript.getCurrentCumulativeEmotionColor();
+			// Update facial emotion colors
+			previousFacialEmotionColor = currentFacialEmotionColor;
+			currentFacialEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentFacialEmotion());
+
+			// Update word sentiment emotion colors
+			previousWordSentimentEmotionColor = currentWordSentimentEmotionColor;
+			currentWordSentimentEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentWordSentimentEmotion());
 			StartCoroutine(UpdateBackgroundColor());
 		}
 	}
