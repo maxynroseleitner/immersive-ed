@@ -1,0 +1,385 @@
+4.2.1
+-Added a very small tweak to the mixer controlling the mute level of MicControl. MicControl now uses a child mixer within the master mixer. This means users can add their own child mixer
+for their audio management and have micControl muted or un-muted without muting all other connect sources.
+
+4.2
+
+-Fixed bug where device caps where not properly detected. This caused the script to freeze when a device did not return a value.
+-44100 and 48000 hz mode should now return correct values.
+-Fixed small unstable jitter from idle devices.
+-Fresh controllers defaulted to wrong sample values. (1024 changed to 256).
+-Changed default sensitivity to 500.0 to be better detectable when using a new controller.
+-Updated the Documentation to have an easy step by step guide on setting up your first controller.
+-Updated the documentation with the location of the menu item.
+-Added a prefab in the root folder for users who did not manage to find the menu item.
+-Added new error log. If the selected device does not send any data or no frequency is detected, the script will stop and throw out an error.
+
+
+4.1
+
+-Fixed bug in MicControl_example_timeScale_average_Loudness example scene.
+-Fixed bug in Unity 5.3 packages that prevented correct builds.(in those versions this is visible as  hotfix 4.0b)
+-Added dropdown menu in example scenes to select device on the fly.
+-Added new reference script: UI_devices_dropdown_list.
+
+
+
+4.0a(hotfix)
+
+-Small hotfix that prevented script compilation to mobile platforms.
+
+
+4.0 (Big C# overhaul update, dropping/deprecating and removing UnityScript/UnityScript support!)
+
+WARNING THIS UPDATE WILL BREAK ALL PREVIOUS -4.0 (UnityScript) VERSIONS .
+
+
+It is finally here! The much requested and long awaited, fully supported C# version of MicControl. Fittingly named 'MicControl 3' because
+of its new (written from the ground up) C# code and big overhaul on how the system works and sets itself up. Expect a major performance increase. 
+With loudness en spectrumData enabled on medium(ish) settings and only a 6% CPU cost.
+
+-Major new MicControl 3 release!
+
+-Rewrote the complete system in C#!
+-Rewrote editor script in C#.
+-Rewrote the ReadMe file and documentation to fit the new C# format.
+
+-removed the old loading level check as this method is now deprecated by Unity.
+-All 3 "onfocus" methods are no longer called/compiled in mobile and web builds. (This is because of gear VR and other issues).
+
+-fixed efficiency errors.
+-fixed memory leak that caused the system to freeze up when a wrong frequency was set.
+-fixed bug that prevented the Gear VR from receiving data. (OnApplicationFocus, etc.. are disabled in this scenario, so minor lag might be introduced).
+-fixed nasty bug that broke device connection when switching scenes (while each scene featured their own controller calling to the same device).
+ You can however, still use "do not destroy on load" to use a single controller for all your scenes. Just keep in mind that your scripts must account for searching this
+ controller each time they start.
+-fixed creating a controller not registering to undo history.
+
+-Replaced most of the foreach loops with for loops in C#, for better efficiency.
+-Cleaned up code.
+
+-Removed runineditmode command, the system made unnecessary loops and processes during editor mode, causing stutter. All settings are now initialized on the first frame of your game.
+-Removed "copy setup buttons" from the inspector, Proper reference scripts are now available in the reference folder. This will give less clutter inside he inspector.
+
+-New example scenes.
+-New reference scripts written in C#.
+-Deleted old UnityScript systems and components that where either obsolete or rewritten to C#.
+
+-Exposed almost all variables to the user (can be found in the ReadMe file). This makes it possible for users to check whether the system is done initializing or not and
+ to override settings with their own scripts (one needs to manually trigger the initialization process when doing this, see the documentation). With this new gained access, users
+ could also write their own custom editor scripts, should they feel the need.
+
+-Removed GetMicCaps (). New approach created that sets the frequency-cap directly in the microphone initialization.
+-Removed minFreq. With the remove of above GetMicCaps, there is no longer a need to check against minimum frequencies.
+-Renamed maxFreq to setFrequency as it is now no longer depended on minFreq. This naming scheme also makes more sense for users who want to write their own
+ setting scripts.
+
+
+
+
+
+
+3.2
+
+-Added option to select "Manually set device slot". This will show a slot to type an integer to use for selection.
+Rather than using the buttons (which show device name). The reason for this is mainly for mobile use. Since you cannot select a mobile
+microphone device through the unity inspector. You can now simply type the slot number it is on your device (Mac, Windows and Android represent their devices
+in an array list. So you can call a device's name, which you would need in order to interact with it'. By simply calling the current slot device's name.
+
+-Added new reference code on how to "catch" a certain length out of the spectrumData array.
+-Added exception handler in editor script. So that the interface would not crash when selecting a slot not containing a microphone. This is because when manually typing a slot
+ for Android, the device might not be on your computer. For instance if Android has a microphone at position 3 but you only have position 1 and 2 connected to your pc (headphones, webcam).
+ You might not be able to select slot 3 because of this. Thus making it impossible on your pc to select the unreachable slot. Keep in mind that although you can set not connected slots now.
+ Your microphone input will not work in the editor. A good rule of thumb to follow is, to always develop in the editor with your workstation default microphone and only at build set the slot
+ to what Android would be using.
+
+ If your android device only uses the internal microphone, simply select "use default device" and you are good to go.
+
+
+-Added new example script to the "Code reference" folder. "Manual_Stop_Example" scripts, shows how to properly stop
+ the set MicController and restart it. In this case it is done by pressing "space" in game. You can see if it worked or not
+ by looking at the controller's inspector.' Keep in mind that clicking the editor or tabbing out of windows and back, will
+ trigger MicControl's active window system and thus reset the value you set in your script (override).
+ E.G. enabling and disabling in the correct way only works while "in game". If you want to keep the setting you made ingame after switching windows.
+ You will need a "watch" script that detects if you switched windows and let the script set your own values. 
+
+ More info on this functionality can be found inside the script itself.
+
+
+-fixed some important grammatical errors in variable names.
+
+
+
+
+3.1.1(hotfix)
+
+-fixed editor freezing bug appearing for users with the Kinect microphone.
+-Tweaked min max values for the buffer.
+-Added extra information in the debug option. When toggled extra information on yield time will be written to the console.
+-Improved stream delay (stream is now even closer to realtime).
+
+
+3.1
+
+-Added ApplySpectrumDataToGameObject and ApplySpectrumDataToLightSource
+ to the reference folder (forgot this last update).
+-fixed bug in editor script that sometimes caused a game freezing error (red).
+-fixed 90% of all warnings (yellow). 3 more warnings remain, two of witch suggest an implicit downcast.
+ These two are false positives and do not influence the functionality of MicControl2 or your project.
+
+ 1 warning warns about using obsolete code (Application.isLoadingLevel). Until I have found an alternative,
+ this warning will remain, just like above this should not influence functionality.
+-Optimized MicControl2 for Unity 5.4.x.
+-fixed deprecated code in the "NextScene" script (Example folder).
+-Corrected some deprecated API code with the correct new one.
+
+
+
+3.0
+
+-Spectrum data analysis!! Yes it is finally added, after lots of requests.
+-Added option to enable spectrum data in the editor inspector.
+-Added toggle to enable the above in the inspector.
+-Added new function to the main script to handle spectrum data.
+-When enabled, a new visualization will appear in the inspector.
+-Added dropdown to show or hide the spectrum visualizer bars.
+-Added new example script and scene.
+-Cleaned and renewed the manual. (removed some deprecated info).
+-Cleaned scripts.
+-Optimized runtime slightly.
+-Added new button to copy basic setup of spectrum data to inspector.
+-Removed single loudness copy button from inspector.
+-Added new example scene showcasing spectrum data (single scene setup).
+
+
+2.7.3
+
+-Added a new script to the code reference folder, the script is called "Blow_out_Module".
+ This script is basically a fully premade module that lets users define object and blow strength limits to enable or disable objects. Users can
+ modify the array's length in order to create more modules with different blow strengths.' For example, a user may have 6 candles, but each candle needs a different
+ kind of blow force before turning off. One simply creates 6 modules in the array and set the respective slots with their max strength.
+
+ The module also has a "minimum" strength that needs to be set. This simply means that the script only executes its code and loops when the user is blowing over a minimum limit.
+ This is done to prevent regular breathing from triggering the modules.
+
+ (You can place this script on any object, but it is recommended to place it on an EmptyGameObject).
+
+
+2.7.2
+
+-Updated ReadMe file with new info about osX and the reason why only one Microphone can be used on a Mac.
+-Updated store description.
+-Added new example scene. Users can now test both multi-scene based setup and single-scene based setup.
+
+
+2.7.1
+
+-fixed crash on mobile platforms.
+-fixed authentication issue on iOS.
+-fixed micControll not working while switching scenes.(Multiple scenes now require a persistent controller).
+-Changed setup description in the ReadMe file to be more clear.
+-Updated MicControl workflow in a_callReference script and readme file.
+-New example scene setup.
+
+
+2.7
+
+-Users can now set the buffer size (in seconds). This will set how much audio the controller should put in ram. 1 second is recommended.
+-Removed slot drop down from menu. 
+-Added selection buttons to Detected devices menu.
+-Users can now easely select a microphone by clicking the button in front of it.
+-Updated help button url.
+-Completely removed the preset Enum for device slots.
+-Added dynamic search system. Unlimited devices can now be detected and set.
+-Added  manual device slot. This is need for multiple device usage, of which the device is not present on the development machine (multiple mobile microphones for example).
+ This setting overides the device selection mentioned above.
+-Simplefied Editor inspector script. Because of the new detection system, the inspector is much more responsive and code made much cleaner.
+-Re-organised the inspector to make more sense (order of execution).
+-Added extra device check ontop of the iOSplayer check to detect if the system is on any iPhone or iPad device and thus enable proper device authentication requests. 
+-Max sensitivity (of the slider) is now determined by a min max slider below. This allows users to increase or decrease the sensitivy's spectrum.
+ Making it easier to drastically increase sensitivty, or precisely set float values.
+
+
+2.6.2
+
+-IMPORTANT!! Dropped WebPlayer support (Unity will soon deprecate  this platform).
+
+-Added Authorization check for mobile platforms. The system will automatically ask permission to use selected Microphone on
+ mobile devices.
+
+-New platform authorization support for the folowing devices: Android, iOS, Windows Phone 8.
+
+-For mobile development always use slot 1 in the controller. On pc's this refers to the default microphone and
+ on mobile platform this refers to the build in microphone.
+
+
+
+
+2.6.1(hotfix)
+
+-fixed wrong privacy status on InitMic function.
+
+
+2.6
+"ATTENTION!! This updates changes allot behind the scenes. This is because Unity version 5.2.x and up have changed the way muting is
+"controlled on an AudioSource. MicControl is dependent on the AudioSource as the recorded data is stored and read in there.
+"MicControl is volume dependent and since muting in these versions lowered the volume. We would no longer be able to have
+"microphone input while muting the actual audio. Resulting in always having playback.
+
+"The system now uses an AudioMixerGroup to control/mute its volume, whilst maintaining data input. Do not worry, the system sets this
+"up automatically!
+
+"The way the Controller is used by you the user, has not changed at all and the old tutorials can still be used. This update will
+"drop support for versions below Unity 5.0 that do not support AudioMixers.
+
+"It is not required, but recommended, to delete older folders of MicControl2 and download a clean version of MicControl 2(clean instalation).
+
+Updates:
+
+-Moved slot selection to the editor script with a enumPopup reference.
+-Unity 5.2.x changed the way data can be gathered from an AudioSource. This causes the system to
+ malfunction when muted (data collection stops). The system now works together with a mixer group, to be able to collect data while muted.
+
+-Mixer group is automatically added. It is best to leave this audio mixer alone. Unless you want to hear your playback. However
+ this can be swiftly controlled with the mute button.
+-Source volume will now always be 1 to make sure the gathered data is correct. Adjust the mixer instead of the AudioSource, to control volume (if you want playback).
+-Removed source volume option in the inspector as it is no longer needed.
+-Mute button now controls mixer volume isntead of AudioSource volume.
+-Mixer features can now be used to control MicControl (playback audio) through custom scripts.
+
+
+-Dropped Unity 4.x functionality and support. This version will not work on version older than Unity 5!
+-Removed 3D (Unity 4.x). If you really need this function (Unity 5.x can set this in the AudioSource itself), you can un-quote it. But this is not recommended.
+
+
+-The recorded clip (which gets feed into the data gatherer) is now only 1 second long instead of 10 seconds.
+ This reduces (the already low) memory footprint even more. Since everything is near real-time anyway, there 
+ was no need to buffer 10 seconds of microphone audio.
+
+-fixed embarrassing spelling mistake in error log (devies = devices).
+ 
+-Added new example script in the Example code folder. This script lets you interact with the albedo color of a standard material.
+
+-Removed: SourceVolume, PanThreshold, VolumeFallOff,ListenerDistance, ListenerPosition and audioListener as with the Unity 4.x support dropped, these are now depricated.
+
+-Added frequency selection list. Users no longer have to type the frequency manually in the slot.
+-Added frequency selection to the microphone initialisation function.
+
+-Added do not destroy on load option, to make the controller persistent between scenes.
+-Tweaked inspector GUI.
+
+-Sample amount now locked (snapping) to increments ranging from 256 up to 8192 Samples per frame.
+-Sample amount default is now set to 1024
+
+
+
+2.5
+Updates:
+-Added buttons to have quick and easy acces to code information. Users can simply copy complete scripting setups to the clipboard and paste them
+ into their own projects.
+-Changed explanation and tooltip text a bit.
+-Inspector is now cleaner and more understandable.
+-Changed the names of device dropdown list to slot X. To better match the representation of the detected devices list. This way users know what slot to select.
+-Visual indicator to show wether the microphone is active or not.
+-Added a help button that links to the MicControl 2 website page. Users can read FAQ's and watch tutorial videos (no videos available for now, working on it).
+-Improved inspector ui performance and speed.
+-Added Error logs and return. This prevents fatal errors and lets the user know what is going on.
+
+2.4
+Updates:
+
+-Moved all the variables (except device selection menu) to the editor script.
+-Added more tooltips to help you find your way.
+-Added default values to every variable so everything work straight out of the box.
+-All tweakable variables are moved under the "Advanced settings" button.
+-The loudness bar now also shows the current loudness value. You can still see the loudness's history' in the console by selecting the Debug toggle.
+-Variables "Volume falloff, pann threshold and AudioListener" only show when Unity 4.x only! 3D sound is selected as these are obsolete in Unity 5.
+-The device name and number now show in the inspector by selecting Show Device name(s). It is no longer required to go in playmode first to see what your
+ devices are. Devices are also no longer printed to the console.
+-The script will only be active when the game window is active. This is to prevent time lag and keeps the loudness variable realtime.
+ the same rules apply when build.
+-Tweaked the readme file to be more clear, moved instructions to the top.
+
+Bugfixes:
+-fixed several bugs in the example scene. Everything should load properly now.
+
+2.3
+Updates:
+
+-The project is no longer open source, removed community scripts as they where poorly maintained nor updated frequently enough.
+
+
+-Faster microphone initialization.
+-Created menu button under GameObject-Audio-MicControl.
+-Loudness value is no longer static and can no longer be called from other scripts without setup.
+
+-Users can now call data from multiple mic's by placing multiple controllers (this is the reason why Loudness is no longer static).
+ This was possible before, but required users to tweak the scripts. This is now done by defautl.
+ 
+-Adjusted the ReadMe file to correspond mentioned updates.
+-Generators now have a Gizmo.
+-Removed GUI properties: They where incomplete and obsolete.
+-Created reference script on how to call MicControl data. The scripts also contain a few examples on how to do things like adding force to rigid bodies by blowing.
+-3D sound is now only required for unity 4.x users, Unity  5 does this through the audioSource's spatial blend feature.
+-re-structured folder hierachy.
+
+Bugfixes:
+-Cleaned up some errors in the example scene.
+-fixed audio delay when switching programs. Microphone now properly stops and re-initializes when application is active again.
+
+
+2.2.1(bugfix):
+
+Updates:
+
+Bugfixes:
+-fixed small bug in the microphone initialisation process. The bug would go unoticed most of the times. fixed 
+ made possible thanks to Vinicius Bruno.
+
+2.2:
+
+Updates:
+-Removed update list from the ReadMe file.
+-Added panning to simulate full 3D sound (only works when mute is off. This affects the left and right speakers.
+-updated ReadMe file (Javascript version).
+-Changed tooltip explanation.
+-Tweaked the data lag prevention. You will experience 
+-Created new example scene. This scene uses the microphone to stream audio from an object in space and adjust its scale based on the loudness.
+
+
+Bugfixes:
+-fixed bug in the 3D fallof.
+-fixed crash when calling the 'loudness' value in standalone mode (only happened very rarely).
+-Loudness value would not print to the console if debug is enabled.
+
+
+2.0:
+-Added 3D sound effect, based on listener distance.
+-New inspector interface with tooltips.
+-Added new tutorial guiding through the new features.
+-Edited UnityScript manual with the new variables and corresponding descriptions.
+-fixed bug that caused Unity to crash.
+-New example scene.
+
+1.2.5.1(hotfix):
+
+Uploaded with correct unity version.
+
+1.2.5
+
+-WebPlayer support for the JavaScript version
+-video tutorial webplayer
+-Chanced folder names
+-fixed nasty bug that crashed WebPlayers
+
+
+
+1.2.4
+Updates: -Webplayer support: The script now recognize the webplayer and will catch the mic for autorization. When autorization is released, the mic will be initialized.
+
+
+1.2.3
+Updates: -fixed audio bar (editor script) to visualize the Mic Input in the inspector (while ingame).
+		 -fixed memory leak and call bugs.
+		 -Cleaned up Readme file: divided into chapters.
+		 -Video tutorial added.
