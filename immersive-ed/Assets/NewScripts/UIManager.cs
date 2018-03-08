@@ -17,15 +17,22 @@ public class UIManager : MonoBehaviour {
 	private CameraInput camInputScript;
 	private Renderer planeRenderer;
 
-	private Color currentEmotionColor;
-	private Color previousEmotionColor;
+	// Emotion modality colors
+	private Color currentFacialEmotionColor;
+	private Color previousFacialEmotionColor;
+	private Color currentWordSentimentEmotionColor;
+	private Color previousWordSentimentEmotionColor;
 
 	public float colorUpdateTime = 0.5f;	// Update the colors on-screen every X seconds
 	private float lerpTime = 0.25f;
 
 	public Image facialEmotionBar;
-	private float currentEmotionBarWidth;
-	private float previousEmotionBarWidth;
+	private float currentFacialEmotionBarWidth;
+	private float previousFacialEmotionBarWidth;
+
+	public Image wordSentimentEmotionBar;
+	private float currentWordSentimentEmotionBarWidth;
+	private float previousWordSentimentEmotionBarWidth;
 
 	// Use this for initialization
 	void Start () {
@@ -38,11 +45,18 @@ public class UIManager : MonoBehaviour {
 		webcamRenderPlane.transform.localScale = new Vector3(aspectRatio, 1.0f, 1.0f);
 
 		// Initalize the colors
-		previousEmotionColor = new Color();
-		currentEmotionColor = new Color();
+		previousFacialEmotionColor = new Color();
+		currentFacialEmotionColor = new Color();
 
-		currentEmotionBarWidth = 0.0f;
-		previousEmotionBarWidth = 0.0f;
+		previousWordSentimentEmotionColor = new Color();
+		currentWordSentimentEmotionColor = new Color();
+
+		// Initialize the bar widths
+		currentFacialEmotionBarWidth = 0.0f;
+		previousFacialEmotionBarWidth = 0.0f;
+
+		currentWordSentimentEmotionBarWidth = 0.0f;
+		previousWordSentimentEmotionBarWidth = 0.0f;
 
 		// Start the background emotion updater
 		StartCoroutine(RequestEmotionUpdate());
@@ -62,13 +76,17 @@ public class UIManager : MonoBehaviour {
 		while (t < 1)
 		{
 			// Now the loop will execute on every end of frame until the condition is true
-			// Update the background color
-			// mainCamera.backgroundColor = Color.Lerp(previousEmotionColor, currentEmotionColor, t);
-
-			// Update the emotion bar
-			facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousEmotionBarWidth, currentEmotionBarWidth, t),
+			// Update the facial emotion bar
+			facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousFacialEmotionBarWidth, currentFacialEmotionBarWidth, t),
 																   facialEmotionBar.rectTransform.sizeDelta.y);
-			facialEmotionBar.color = Color.Lerp(previousEmotionColor, currentEmotionColor, t);
+			facialEmotionBar.color = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
+
+			// Update the word sentiment emotion bar
+			wordSentimentEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousWordSentimentEmotionBarWidth, currentWordSentimentEmotionBarWidth, t),
+																   wordSentimentEmotionBar.rectTransform.sizeDelta.y);
+			wordSentimentEmotionBar.color = Color.Lerp(previousWordSentimentEmotionColor, currentWordSentimentEmotionColor, t);	
+
+			// mainCamera.backgroundColor = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
 
 			t += Time.deltaTime / lerpTime;
 
@@ -82,12 +100,29 @@ public class UIManager : MonoBehaviour {
 		while (true) 
 		{
 			yield return new WaitForSeconds(colorUpdateTime);
-			previousEmotionColor = currentEmotionColor;
-			currentEmotionColor = gameManagerScript.getCurrentCumulativeEmotionColor();
 
-			previousEmotionBarWidth = currentEmotionBarWidth;
-			currentEmotionBarWidth = gameManagerScript.getValueOfStrongestCurrentCumulativeEmotion() * 2;
+			// Update facial emotion colors
+			previousFacialEmotionColor = currentFacialEmotionColor;
+			currentFacialEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentFacialEmotion());
 
+			// Update word sentiment emotion colors
+			previousWordSentimentEmotionColor = currentWordSentimentEmotionColor;
+			currentWordSentimentEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentWordSentimentEmotion());
+
+			// Update the emotion bars
+			previousFacialEmotionBarWidth = currentFacialEmotionBarWidth;
+			currentFacialEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentFacialEmotion()) * 2;
+
+			EmotionStruct currentEmotions = gameManagerScript.getCurrentWordSentimentEmotion();
+			Debug.Log("Joy: " + currentEmotions.joy);
+			Debug.Log("anger: " + currentEmotions.anger);
+			Debug.Log("fear: " + currentEmotions.fear);
+       		Debug.Log("disgust: " + currentEmotions.disgust);
+        	Debug.Log("sadness: " + currentEmotions.sadness);
+
+			previousWordSentimentEmotionBarWidth = currentWordSentimentEmotionBarWidth;
+			currentWordSentimentEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentWordSentimentEmotion()) * 2;
+			
 			StartCoroutine(UpdateBackgroundColor());
 		}
 	}
