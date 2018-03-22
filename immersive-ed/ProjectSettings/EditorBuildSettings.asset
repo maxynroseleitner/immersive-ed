@@ -4,4 +4,7 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/FacialEmotionBarScene.unity
+    guid: d263fa071a2ab4208b2d13a0cc74486d

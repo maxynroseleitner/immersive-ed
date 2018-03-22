@@ -63,7 +63,7 @@ public string recordingId;
 public JSONNode currentAnalysis;
 private int duration = 0;
 public AudioClip audBuffer;
-
+private ToneAnalysis vocalToneResults = new ToneAnalysis ();
 
 	//settings
 public float sensitivity=500.0f;
@@ -87,8 +87,6 @@ public bool Initialized=false;
 
 
 public bool doNotDestroyOnLoad=false;
-
-
 
 void Start () {
 		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
@@ -178,8 +176,20 @@ void Start () {
 					Debug.Log("Response Status: " + startResponseObj["status"]);
 					return;
 				}
-				Debug.Log(analysisResponseString);
+				vocalToneResults.TemperVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Value"]);
+				vocalToneResults.ArousalVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Value"]);
+				vocalToneResults.ValenceVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Value"]);
+				vocalToneResults.TemperGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Group"];
+				vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
+				vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
 				recordingId = startResponseObj["recordingId"];
+//				Debug.Log(vocalToneResults.TemperVal);
+//				Debug.Log(vocalToneResults.TemperGroup);
+//				Debug.Log(vocalToneResults.ArousalVal);
+//				Debug.Log(vocalToneResults.ArousalGroup);
+//				Debug.Log(vocalToneResults.ValenceVal);
+//				Debug.Log(vocalToneResults.ValenceGroup);
+
 			}).Start();
 		float[] samples = new float[audBuffer.samples * audBuffer.channels];
 		audBuffer.GetData(samples, Mathf.RoundToInt((1.0f) * 8000));
@@ -585,6 +595,9 @@ void OnDrawGizmos () {
 
 }
 
+	public ToneAnalysis getVocalToneResults(){
+		return vocalToneResults;
+	}
 	#endif
 
 
