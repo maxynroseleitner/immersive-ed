@@ -5,7 +5,9 @@ using UnityEngine;
 public class GameManager : MonoBehaviour {
 
 	public GameObject gameManager;
+
 	public GameObject uiManager;
+	private UIManager uiManagerScript;
 
 	public GameObject facialEmotionAnalyzerObject;
 	public GameObject wordSentimentEmotionAnalyzerObject;
@@ -31,6 +33,8 @@ public class GameManager : MonoBehaviour {
 		currentFacialEmotion = new EmotionStruct();
 		currentWordSentimentEmotion = new EmotionStruct();
 		currentVocalEmotion = new EmotionStruct();
+
+		uiManagerScript = uiManager.GetComponent<UIManager> ();
 
 		// Find the script for facial emotion analysis
 		try
@@ -60,6 +64,9 @@ public class GameManager : MonoBehaviour {
 		// Pull in the most recent emotional state for each of the modalities
 		currentFacialEmotion = facialAnalyzer.getCurrentEmotions();
 		currentWordSentimentEmotion = wordAnalyzer.getCurrentEmotions();
+
+		//Get mood-tracker coordinates
+		CalculateMoodTrackerGeometry ();
 	}
 
 	public EmotionStruct getCurrentFacialEmotion()
@@ -167,4 +174,13 @@ public class GameManager : MonoBehaviour {
 			return new Color(0.0f, 0.0f, 0.0f, 1.0f);		// black
 		}
 	}
+
+	////////////////////////////////////// SET/CALCULATE MOOD TRACKER COORDINATES START /////////////////////////////////////////////////
+
+	private void CalculateMoodTrackerGeometry (){
+		Vector3 moodTrackerCoordinates = facialAnalyzer.GetMoodTrackerGeometry ();
+		uiManagerScript.SetMoodTrackerGeometry (moodTrackerCoordinates);
+	}
+
+	/////////////////////////////////////// SET/CALCULATE MOOD TRACKER COORDINATES END //////////////////////////////////////////////////
 }
