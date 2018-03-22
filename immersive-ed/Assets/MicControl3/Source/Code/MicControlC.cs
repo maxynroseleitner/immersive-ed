@@ -52,16 +52,18 @@ public float[] spectrumData;
 public string[] audBySec = new string[10];
 //public AudioClip audData;
 public string tokenUrl = "https://token.beyondverbal.com/token";
-public string apiKey = "c394f4f8-c4b1-4251-b350-af357c0ea07a";
+public string apiKey = "322360d1-236c-4902-bb9c-1ce56fb84578";
 public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
 public string wavFile;
-private float timeIdx = 0;
+public string analysisUrl;
+private float timeIdx = 1.0f;
 public string requestData;
 public string token;
 public string startResponseString;
 public string recordingId;
 public JSONNode currentAnalysis;
 private int duration = 0;
+public AudioClip audBuffer;
 
 
 	//settings
@@ -105,6 +107,8 @@ void Start () {
 		}
 		recordingId = startResponseObj["recordingId"];
 		StartCoroutine (yieldedStart ());
+		InvokeRepeating("RecordChunk", 1.0f, 1.0f);
+		InvokeRepeating("Analyze", 10.0f, 1.0f);
 
 }
 
@@ -144,8 +148,44 @@ void Start () {
 
 
 
+	void RecordChunk(){
+		if (!audBuffer) {
+			audBuffer = AudioClip.Create ("audioBuffer", audioSource.clip.samples*10, audioSource.clip.channels, audioSource.clip.frequency, false);
+		}
+		SaveWavFile (audioSource.clip);
+		float[] samples = new float[audioSource.clip.samples * audioSource.clip.channels];
+		audioSource.clip.GetData(samples, 0);
+		audBuffer.SetData (samples, Mathf.RoundToInt((timeIdx-1.0f) * 8000));
+		if (timeIdx < 10.0f){
+			timeIdx += 1.0f;
+		}
+	}
 
-
+	void Analyze(){
+		wavFile = SaveWavFile (audBuffer);
+		analysisUrl = startUrl + recordingId;
+		new Thread(() => 
+			{
+				Thread.CurrentThread.IsBackground = true; 
+				/* run your code here */ 
+				var bytes = File.ReadAllBytes(wavFile);
+				var analysisResponseString = CreateWebRequest(analysisUrl, bytes, token);
+				//							Debug.Log(analysisResponseString);
+				currentAnalysis = JSON.Parse(analysisResponseString);
+				startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
+				var startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
+				if (startResponseObj["status"] != "success")
+				{
+					Debug.Log("Response Status: " + startResponseObj["status"]);
+					return;
+				}
+				Debug.Log(analysisResponseString);
+				recordingId = startResponseObj["recordingId"];
+			}).Start();
+		float[] samples = new float[audBuffer.samples * audBuffer.channels];
+		audBuffer.GetData(samples, Mathf.RoundToInt((1.0f) * 8000));
+		audBuffer.SetData (samples, 0);
+	}
 
 
 
@@ -211,31 +251,8 @@ void Update () {
 
 //				if(enableSpectrumData){
 //					spectrumData=  GetSpectrumAnalysis();
-//				}	
-				timeIdx += Time.deltaTime;
-				Debug.Log (timeIdx);
-				if (timeIdx > 10.0) {
-					timeIdx = 0;
-					wavFile = SaveWavFile ();
-					string analysisUrl = startUrl + recordingId;
-					Debug.Log (analysisUrl+"/analysis?fromMs=0");
-					var bytes = File.ReadAllBytes(wavFile);
-					var analysisResponseString = CreateWebRequest(analysisUrl, bytes, token);
-					Debug.Log(analysisResponseString);
-					currentAnalysis = JSON.Parse(analysisResponseString);
-					Debug.Log (currentAnalysis["result"]["duration"]);
-					duration += 10000;
-					startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
-					//		Debug.Log (startResponseString);
-					var startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
-					if (startResponseObj["status"] != "success")
-					{
-						Debug.Log("Response Status: " + startResponseObj["status"]);
-						return;
-					}
-					recordingId = startResponseObj["recordingId"];
-
-				}
+//				}
+					
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -352,10 +369,10 @@ void Update () {
 	return dataSpectrum;
 
 }
-	public string SaveWavFile ()
+	public string SaveWavFile (AudioClip aud)
 	{
 		string filepath;
-		WavUtility.FromAudioClip(audioSource.clip, out filepath, true);
+		WavUtility.FromAudioClip(aud, out filepath, true);
 		return filepath;
 	}
 
@@ -369,7 +386,9 @@ public void InitMic(){
 	if(!audioSource){
 		audioSource = transform.GetComponent<AudioSource>();
 	} 
-
+//	if(!audBuffer){
+//		audBuffer = transform.GetComponent<AudioSource>();
+//	}
 	//only Initialize microphone if a device is detected
 	if(Microphone.devices.Length>=0){
 
@@ -407,7 +426,7 @@ public void InitMic(){
 
 
 		//detect the selected microphone one time to geth the first buffer.
-			audioSource.clip =  Microphone.Start(selectedDevice, true, 11, setFrequency);
+			audioSource.clip =  Microphone.Start(selectedDevice, true, 1, setFrequency);
 
 
 		//loop the playing of the recording so it will be realtime
@@ -459,7 +478,7 @@ public void InitMic(){
 
 		GetMicCaps ();
 
-		audioSource.clip = Microphone.Start(selectedDevice, true, 11, setFrequency);//Starts recording
+		audioSource.clip = Microphone.Start(selectedDevice, true, 1, setFrequency);//Starts recording
 
 	while (!(Microphone.GetPosition(selectedDevice) > 0)){// Wait if a device is detected and  only then start the recording
 		if(debug){
