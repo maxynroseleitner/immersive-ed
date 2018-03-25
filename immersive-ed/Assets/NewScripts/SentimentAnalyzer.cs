@@ -29,8 +29,12 @@ using System;
 using SimpleJSON;
 public class SentimentAnalyzer : MonoBehaviour
 {
-    private string _username = "bd7c3afe-72db-467d-b029-399ea4e2d0d4";
-    private string _password = "oaQ8pVOIG2oq";
+    // Original Watson speech to text credentials
+    // private string _username = "bd7c3afe-72db-467d-b029-399ea4e2d0d4";
+    // private string _password = "oaQ8pVOIG2oq";
+
+    private string _username = "55095a1d-71db-4b7b-9007-2de45bbfc8ef";
+    private string _password = "4AydC5ntEOUs";
     private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
 
     public Text ResultsField;
@@ -75,6 +79,10 @@ public class SentimentAnalyzer : MonoBehaviour
         _speechToText = new SpeechToText(credentials);
         Credentials naturalLanguageUnderstandingCredentials = new Credentials()
         {
+            // Original Watson NLP credentials
+            // Username = "b2e711a5-5d95-4988-a355-8653923d7769",
+            // Password = "1VRamFU1cXr1",
+
             Username = "b2e711a5-5d95-4988-a355-8653923d7769",
             Password = "1VRamFU1cXr1",
             Url = "https://gateway.watsonplatform.net/natural-language-understanding/api"
