@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject gameManager;
 	public GameObject uiManager;
+	private UIManager uiManagerScript;
 
 	public GameObject facialEmotionAnalyzerObject;
 	public GameObject wordSentimentEmotionAnalyzerObject;
@@ -33,6 +34,9 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+
+		uiManagerScript = uiManager.GetComponent<UIManager> ();
+
 		// Initialize the current emotion
 		// currentFacialEmotion = new EmotionStruct();
 		// currentWordSentimentEmotion = new EmotionStruct();
@@ -133,7 +137,9 @@ public class GameManager : MonoBehaviour {
 		{
 			currentVocalEmotion = vocalAnalyzer.getVocalToneResults();
 		}
-			
+
+		//Set mood tracker attributes
+		CalculateMoodTrackerGeometry ();
 	}
 
 	public EmotionStruct getCurrentFacialEmotion()
@@ -246,4 +252,12 @@ public class GameManager : MonoBehaviour {
 			return new Color(0.0f, 0.0f, 0.0f, 1.0f);		// black
 		}
 	}
+
+////////////////////////////////////// SET/CALCULATE MOOD TRACKER COORDINATES START /////////////////////////////////////////////////
+	private void CalculateMoodTrackerGeometry (){
+		Vector3 moodTrackerCoordinates = facialAnalyzer.GetMoodTrackerGeometry ();
+		uiManagerScript.SetMoodTrackerGeometry (moodTrackerCoordinates);
+	}
+/////////////////////////////////////// SET/CALCULATE MOOD TRACKER COORDINATES END //////////////////////////////////////////////////
+
 }
