@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-
 using DigitalRuby.WeatherMaker;
 
 using Affdex;
@@ -36,6 +35,10 @@ public class UIManager : MonoBehaviour {
 
 	public GameObject weatherMaker;
 	public WeatherMakerScript weatherScript;
+
+	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{{"anger", WeatherMakerPrecipitationType.Hail},{"sadness", WeatherMakerPrecipitationType.Rain},{"fear",WeatherMakerPrecipitationType.None}, {"joy",WeatherMakerPrecipitationType.None}, {"neutral",WeatherMakerPrecipitationType.None}, {"disgust",WeatherMakerPrecipitationType.None}, {"surprise",WeatherMakerPrecipitationType.None}};
+	private Dictionary<string, float> fogDict = new Dictionary<string, float>{{"anger",0.0f},{"sadness",0.0f},{"fear",1.0f}, {"joy",0.0f}, {"neutral",0.0f}, {"disgust",0.0f}, {"surprise",0.0f}};
+	private Dictionary<string, WeatherMakerCloudType> cloudDict = new Dictionary<string, WeatherMakerCloudType>{{"low",WeatherMakerCloudType.Light},{"medium",WeatherMakerCloudType.Medium},{"high",WeatherMakerCloudType.Heavy}};
 
 	// Use this for initialization
 	void Start () {
@@ -97,37 +100,8 @@ public class UIManager : MonoBehaviour {
 			Debug.Log(vocalToneResults.ValenceVal);
 			Debug.Log(vocalToneResults.ValenceGroup);
 		}
-	}
 
-	// Coroutine enumerator for updating the current emotion color using linear interpolation over a predefined amount of time
-	private IEnumerator UpdateBackgroundColor()
-	{		
-		// Debug.Log("Entered UPDATE BACKGROUND COLOR COROUTINE.");
-		float t = 0;
-		while (t < 1)
-		{
-			// Now the loop will execute on every end of frame until the condition is true
-			if (gameManagerScript.useFacialEmotion)
-			{
-				// Update the facial emotion bar
-				facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousFacialEmotionBarWidth, currentFacialEmotionBarWidth, t),
-																	facialEmotionBar.rectTransform.sizeDelta.y);
-				facialEmotionBar.color = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
-			}
-
-			if (gameManagerScript.useWordSentimentEmotion)
-			{
-				// Update the word sentiment emotion bar
-				wordSentimentEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousWordSentimentEmotionBarWidth, currentWordSentimentEmotionBarWidth, t),
-																	wordSentimentEmotionBar.rectTransform.sizeDelta.y);
-				wordSentimentEmotionBar.color = Color.Lerp(previousWordSentimentEmotionColor, currentWordSentimentEmotionColor, t);	
-			}
-			// mainCamera.backgroundColor = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
-
-			t += Time.deltaTime / lerpTime;
-
-			yield return new WaitForEndOfFrame();
-		}
+		SetCurrentWeather ();
 	}
 
 	private IEnumerator RequestEmotionUpdate()
@@ -173,6 +147,37 @@ public class UIManager : MonoBehaviour {
 			}
 
 			StartCoroutine(UpdateBackgroundColor());
+		}
+	}
+
+	// Coroutine enumerator for updating the current emotion color using linear interpolation over a predefined amount of time
+	private IEnumerator UpdateBackgroundColor()
+	{		
+		// Debug.Log("Entered UPDATE BACKGROUND COLOR COROUTINE.");
+		float t = 0;
+		while (t < 1)
+		{
+			// Now the loop will execute on every end of frame until the condition is true
+			if (gameManagerScript.useFacialEmotion)
+			{
+				// Update the facial emotion bar
+				facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousFacialEmotionBarWidth, currentFacialEmotionBarWidth, t),
+					facialEmotionBar.rectTransform.sizeDelta.y);
+				facialEmotionBar.color = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
+			}
+
+			if (gameManagerScript.useWordSentimentEmotion)
+			{
+				// Update the word sentiment emotion bar
+				wordSentimentEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousWordSentimentEmotionBarWidth, currentWordSentimentEmotionBarWidth, t),
+					wordSentimentEmotionBar.rectTransform.sizeDelta.y);
+				wordSentimentEmotionBar.color = Color.Lerp(previousWordSentimentEmotionColor, currentWordSentimentEmotionColor, t);	
+			}
+			// mainCamera.backgroundColor = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
+
+			t += Time.deltaTime / lerpTime;
+
+			yield return new WaitForEndOfFrame();
 		}
 	}
 
@@ -273,5 +278,50 @@ public class UIManager : MonoBehaviour {
 
 	}
 ///////////////////////////////////////////////// SET CAMERA FEED  END //////////////////////////////////////////////////////////////
+
+	public float CalculateLighteningMin (float x) {
+
+		return (7.5f / 40f) * ((100.0f - x)+ 2.5f);
+	}
+
+	public float CalculateLighteningMax (float x) {
+
+		return (2.0f / 40f) * ((100.0f - x)+ 0.5f);
+	}
+
+	public float CalculateTimeOfDay(float x) {
+		return (86400 - 432.0f * x);
+	}
+
+	public void SetCurrentWeather (){
+
+		string currentStrongestEmotionString = gameManagerScript.getValueOfStrongestEmotionString (gameManagerScript.currentFacialEmotion);
+		float currentStrongestEmotionValue = gameManagerScript.getValueOfStrongestEmotion (gameManagerScript.currentFacialEmotion);
+
+		WeatherMakerScript.Instance.Precipitation = precipitationDict [currentStrongestEmotionString]; //
+		WeatherMakerScript.Instance.PrecipitationIntensity = currentStrongestEmotionValue * 0.01f;
+
+		//Tuning may be required
+		WeatherMakerScript.Instance.FogScript.TransitionFogDensity(fogDict [currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, fogDict [currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, 1.0f);
+
+		WeatherMakerScript.Instance.Clouds = cloudDict [gameManagerScript.getCurrentVocalEmotion().ValenceGroup]; //
+		//WeatherMakerCloudType
+		WeatherMakerScript.Instance.TimeOfDay = CalculateTimeOfDay (gameManagerScript.getCurrentVocalEmotion().ArousalVal);
+
+		WeatherMakerThunderAndLightningScript thunderAndLightningScript = FindObjectOfType<WeatherMakerThunderAndLightningScript> ();
+		if (gameManagerScript.getCurrentVocalEmotion().TemperGroup == "high") {
+			
+			thunderAndLightningScript.EnableLightning = true;
+		} else {
+			thunderAndLightningScript.EnableLightning = false;
+		}
+
+		thunderAndLightningScript.LightningIntervalTimeRange = new RangeOfFloats {
+			Minimum = CalculateLighteningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal),
+			Maximum = CalculateLighteningMax (gameManagerScript.getCurrentVocalEmotion().TemperVal)
+		};
+
+		thunderAndLightningScript.LightningIntenseProbability = gameManagerScript.getCurrentVocalEmotion().TemperVal * 0.01f;
+	}
 
 }

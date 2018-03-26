@@ -205,6 +205,54 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	// Returns the strongest emotion present in the current cumulative emotion
+	public string getValueOfStrongestEmotionString(EmotionStruct emotions)
+	{
+		if (emotions.joy > emotions.fear &&
+			emotions.joy > emotions.disgust &&
+			emotions.joy > emotions.sadness && 
+			emotions.joy > emotions.anger && 
+			emotions.joy > emotions.surprise &&
+			emotions.joy > emotionThreshold)
+		{
+			return "joy";
+		}
+		else if (emotions.fear > emotions.disgust &&
+			emotions.fear > emotions.sadness &&
+			emotions.fear > emotions.anger &&
+			emotions.fear > emotions.surprise &&
+			emotions.fear > emotionThreshold)
+		{
+			return "fear";
+		}
+		else if (emotions.disgust > emotions.sadness &&
+			emotions.disgust > emotions.anger &&
+			emotions.disgust > emotions.surprise &&
+			emotions.disgust > emotionThreshold)
+		{
+			return "disgust";
+		}
+		else if (emotions.sadness > emotions.anger &&
+			emotions.sadness > emotions.surprise &&
+			emotions.sadness > emotionThreshold)
+		{
+			return "sadness";
+		}
+		else if (emotions.anger > emotions.surprise &&
+			emotions.anger > emotionThreshold)
+		{
+			return "anger";
+		}
+		else if(emotions.surprise > emotionThreshold)
+		{
+			return "surprise";
+		}
+		else
+		{
+			return "neutral";
+		}
+	}
+
 	// Returns a color to be used by the user interface based on the current synthesized emotion
 	public Color calculateEmotionColor(EmotionStruct emotions)
 	{

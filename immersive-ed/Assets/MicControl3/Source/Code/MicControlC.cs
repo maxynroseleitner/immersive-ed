@@ -53,7 +53,7 @@ public class MicControlC : MonoBehaviour {
 	public string[] audBySec = new string[10];
 	//public AudioClip audData;
 	public string tokenUrl = "https://token.beyondverbal.com/token";
-	private string apiKey = "22147938-29cc-4a2c-9720-2c4ddcb493e8"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
+	private string apiKey = "8f6d2151-d5b5-4928-bae7-a4febea3a4ea";//"22147938-29cc-4a2c-9720-2c4ddcb493e8"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
 	public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
 	public string wavFile;
 	public string analysisUrl;
