@@ -114,11 +114,11 @@ public class UIManager : MonoBehaviour {
 			if (gameManagerScript.useFacialEmotion)
 			{
 				EmotionStruct currentEmotions = gameManagerScript.getCurrentFacialEmotion();
-				Debug.Log("Joy: " + currentEmotions.joy);
-				Debug.Log("anger: " + currentEmotions.anger);
-				Debug.Log("fear: " + currentEmotions.fear);
-				Debug.Log("disgust: " + currentEmotions.disgust);
-				Debug.Log("sadness: " + currentEmotions.sadness);
+				// Debug.Log("Joy: " + currentEmotions.joy);
+				// Debug.Log("anger: " + currentEmotions.anger);
+				// Debug.Log("fear: " + currentEmotions.fear);
+				// Debug.Log("disgust: " + currentEmotions.disgust);
+				// Debug.Log("sadness: " + currentEmotions.sadness);
 
 				// Update facial emotion colors
 				previousFacialEmotionColor = currentFacialEmotionColor;
