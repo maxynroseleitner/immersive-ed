@@ -53,7 +53,7 @@ public class MicControlC : MonoBehaviour {
 	public string[] audBySec = new string[10];
 	//public AudioClip audData;
 	public string tokenUrl = "https://token.beyondverbal.com/token";
-	private string apiKey = "22147938-29cc-4a2c-9720-2c4ddcb493e8"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
+	private string apiKey = "8f6d2151-d5b5-4928-bae7-a4febea3a4ea"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
 	public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
 	public string wavFile;
 	public string analysisUrl;
@@ -155,7 +155,7 @@ public class MicControlC : MonoBehaviour {
 		if (!audBuffer) {
 			audBuffer = AudioClip.Create ("audioBuffer", audioSource.clip.samples*10, audioSource.clip.channels, audioSource.clip.frequency, false);
 		}
-
+		Debug.Log ("Record 1");
 		SaveWavFile (audioSource.clip);
 		float[] samples = new float[audioSource.clip.samples * audioSource.clip.channels];
 		audioSource.clip.GetData(samples, 0);
@@ -166,6 +166,7 @@ public class MicControlC : MonoBehaviour {
 	}
 
 	void Analyze(){
+		Debug.Log ("RECORD 10!");
 		wavFile = SaveWavFile (audBuffer);
 		analysisUrl = startUrl + recordingId;
 		new Thread(() => 
@@ -190,12 +191,12 @@ public class MicControlC : MonoBehaviour {
 				vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
 				vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
 				recordingId = startResponseObj["recordingId"];
-				//				Debug.Log(vocalToneResults.TemperVal);
-				//				Debug.Log(vocalToneResults.TemperGroup);
-				//				Debug.Log(vocalToneResults.ArousalVal);
-				//				Debug.Log(vocalToneResults.ArousalGroup);
-				//				Debug.Log(vocalToneResults.ValenceVal);
-				//				Debug.Log(vocalToneResults.ValenceGroup);
+								Debug.Log(vocalToneResults.TemperVal);
+								Debug.Log(vocalToneResults.TemperGroup);
+								Debug.Log(vocalToneResults.ArousalVal);
+								Debug.Log(vocalToneResults.ArousalGroup);
+								Debug.Log(vocalToneResults.ValenceVal);
+								Debug.Log(vocalToneResults.ValenceGroup);
 
 			}).Start();
 		float[] samples = new float[audBuffer.samples * audBuffer.channels];
