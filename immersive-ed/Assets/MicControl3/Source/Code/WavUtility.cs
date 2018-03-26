@@ -194,7 +194,6 @@ public class WavUtility
 	public static byte[] FromAudioClip (AudioClip audioClip, out string filepath, bool saveAsFile = true, string dirname = "recordings")
 	{
 		MemoryStream stream = new MemoryStream ();
-		byte[] bytes = stream.ToArray ();
 
 		const int headerSize = 44;
 
@@ -205,13 +204,7 @@ public class WavUtility
 		//Debug.AssertFormat (bitDepth == 16, "Only converting 16 bit is currently supported. The audio clip data is {0} bit.", bitDepth);
 
 		// total file size = 44 bytes for header format and audioClip.samples * factor due to float to Int16 / sbyte conversion
-		int fileSize = 0;
-		if (audioClip.length == 0) {
-			fileSize = audioClip.samples * BlockSize_16Bit + headerSize; // BlockSize (bitDepth)
-		} else {
-			filepath = null;
-			return bytes;
-		}
+		int fileSize = audioClip.samples * BlockSize_16Bit + headerSize; // BlockSize (bitDepth)
 
 		// chunk descriptor (riff)
 		WriteFileHeader (ref stream, fileSize);
@@ -219,6 +212,8 @@ public class WavUtility
 		WriteFileFormat (ref stream, audioClip.channels, audioClip.frequency, bitDepth);
 		// data chunks (data)
 		WriteFileData (ref stream, audioClip, bitDepth);
+
+		byte[] bytes = stream.ToArray ();
 
 		// Validate total bytes
 		Debug.AssertFormat (bytes.Length == fileSize, "Unexpected AudioClip to wav format byte count: {0} == {1}", bytes.Length, fileSize);
@@ -408,4 +403,3 @@ public class WavUtility
 	}
 
 }
-

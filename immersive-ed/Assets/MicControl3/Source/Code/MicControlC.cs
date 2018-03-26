@@ -53,7 +53,7 @@ public class MicControlC : MonoBehaviour {
 	public string[] audBySec = new string[10];
 	//public AudioClip audData;
 	public string tokenUrl = "https://token.beyondverbal.com/token";
-	private string apiKey = "8f6d2151-d5b5-4928-bae7-a4febea3a4ea";//"22147938-29cc-4a2c-9720-2c4ddcb493e8"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
+	private string apiKey = "8f6d2151-d5b5-4928-bae7-a4febea3a4ea"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
 	public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
 	public string wavFile;
 	public string analysisUrl;
@@ -149,23 +149,24 @@ public class MicControlC : MonoBehaviour {
 
 	}
 
+
+
 	void RecordChunk(){
-		if ( (audBuffer != null) && (audioSource != null)) {
-			AudioSource tempAudioSource = audioSource;
-			//audBuffer = AudioClip.Create ("audioBuffer", audioSource.clip.samples*10, audioSource.clip.channels, audioSource.clip.frequency, false);
-			audBuffer = AudioClip.Create ("audioBuffer", tempAudioSource.clip.samples*10, tempAudioSource.clip.channels, tempAudioSource.clip.frequency, false);
-		
-			SaveWavFile (tempAudioSource.clip);
-			float[] samples = new float[tempAudioSource.clip.samples * tempAudioSource.clip.channels];
-			tempAudioSource.clip.GetData(samples, 0);
-			audBuffer.SetData (samples, Mathf.RoundToInt((timeIdx-1.0f) * 8000));
-			if (timeIdx < 10.0f){
-				timeIdx += 1.0f;
-			}
+		if (!audBuffer) {
+			audBuffer = AudioClip.Create ("audioBuffer", audioSource.clip.samples*10, audioSource.clip.channels, audioSource.clip.frequency, false);
+		}
+		Debug.Log ("Record 1");
+		SaveWavFile (audioSource.clip);
+		float[] samples = new float[audioSource.clip.samples * audioSource.clip.channels];
+		audioSource.clip.GetData(samples, 0);
+		audBuffer.SetData (samples, Mathf.RoundToInt((timeIdx-1.0f) * 8000));
+		if (timeIdx < 10.0f){
+			timeIdx += 1.0f;
 		}
 	}
 
 	void Analyze(){
+		Debug.Log ("RECORD 10!");
 		wavFile = SaveWavFile (audBuffer);
 		analysisUrl = startUrl + recordingId;
 		new Thread(() => 
@@ -190,20 +191,17 @@ public class MicControlC : MonoBehaviour {
 				vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
 				vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
 				recordingId = startResponseObj["recordingId"];
-				//				Debug.Log(vocalToneResults.TemperVal);
-				//				Debug.Log(vocalToneResults.TemperGroup);
-				//				Debug.Log(vocalToneResults.ArousalVal);
-				//				Debug.Log(vocalToneResults.ArousalGroup);
-				//				Debug.Log(vocalToneResults.ValenceVal);
-				//				Debug.Log(vocalToneResults.ValenceGroup);
+								Debug.Log(vocalToneResults.TemperVal);
+								Debug.Log(vocalToneResults.TemperGroup);
+								Debug.Log(vocalToneResults.ArousalVal);
+								Debug.Log(vocalToneResults.ArousalGroup);
+								Debug.Log(vocalToneResults.ValenceVal);
+								Debug.Log(vocalToneResults.ValenceGroup);
 
 			}).Start();
-
-		if (audBuffer != null) {
-			float[] samples = new float[audBuffer.samples * audBuffer.channels];
-			audBuffer.GetData (samples, Mathf.RoundToInt ((1.0f) * 8000));
-			audBuffer.SetData (samples, 0);
-		}
+		float[] samples = new float[audBuffer.samples * audBuffer.channels];
+		audBuffer.GetData(samples, Mathf.RoundToInt((1.0f) * 8000));
+		audBuffer.SetData (samples, 0);
 	}
 
 
@@ -415,11 +413,7 @@ public class MicControlC : MonoBehaviour {
 	}
 	public string SaveWavFile (AudioClip aud)
 	{
-		string filepath = null;
-		if (aud == null) {
-			return filepath;
-		}
-
+		string filepath;
 		WavUtility.FromAudioClip(aud, out filepath, true);
 		return filepath;
 	}
@@ -652,9 +646,3 @@ public class MicControlC : MonoBehaviour {
 
 
 }
-
-
-
-
-
-

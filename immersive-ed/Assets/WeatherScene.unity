@@ -868,7 +868,7 @@ MonoBehaviour:
   colorUpdateTime: 0.5
   lerpTime: 0.25
   displayHeight: 0.54
-  flipHorizontal: 1
+  flipHorizontal: 0
   flipVertical: 0
 --- !u!4 &870463374
 Transform:
