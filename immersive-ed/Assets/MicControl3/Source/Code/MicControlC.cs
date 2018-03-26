@@ -149,19 +149,19 @@ public class MicControlC : MonoBehaviour {
 
 	}
 
-
-
 	void RecordChunk(){
-		if (!audBuffer) {
-			audBuffer = AudioClip.Create ("audioBuffer", audioSource.clip.samples*10, audioSource.clip.channels, audioSource.clip.frequency, false);
-		}
-
-		SaveWavFile (audioSource.clip);
-		float[] samples = new float[audioSource.clip.samples * audioSource.clip.channels];
-		audioSource.clip.GetData(samples, 0);
-		audBuffer.SetData (samples, Mathf.RoundToInt((timeIdx-1.0f) * 8000));
-		if (timeIdx < 10.0f){
-			timeIdx += 1.0f;
+		if ( (audBuffer != null) && (audioSource != null)) {
+			AudioSource tempAudioSource = audioSource;
+			//audBuffer = AudioClip.Create ("audioBuffer", audioSource.clip.samples*10, audioSource.clip.channels, audioSource.clip.frequency, false);
+			audBuffer = AudioClip.Create ("audioBuffer", tempAudioSource.clip.samples*10, tempAudioSource.clip.channels, tempAudioSource.clip.frequency, false);
+		
+			SaveWavFile (tempAudioSource.clip);
+			float[] samples = new float[tempAudioSource.clip.samples * tempAudioSource.clip.channels];
+			tempAudioSource.clip.GetData(samples, 0);
+			audBuffer.SetData (samples, Mathf.RoundToInt((timeIdx-1.0f) * 8000));
+			if (timeIdx < 10.0f){
+				timeIdx += 1.0f;
+			}
 		}
 	}
 
@@ -198,9 +198,12 @@ public class MicControlC : MonoBehaviour {
 				//				Debug.Log(vocalToneResults.ValenceGroup);
 
 			}).Start();
-		float[] samples = new float[audBuffer.samples * audBuffer.channels];
-		audBuffer.GetData(samples, Mathf.RoundToInt((1.0f) * 8000));
-		audBuffer.SetData (samples, 0);
+
+		if (audBuffer != null) {
+			float[] samples = new float[audBuffer.samples * audBuffer.channels];
+			audBuffer.GetData (samples, Mathf.RoundToInt ((1.0f) * 8000));
+			audBuffer.SetData (samples, 0);
+		}
 	}
 
 
@@ -412,7 +415,11 @@ public class MicControlC : MonoBehaviour {
 	}
 	public string SaveWavFile (AudioClip aud)
 	{
-		string filepath;
+		string filepath = null;
+		if (aud == null) {
+			return filepath;
+		}
+
 		WavUtility.FromAudioClip(aud, out filepath, true);
 		return filepath;
 	}
@@ -645,3 +652,9 @@ public class MicControlC : MonoBehaviour {
 
 
 }
+
+
+
+
+
+

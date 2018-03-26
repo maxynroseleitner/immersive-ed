@@ -76,9 +76,9 @@ public class UIManager : MonoBehaviour {
 		previousWordSentimentEmotionBarWidth = 0.0f;
 
 		// Initialize the weather
-		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.Rain;
+		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
 		WeatherMakerScript.Instance.PrecipitationIntensity = 1.0f;
-		WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.Heavy;
+		WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.Light;
 
 		// Start the background emotion updater
 		StartCoroutine(RequestEmotionUpdate());
@@ -304,8 +304,13 @@ public class UIManager : MonoBehaviour {
 		//Tuning may be required
 		WeatherMakerScript.Instance.FogScript.TransitionFogDensity(fogDict [currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, fogDict [currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, 1.0f);
 
-		WeatherMakerScript.Instance.Clouds = cloudDict [gameManagerScript.getCurrentVocalEmotion().ValenceGroup]; //
-		//WeatherMakerCloudType
+		if ( cloudDict.ContainsKey(gameManagerScript.getCurrentVocalEmotion().ValenceGroup ) )
+			WeatherMakerScript.Instance.Clouds = cloudDict [gameManagerScript.getCurrentVocalEmotion().ValenceGroup]; //
+		
+		//WeatherMakerCloudType 
+		if (currentStrongestEmotionString == "joy") {
+			WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.None;
+		}
 		WeatherMakerScript.Instance.TimeOfDay = CalculateTimeOfDay (gameManagerScript.getCurrentVocalEmotion().ArousalVal);
 
 		WeatherMakerThunderAndLightningScript thunderAndLightningScript = FindObjectOfType<WeatherMakerThunderAndLightningScript> ();
