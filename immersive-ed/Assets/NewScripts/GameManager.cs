@@ -125,7 +125,7 @@ public class GameManager : MonoBehaviour {
 		if (useFacialEmotion)
 		{
 			currentFacialEmotion = facialAnalyzer.getCurrentEmotions();
-			Debug.Log("got facial emotion struct");
+			// Debug.Log("got facial emotion struct");
 		}
 			
 		if (useWordSentimentEmotion)
