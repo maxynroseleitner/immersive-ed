@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+using DigitalRuby.WeatherMaker;
+
 using Affdex;
 
 public class UIManager : MonoBehaviour {
@@ -34,11 +36,15 @@ public class UIManager : MonoBehaviour {
 	private float currentWordSentimentEmotionBarWidth;
 	private float previousWordSentimentEmotionBarWidth;
 
+	public GameObject weatherMaker;
+	public WeatherMakerScript weatherScript;
+
 	// Use this for initialization
 	void Start () {
 		gameManagerScript = (GameManager) gameManagerObject.GetComponent(typeof(GameManager));
 		camInputScript = (CameraInput) inputDeviceCamera.GetComponent<CameraInput>();
 		planeRenderer = (Renderer) webcamRenderPlane.GetComponent<Renderer>();
+		weatherScript = (WeatherMakerScript) weatherMaker.GetComponent<WeatherMakerScript>();
 		
 		// Set the webcamRenderPlane to have the same aspect ratio as the video feed
 		float aspectRatio = camInputScript.targetWidth / (float) camInputScript.targetHeight;
@@ -58,6 +64,11 @@ public class UIManager : MonoBehaviour {
 		currentWordSentimentEmotionBarWidth = 0.0f;
 		previousWordSentimentEmotionBarWidth = 0.0f;
 
+		// Initialize the weather
+		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.Rain;
+		WeatherMakerScript.Instance.PrecipitationIntensity = 1.0f;
+		WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.Heavy;
+
 		// Start the background emotion updater
 		StartCoroutine(RequestEmotionUpdate());
 	}
@@ -66,13 +77,17 @@ public class UIManager : MonoBehaviour {
 	void Update () {
 		// Display the webcam input
 		planeRenderer.material.mainTexture = camInputScript.Texture;
-		ToneAnalysis vocalToneResults = gameManagerScript.getCurrentVocalEmotion ();
-		Debug.Log(vocalToneResults.TemperVal);
-		Debug.Log(vocalToneResults.TemperGroup);
-		Debug.Log(vocalToneResults.ArousalVal);
-		Debug.Log(vocalToneResults.ArousalGroup);
-		Debug.Log(vocalToneResults.ValenceVal);
-		Debug.Log(vocalToneResults.ValenceGroup);
+
+		if (gameManagerScript.useVocalToneEmotion)
+		{
+			ToneAnalysis vocalToneResults = gameManagerScript.getCurrentVocalEmotion ();
+			Debug.Log(vocalToneResults.TemperVal);
+			Debug.Log(vocalToneResults.TemperGroup);
+			Debug.Log(vocalToneResults.ArousalVal);
+			Debug.Log(vocalToneResults.ArousalGroup);
+			Debug.Log(vocalToneResults.ValenceVal);
+			Debug.Log(vocalToneResults.ValenceGroup);
+		}
 	}
 
 	// Coroutine enumerator for updating the current emotion color using linear interpolation over a predefined amount of time
@@ -83,16 +98,21 @@ public class UIManager : MonoBehaviour {
 		while (t < 1)
 		{
 			// Now the loop will execute on every end of frame until the condition is true
-			// Update the facial emotion bar
-			facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousFacialEmotionBarWidth, currentFacialEmotionBarWidth, t),
-																   facialEmotionBar.rectTransform.sizeDelta.y);
-			facialEmotionBar.color = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
+			if (gameManagerScript.useFacialEmotion)
+			{
+				// Update the facial emotion bar
+				facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousFacialEmotionBarWidth, currentFacialEmotionBarWidth, t),
+																	facialEmotionBar.rectTransform.sizeDelta.y);
+				facialEmotionBar.color = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
+			}
 
-			// Update the word sentiment emotion bar
-			wordSentimentEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousWordSentimentEmotionBarWidth, currentWordSentimentEmotionBarWidth, t),
-																   wordSentimentEmotionBar.rectTransform.sizeDelta.y);
-			wordSentimentEmotionBar.color = Color.Lerp(previousWordSentimentEmotionColor, currentWordSentimentEmotionColor, t);	
-
+			if (gameManagerScript.useWordSentimentEmotion)
+			{
+				// Update the word sentiment emotion bar
+				wordSentimentEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousWordSentimentEmotionBarWidth, currentWordSentimentEmotionBarWidth, t),
+																	wordSentimentEmotionBar.rectTransform.sizeDelta.y);
+				wordSentimentEmotionBar.color = Color.Lerp(previousWordSentimentEmotionColor, currentWordSentimentEmotionColor, t);	
+			}
 			// mainCamera.backgroundColor = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
 
 			t += Time.deltaTime / lerpTime;
@@ -108,28 +128,41 @@ public class UIManager : MonoBehaviour {
 		{
 			yield return new WaitForSeconds(colorUpdateTime);
 
-			// Update facial emotion colors
-			previousFacialEmotionColor = currentFacialEmotionColor;
-			currentFacialEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentFacialEmotion());
+			if (gameManagerScript.useFacialEmotion)
+			{
+				EmotionStruct currentEmotions = gameManagerScript.getCurrentFacialEmotion();
+				Debug.Log("Joy: " + currentEmotions.joy);
+				Debug.Log("anger: " + currentEmotions.anger);
+				Debug.Log("fear: " + currentEmotions.fear);
+				Debug.Log("disgust: " + currentEmotions.disgust);
+				Debug.Log("sadness: " + currentEmotions.sadness);
 
-			// Update word sentiment emotion colors
-			previousWordSentimentEmotionColor = currentWordSentimentEmotionColor;
-			currentWordSentimentEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentWordSentimentEmotion());
+				// Update facial emotion colors
+				previousFacialEmotionColor = currentFacialEmotionColor;
+				currentFacialEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentFacialEmotion());
 
-			// Update the emotion bars
-			previousFacialEmotionBarWidth = currentFacialEmotionBarWidth;
-			currentFacialEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentFacialEmotion()) * 2;
+				// Update the emotion bars
+				previousFacialEmotionBarWidth = currentFacialEmotionBarWidth;
+				currentFacialEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentFacialEmotion()) * 2;
+			}
 
-			EmotionStruct currentEmotions = gameManagerScript.getCurrentWordSentimentEmotion();
-			Debug.Log("Joy: " + currentEmotions.joy);
-			Debug.Log("anger: " + currentEmotions.anger);
-			Debug.Log("fear: " + currentEmotions.fear);
-       		Debug.Log("disgust: " + currentEmotions.disgust);
-        	Debug.Log("sadness: " + currentEmotions.sadness);
+			if (gameManagerScript.useWordSentimentEmotion)
+			{
+				// Update word sentiment emotion colors
+				previousWordSentimentEmotionColor = currentWordSentimentEmotionColor;
+				currentWordSentimentEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentWordSentimentEmotion());
 
-			previousWordSentimentEmotionBarWidth = currentWordSentimentEmotionBarWidth;
-			currentWordSentimentEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentWordSentimentEmotion()) * 2;
-			
+				EmotionStruct currentEmotions = gameManagerScript.getCurrentWordSentimentEmotion();
+				Debug.Log("Joy: " + currentEmotions.joy);
+				Debug.Log("anger: " + currentEmotions.anger);
+				Debug.Log("fear: " + currentEmotions.fear);
+				Debug.Log("disgust: " + currentEmotions.disgust);
+				Debug.Log("sadness: " + currentEmotions.sadness);
+
+				previousWordSentimentEmotionBarWidth = currentWordSentimentEmotionBarWidth;
+				currentWordSentimentEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentWordSentimentEmotion()) * 2;
+			}
+
 			StartCoroutine(UpdateBackgroundColor());
 		}
 	}

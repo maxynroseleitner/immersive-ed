@@ -51,7 +51,7 @@ public float[] spectrumData;
 public string[] audBySec = new string[10];
 //public AudioClip audData;
 public string tokenUrl = "https://token.beyondverbal.com/token";
-public string apiKey = "322360d1-236c-4902-bb9c-1ce56fb84578";
+private string apiKey = "22147938-29cc-4a2c-9720-2c4ddcb493e8"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
 public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
 public string wavFile;
 public string analysisUrl;
@@ -87,6 +87,10 @@ public bool Initialized=false;
 
 
 public bool doNotDestroyOnLoad=false;
+
+public ToneAnalysis getVocalToneResults(){
+	return vocalToneResults;
+}
 
 void Start () {
 		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
@@ -595,9 +599,7 @@ void OnDrawGizmos () {
 
 }
 
-	public ToneAnalysis getVocalToneResults(){
-		return vocalToneResults;
-	}
+
 	#endif
 
 

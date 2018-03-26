@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d9eda3b874b93d945855b4de30988992, type: 3}
+  m_Name: WeatherMakerSkyProfile_Procedural
+  m_EditorClassIdentifier: 
+  SkyMode: 2
+  DitherLevel: 0.005
+  YOffsetMultiplier: 0
+  FarClipPlaneMultiplier: 0.8
+  SkyGradient:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0.9411765, g: 0.5882353, b: 0.37254903, a: 0}
+    key3: {r: 0.9411765, g: 0.5870386, b: 0.37370244, a: 0}
+    key4: {r: 0.9764706, g: 0.9490196, b: 1, a: 0}
+    key5: {r: 1, g: 1, b: 1, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 22158
+    ctime2: 30819
+    ctime3: 34716
+    ctime4: 42655
+    ctime5: 65535
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 6
+    m_NumAlphaKeys: 2
+  DayTexture: {fileID: 0}
+  DawnDuskTexture: {fileID: 0}
+  NightTexture: {fileID: 2800000, guid: 4ab898da75a8d47458b3daa046db5a04, type: 3}
+  NightVisibilityThreshold: 0
+  NightIntensity: 1
+  NightTwinkleSpeed: 6.6
+  NightTwinkleVariance: 1.11
+  NightTwinkleMinimum: 0.02
+  NightTwinkleRandomness: 0.87
+  CheckForEclipse: 0
+  SkyYOffset: 0.25
+  SkyCameraHeight: 0.0001
+  SkyExposure: 1
+  SkyTintColor: {r: 0.47794116, g: 0.41116998, b: 0.41116998, a: 1}
+  SkyAtmosphereMie: 0.97
+  SkyAtmosphereThickness: 1
+  SkyAtmosphereTurbidity: 1
+  SkyOuterRadius: 1.025
+  SkyInnerRadius: 1
+  SkyMieMultiplier: 1
+  SkyRayleighMultiplier: 1
+  LightWaveLengths: {x: 0.65, y: 0.57, z: 0.475, w: 0.15}

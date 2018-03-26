@@ -1,0 +1,35 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1dbf99d734a1324d9d0da47c5d0d9d6, type: 3}
+  m_Name: WeatherMakerFogProfile_CubeDefault
+  m_EditorClassIdentifier: 
+  FogMode: 3
+  FogDensity: 0.05
+  FogColor: {r: 1, g: 1, b: 1, a: 1}
+  FogEmissionColor: {r: 0, g: 0, b: 0, a: 1}
+  FogLightAbsorption: 1
+  EnableFogLights: 1
+  MaxFogFactor: 1
+  FogNoiseScale: 0.03
+  FogNoiseAdder: -0.329
+  FogNoiseMultiplier: 5.31
+  FogNoiseVelocity: {x: 15, y: 0, z: 10}
+  FogNoiseSampleCount: 10
+  DitherLevel: 0.005
+  FogShadowSampleCount: 0
+  FogShadowMaxRayLength: 300
+  FogShadowMultiplier: 8
+  FogShadowPower: 64
+  FogShadowBrightness: 1
+  FogShadowDecay: 0.95
+  FogShadowDither: 0.4
+  FogShadowDitherMagic: {x: 0.73, y: 1.665, z: 1024, w: 1024}
+  FogPercentage: 0.9

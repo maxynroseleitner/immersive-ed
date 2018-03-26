@@ -1,0 +1,182 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: WeatherMakerSkySphereMaterial
+  m_Shader: {fileID: 4800000, guid: a27a8894c3461a14e849975a7fc356b9, type: 3}
+  m_ShaderKeywords: ENABLE_NIGHT_TWINKLE ENABLE_PROCEDURAL_SKY ENABLE_SUN ENABLE_SUN_HIGH_QUALITY
+    PER_PIXEL_LIGHTING _SUNDISK_HIGH_QUALITY
+  m_LightmapFlags: 1
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _BumpMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DawnDuskTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailAlbedoMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailMask:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _DetailNormalMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _EmissionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FogLightScatter:
+        m_Texture: {fileID: 2800000, guid: 16bd7bf302683734d9a2a1c2e8cc7ef6, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FogNoise:
+        m_Texture: {fileID: 2800000, guid: 21f2efbf25fb715498d924b2f7050c10, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FogNoise2:
+        m_Texture: {fileID: 2800000, guid: 838b1e53e7a9d6a40b875d4eb20c8461, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FogNoiseMask:
+        m_Texture: {fileID: 2800000, guid: 20e0da8c58c72e540b66e8f5bb09a859, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Illum:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MetallicGlossMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NightTex:
+        m_Texture: {fileID: 2800000, guid: 4ab898da75a8d47458b3daa046db5a04, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _OcclusionMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _ParallaxMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SunTex:
+        m_Texture: {fileID: 2800000, guid: 1f67052b805dd6940837e0142e155f28, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - PixelSnap: 0
+    - _AmbientLightMultiplier: 1
+    - _AtmosphereThickness: 1
+    - _BumpScale: 1
+    - _CloudDensity: 0
+    - _Cutoff: 0.5
+    - _DawnDuskMultiplier: 0
+    - _DayMultiplier: 1
+    - _DetailNormalMapScale: 1
+    - _DirectionalLightMultiplier: 1
+    - _DitherLevel: 0.005
+    - _DstBlend: 0
+    - _Emission: 1
+    - _Exposure: 1
+    - _FogCameraY: -1000
+    - _FogCover: 1
+    - _FogDensity: 0.8
+    - _FogLightAbsorption: 0.013
+    - _FogNoiseHeightMultiplier: 50
+    - _FogNoiseHeightScale: 0.002
+    - _FogNoiseMaskRotation: 0
+    - _FogNoiseMaskRotationCos: 1
+    - _FogNoiseMaskRotationSin: 0
+    - _FogNoiseMaskScale: 0.002
+    - _FogNoiseMinimum: 0
+    - _FogNoiseMultiplier: 1
+    - _FogNoiseScale: 0.002
+    - _FogShadowThreshold: 0.02
+    - _FogSharpness: 0.015
+    - _FogSunMultiplier: 1
+    - _FogThickness: 0
+    - _FogWhispiness: 0.3
+    - _FogWhispinessChangeFactor: 0.3
+    - _Glossiness: 0.5
+    - _InvFade: 1
+    - _Metallic: 0
+    - _Mode: 0
+    - _NightIntensity: 1
+    - _NightMultiplier: 0
+    - _NightSkyMultiplier: 0
+    - _NightTwinkleMinimum: 0.02
+    - _NightTwinkleRandomness: 0.87
+    - _NightTwinkleSpeed: 6.6
+    - _NightTwinkleVariance: 1.11
+    - _NightVisibilityThreshold: 0
+    - _OcclusionStrength: 1
+    - _OffsetX: 1
+    - _OffsetY: 1
+    - _Parallax: 0.02
+    - _PointSpotLightMultiplier: 1
+    - _SkyAtmosphereThickness: 1
+    - _SkyAtomosphereThickness: 1
+    - _SkyDitherLevel: 0.005
+    - _SrcBlend: 1
+    - _SunDisk: 2
+    - _SunSize: 0.02
+    - _UVSec: 0
+    - _WeatherMakerDitherLevel: 0.005
+    - _WeatherMakerMoonLightDotSubtractor: 0.05
+    - _WeatherMakerMoonLightPower: 16
+    - _WeatherMakerMoonPercentFull: 0.55685675
+    - _WeatherMakerMoonPhase: 0.5058302
+    - _WeatherMakerMoonTintIntensity: 2
+    - _WeatherMakerNightMultiplier: 0
+    - _WeatherMakerSkyDitherLevel: 0.005
+    - _WeatherMakerSunLightDotSubtractor: 0
+    - _WeatherMakerSunLightPower: 8
+    - _WeatherMakerSunSize: 0.03
+    - _ZWrite: 1
+    m_Colors:
+    - _AtmosphereColor: {r: 0.2, g: 0.2, b: 0.9, a: 1}
+    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
+    - _FogColor: {r: 1, g: 1, b: 1, a: 1}
+    - _FogEmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _FogNoiseMaskOffset: {r: 0.69, g: 0.3, b: 0, a: 0}
+    - _FogNoiseMaskVelocity: {r: 0, g: 0, b: 0, a: 0}
+    - _FogNoiseVelocity: {r: 0.02, g: -0.03, b: 0, a: 0}
+    - _GroundColor: {r: 0.369, g: 0.349, b: 0.341, a: 1}
+    - _GroundTintColor: {r: 0.5735294, g: 0.5735294, b: 0.5735294, a: 1}
+    - _SkyTint: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _SkyTintColor: {r: 0.5019608, g: 0.5019608, b: 0.5019608, a: 1}
+    - _SunColor: {r: 0.9749493, g: 1, b: 0.8602941, a: 1}
+    - _SunDirection: {r: -0.3535535, g: 0.7071067, b: 0.6123726, a: 0}
+    - _SunNormal: {r: -0.3535535, g: 0.7071067, b: 0.6123726, a: 0}
+    - _TintColor: {r: 0.5, g: 0.5, b: 0.5, a: 0.5}
+    - _WeatherMakerMoonDirection: {r: -0.53205705, g: 0.8151117, b: 0.22914663, a: 0}
+    - _WeatherMakerMoonPosition: {r: 0, g: 0, b: 0, a: 0}
+    - _WeatherMakerMoonTintColor: {r: 1, g: 1, b: 1, a: 1}
+    - _WeatherMakerSkyTintColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    - _WeatherMakerSunColor: {r: 0.9749493, g: 1, b: 0.8602941, a: 1}
+    - _WeatherMakerSunDirection: {r: -0.3535535, g: 0.7071067, b: 0.6123726, a: 0}

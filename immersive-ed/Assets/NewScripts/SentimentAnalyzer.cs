@@ -33,8 +33,12 @@ public class SentimentAnalyzer : MonoBehaviour
     // private string _username = "bd7c3afe-72db-467d-b029-399ea4e2d0d4";
     // private string _password = "oaQ8pVOIG2oq";
 
-    private string _username = "55095a1d-71db-4b7b-9007-2de45bbfc8ef";
-    private string _password = "4AydC5ntEOUs";
+    // Second Watson set of credentials
+    // private string _username = "55095a1d-71db-4b7b-9007-2de45bbfc8ef";
+    // private string _password = "4AydC5ntEOUs";
+
+    private string _username = "91962287-1aa6-4dbf-a193-6f4e9e95d34e";
+    private string _password = "6YMPWyz5SUBd";
     private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
 
     public Text ResultsField;
@@ -51,6 +55,8 @@ public class SentimentAnalyzer : MonoBehaviour
     private bool _analyzeTested = false;
     private SpeechToText _speechToText;
     ArrayList al = new ArrayList();
+    ArrayList bufferfor10 = new ArrayList();
+    string recordData=""; 
     private IEnumerator coroutine;
 
     public EmotionStruct currentEmotions;
@@ -142,21 +148,55 @@ public class SentimentAnalyzer : MonoBehaviour
 
     IEnumerator coroutineA()
     {
+        // // wait for 1 second
+        // while (true)
+        // {
+        //    // Debug.Log("coroutineA created");
+        //     string analyseText = "";
+        //     foreach (string item in al)
+        //     {
+        //         analyseText += item;
+        //     }
+        //     al.Clear();
+        //     analyse(analyseText);
+            
+        //     yield return new WaitForSeconds(10.0f);
+            
+        //     //Debug.Log("coroutineA running again");
+        // }
         // wait for 1 second
+        int timeInt =10;
+        
         while (true)
         {
-           // Debug.Log("coroutineA created");
-            string analyseText = "";
-            foreach (string item in al)
+            if (timeInt==0)
             {
-                analyseText += item;
+                // Get the next second of data
+                bufferfor10.Add(recordData);
+                recordData="";
+
+                // Perform analysis of the current recorded 10 seconds
+                string analyseText="";
+                int index=0;
+                while(index<10)
+                {
+                    analyseText+=bufferfor10[index]+" ";
+                    index++;
+                }
+                analyse(analyseText);
+
+                // Remove the first element
+                bufferfor10.RemoveAt(0);
             }
-            al.Clear();
-            analyse(analyseText);
-            
-            yield return new WaitForSeconds(10.0f);
-            
-            //Debug.Log("coroutineA running again");
+            else
+            {
+                // Record the first 10 seconds before performing any analysis
+                bufferfor10.Add(recordData);
+                recordData="";
+                timeInt=timeInt-1;
+            }
+
+            yield return new WaitForSeconds(1.0f);
         }
     }
 
@@ -268,7 +308,10 @@ public class SentimentAnalyzer : MonoBehaviour
                         text=text.Replace(replaceText, "");
                     }
 
-                    al.Add(text);
+                    //al.Add(text);
+                    if (recordData=="")
+                        recordData=text;
+                    else recordData=recordData+" "+text;
                 }
 
                 if (res.keywords_result != null && res.keywords_result.keyword != null)

@@ -5,6 +5,9 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
-  - enabled: 1
+  - enabled: 0
     path: Assets/FacialEmotionBarScene.unity
     guid: d263fa071a2ab4208b2d13a0cc74486d
+  - enabled: 1
+    path: Assets/WeatherScene.unity
+    guid: 64be57dc9ffda4a059aa50723b845602
