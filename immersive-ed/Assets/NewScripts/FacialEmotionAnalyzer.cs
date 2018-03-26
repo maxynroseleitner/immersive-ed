@@ -10,6 +10,9 @@ public class FacialEmotionAnalyzer : ImageResultsListener {
 	private Vector3 moodTrackerParameters;
 	private ArrayList emotionWindow;
 
+	private int frameSampleCount = 0;
+	private int frameSampleRate = 20;
+
 	// Use this for initialization
 	void Start () {
 		currentEmotions = new EmotionStruct();
@@ -51,35 +54,47 @@ public class FacialEmotionAnalyzer : ImageResultsListener {
             // face.Emotions.TryGetValue(Emotions.Contempt, out currentContempt);
             // face.Emotions.TryGetValue(Emotions.Valence, out currentValence);
 
-			// Retrieve the emotion for this frame
-			EmotionStruct nextEmotion = new EmotionStruct();
-			face.Emotions.TryGetValue(Emotions.Joy, out nextEmotion.joy);
-            face.Emotions.TryGetValue(Emotions.Fear, out nextEmotion.fear);
-            face.Emotions.TryGetValue(Emotions.Disgust, out nextEmotion.disgust);
-            face.Emotions.TryGetValue(Emotions.Sadness, out nextEmotion.sadness);
-            face.Emotions.TryGetValue(Emotions.Anger, out nextEmotion.anger);
-            face.Emotions.TryGetValue(Emotions.Surprise, out nextEmotion.surprise);
-            
-			// currentEmotions = nextEmotion;
-			// Debug.Log("NEW ANGER!: " + nextEmotion.anger);
-
-			// Add in the next emotion captured by Affectiva
-			if (emotionWindow.Count == 9)
+			// Ensure that emotion values are sampled only once a second, regardless of the frame rate
+			if (frameSampleCount % frameSampleRate == 0)
 			{
-				// add the tenth analysis to complete the window
-				emotionWindow.Add(nextEmotion);
+				// Retrieve the emotion for this frame
+				EmotionStruct nextEmotion = new EmotionStruct();
+				face.Emotions.TryGetValue(Emotions.Joy, out nextEmotion.joy);
+				face.Emotions.TryGetValue(Emotions.Fear, out nextEmotion.fear);
+				face.Emotions.TryGetValue(Emotions.Disgust, out nextEmotion.disgust);
+				face.Emotions.TryGetValue(Emotions.Sadness, out nextEmotion.sadness);
+				face.Emotions.TryGetValue(Emotions.Anger, out nextEmotion.anger);
+				face.Emotions.TryGetValue(Emotions.Surprise, out nextEmotion.surprise);
+				
+				// currentEmotions = nextEmotion;
+				// Debug.Log("NEW ANGER!: " + nextEmotion.anger);
 
-				// calculate the currentEmotions for this window and assign the parameter
-				calculateCurrentEmotion();
+				// Add in the next emotion captured by Affectiva
+				if (emotionWindow.Count == 9)
+				{
+					// add the tenth analysis to complete the window
+					emotionWindow.Add(nextEmotion);
 
-				// shift the window back to prepare for the next emotion data
-				emotionWindow.RemoveAt(0);
+					// calculate the currentEmotions for this window and assign the parameter
+					calculateCurrentEmotion();
+
+					// shift the window back to prepare for the next emotion data
+					emotionWindow.RemoveAt(0);
+				}
+				else
+				{
+					// add the next element
+					emotionWindow.Add (nextEmotion);
+				}
 			}
-			else
-			{
-				// add the next element
-				emotionWindow.Add (nextEmotion);
-			}
+			
+			frameSampleCount++;
+			
+			// check for overflow and reset if it occurs
+			if (frameSampleCount < 0)
+				frameSampleCount = 0;
+
+			// Debug.Log("Frame sample count: " + frameSampleCount);
 
 			//Retrieve the Smile Score
 			// face.Expressions.TryGetValue(Expressions.Smile, out currentSmile);

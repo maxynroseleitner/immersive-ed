@@ -1041,7 +1041,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b58a41d2cccbef14fbba41225e469907, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sampleRate: 1
+  sampleRate: 20
   isFrontFacing: 1
   targetWidth: 1280
   targetHeight: 720
