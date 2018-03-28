@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using System.Net;
 using Affdex;
 
 public class FacialEmotionAnalyzer : ImageResultsListener {
@@ -9,7 +9,6 @@ public class FacialEmotionAnalyzer : ImageResultsListener {
 	private EmotionStruct currentEmotions;	// The cumulative current emotions over the past 10 second window
 	private Vector3 moodTrackerParameters;
 	private ArrayList emotionWindow;
-
 	private int frameSampleCount = 0;
 	private int frameSampleRate = 20;
 
@@ -57,6 +56,17 @@ public class FacialEmotionAnalyzer : ImageResultsListener {
 			// Ensure that emotion values are sampled only once a second, regardless of the frame rate
 			if (frameSampleCount % frameSampleRate == 0)
 			{
+
+//				new Thread(() => 
+//					{
+//						Thread.CurrentThread.IsBackground = true; 
+//						/* run your code here */ 
+//						var bytes = File.ReadAllBytes(wavFile);
+//						var analysisResponseString = CreateWebRequest(analysisUrl, bytes, token);
+//						//							Debug.Log(analysisResponseString);
+//						currentAnalysis = JSON.Parse(analysisResponseString);
+//					}).Start()
+
 				// Retrieve the emotion for this frame
 				EmotionStruct nextEmotion = new EmotionStruct();
 				face.Emotions.TryGetValue(Emotions.Joy, out nextEmotion.joy);
@@ -65,7 +75,10 @@ public class FacialEmotionAnalyzer : ImageResultsListener {
 				face.Emotions.TryGetValue(Emotions.Sadness, out nextEmotion.sadness);
 				face.Emotions.TryGetValue(Emotions.Anger, out nextEmotion.anger);
 				face.Emotions.TryGetValue(Emotions.Surprise, out nextEmotion.surprise);
-				
+
+				//Not considering surprise or disgust for now
+				nextEmotion.surprise = 0f;
+				nextEmotion.disgust = 0f;
 				// currentEmotions = nextEmotion;
 				// Debug.Log("NEW ANGER!: " + nextEmotion.anger);
 

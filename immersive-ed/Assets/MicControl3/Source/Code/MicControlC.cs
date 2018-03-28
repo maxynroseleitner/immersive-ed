@@ -53,7 +53,7 @@ public class MicControlC : MonoBehaviour {
 	public string[] audBySec = new string[10];
 	//public AudioClip audData;
 	public string tokenUrl = "https://token.beyondverbal.com/token";
-	private string apiKey = "8f6d2151-d5b5-4928-bae7-a4febea3a4ea"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
+	private string apiKey = "412e16e9-e26c-4b9e-a018-3071ffbfad56"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
 	public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
 	public string wavFile;
 	public string analysisUrl;
@@ -63,7 +63,6 @@ public class MicControlC : MonoBehaviour {
 	public string startResponseString;
 	public string recordingId;
 	public JSONNode currentAnalysis;
-	private int duration = 0;
 	public AudioClip audBuffer;
 	private ToneAnalysis vocalToneResults = new ToneAnalysis ();
 
@@ -155,7 +154,6 @@ public class MicControlC : MonoBehaviour {
 		if (!audBuffer) {
 			audBuffer = AudioClip.Create ("audioBuffer", audioSource.clip.samples*10, audioSource.clip.channels, audioSource.clip.frequency, false);
 		}
-		Debug.Log ("Record 1");
 		SaveWavFile (audioSource.clip);
 		float[] samples = new float[audioSource.clip.samples * audioSource.clip.channels];
 		audioSource.clip.GetData(samples, 0);
@@ -166,7 +164,6 @@ public class MicControlC : MonoBehaviour {
 	}
 
 	void Analyze(){
-		Debug.Log ("RECORD 10!");
 		wavFile = SaveWavFile (audBuffer);
 		analysisUrl = startUrl + recordingId;
 		new Thread(() => 
@@ -177,7 +174,9 @@ public class MicControlC : MonoBehaviour {
 				var analysisResponseString = CreateWebRequest(analysisUrl, bytes, token);
 				//							Debug.Log(analysisResponseString);
 				currentAnalysis = JSON.Parse(analysisResponseString);
+				Debug.Log ("Post 10");
 				startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
+				Debug.Log ("Listen 10");
 				var startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
 				if (startResponseObj["status"] != "success")
 				{

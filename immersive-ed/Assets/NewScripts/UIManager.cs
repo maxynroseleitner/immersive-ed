@@ -38,7 +38,9 @@ public class UIManager : MonoBehaviour {
 
 	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{{"anger", WeatherMakerPrecipitationType.Hail},{"sadness", WeatherMakerPrecipitationType.Rain},{"fear",WeatherMakerPrecipitationType.None}, {"joy",WeatherMakerPrecipitationType.None}, {"neutral",WeatherMakerPrecipitationType.None}, {"disgust",WeatherMakerPrecipitationType.None}, {"surprise",WeatherMakerPrecipitationType.None}};
 	private Dictionary<string, float> fogDict = new Dictionary<string, float>{{"anger",0.0f},{"sadness",0.0f},{"fear",1.0f}, {"joy",0.0f}, {"neutral",0.0f}, {"disgust",0.0f}, {"surprise",0.0f}};
-	private Dictionary<string, WeatherMakerCloudType> cloudDict = new Dictionary<string, WeatherMakerCloudType>{{"low",WeatherMakerCloudType.Light},{"medium",WeatherMakerCloudType.Medium},{"high",WeatherMakerCloudType.Heavy}};
+	private Dictionary<string, WeatherMakerCloudType> cloudDict = new Dictionary<string, WeatherMakerCloudType>{{"positive",WeatherMakerCloudType.Light},{"negative",WeatherMakerCloudType.Heavy}};
+	private Dictionary<string, float> dayDict = new Dictionary<string, float>{{"low",86400f},{"neutral",68400f},{"high",43200f}};
+
 
 	// Use this for initialization
 	void Start () {
@@ -95,10 +97,10 @@ public class UIManager : MonoBehaviour {
 			ToneAnalysis vocalToneResults = gameManagerScript.getCurrentVocalEmotion ();
 			Debug.Log(vocalToneResults.TemperVal);
 			Debug.Log(vocalToneResults.TemperGroup);
-			Debug.Log(vocalToneResults.ArousalVal);
-			Debug.Log(vocalToneResults.ArousalGroup);
-			Debug.Log(vocalToneResults.ValenceVal);
-			Debug.Log(vocalToneResults.ValenceGroup);
+//			Debug.Log(vocalToneResults.ArousalVal);
+//			Debug.Log(vocalToneResults.ArousalGroup);
+//			Debug.Log(vocalToneResults.ValenceVal);
+//			Debug.Log(vocalToneResults.ValenceGroup);
 		}
 
 		SetCurrentWeather ();
@@ -281,7 +283,7 @@ public class UIManager : MonoBehaviour {
 
 	public float CalculateLighteningMin (float x) {
 
-		return (7.5f / 40f) * ((100.0f - x)+ 2.5f);
+		return (1.5f / 40f) * ((100.0f - x));
 	}
 
 	public float CalculateLighteningMax (float x) {
@@ -304,6 +306,10 @@ public class UIManager : MonoBehaviour {
 		//Tuning may be required
 		WeatherMakerScript.Instance.FogScript.TransitionFogDensity(fogDict [currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, fogDict [currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, 1.0f);
 
+		if (currentStrongestEmotionString == "neutral") {
+			WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.Medium;
+		}
+
 		if ( cloudDict.ContainsKey(gameManagerScript.getCurrentVocalEmotion().ValenceGroup ) )
 			WeatherMakerScript.Instance.Clouds = cloudDict [gameManagerScript.getCurrentVocalEmotion().ValenceGroup]; //
 		
@@ -311,7 +317,9 @@ public class UIManager : MonoBehaviour {
 		if (currentStrongestEmotionString == "joy") {
 			WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.None;
 		}
-		WeatherMakerScript.Instance.TimeOfDay = CalculateTimeOfDay (gameManagerScript.getCurrentVocalEmotion().ArousalVal);
+		if (dayDict.ContainsKey (gameManagerScript.getCurrentVocalEmotion ().ArousalGroup))
+			WeatherMakerScript.Instance.DayNightScript.TimeOfDay = CalculateTimeOfDay (gameManagerScript.getCurrentVocalEmotion ().ArousalVal);
+//			WeatherMakerScript.Instance.DayNightScript.TimeOfDay = dayDict[gameManagerScript.getCurrentVocalEmotion().ArousalGroup];
 
 		WeatherMakerThunderAndLightningScript thunderAndLightningScript = FindObjectOfType<WeatherMakerThunderAndLightningScript> ();
 		if (gameManagerScript.getCurrentVocalEmotion().TemperGroup == "high") {
@@ -323,7 +331,7 @@ public class UIManager : MonoBehaviour {
 
 		thunderAndLightningScript.LightningIntervalTimeRange = new RangeOfFloats {
 			Minimum = CalculateLighteningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal),
-			Maximum = CalculateLighteningMax (gameManagerScript.getCurrentVocalEmotion().TemperVal)
+			Maximum = CalculateLighteningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal)
 		};
 
 		thunderAndLightningScript.LightningIntenseProbability = gameManagerScript.getCurrentVocalEmotion().TemperVal * 0.01f;
