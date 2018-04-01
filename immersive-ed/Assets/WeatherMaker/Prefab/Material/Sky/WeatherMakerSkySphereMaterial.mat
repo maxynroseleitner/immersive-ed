@@ -127,7 +127,7 @@ Material:
     - _Mode: 0
     - _NightIntensity: 1
     - _NightMultiplier: 0
-    - _NightSkyMultiplier: 1
+    - _NightSkyMultiplier: 0
     - _NightTwinkleMinimum: 0.02
     - _NightTwinkleRandomness: 0.87
     - _NightTwinkleSpeed: 6.6
