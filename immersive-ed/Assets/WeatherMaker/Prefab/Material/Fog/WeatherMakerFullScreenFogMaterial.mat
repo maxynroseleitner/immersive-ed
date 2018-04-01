@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: WeatherMakerFullScreenFogMaterial
+  m_Shader: {fileID: 4800000, guid: f86ade4d77234ec45b41d91a84392861, type: 3}
+  m_ShaderKeywords: DITHER ENABLE_DITHER ENABLE_FOG_LIGHTS ENABLE_FOG_TRANSPARENCY_OVERLAY
+    ENABLE_MINIMUM_DISTANCE FOG_NONE
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: -1
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DitherTex:
+        m_Texture: {fileID: 2800000, guid: d60728f6a8c116647ae8892610421d22, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FogNoise:
+        m_Texture: {fileID: 2800000, guid: 21f2efbf25fb715498d924b2f7050c10, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _FogNoiseHeight:
+        m_Texture: {fileID: 2800000, guid: 3db25fc3b304df748a1e599d8944720a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _MainTex:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _NoiseTexture:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _AmbientLightMultiplier: 0.5
+    - _DirectionalLightMultiplier: 1
+    - _DitherLevel: 0.02
+    - _FarPlaneSunThreshold: 0.5
+    - _FogDensity: 0
+    - _FogDistance: 1000
+    - _FogDitherLevel: 0.001
+    - _FogHeight: 0
+    - _FogNoiseHeightMultiplier: 1
+    - _FogNoiseHeightScale: 0.04
+    - _FogNoiseHeightVariance: 2
+    - _FogNoiseMultiplier: 0
+    - _FogNoiseScale: 0.02
+    - _FogScale: 1
+    - _FogYNormalFadeEnd: 0.5
+    - _FogYNormalFadeStart: 0.75
+    - _MaxFogFactor: 1
+    - _PointSpotLightMultiplier: 1
+    m_Colors:
+    - _FogColor: {r: 0.7621648, g: 0.8005317, b: 0.8161765, a: 1}
+    - _FogNoiseHeightVelocity: {r: 1, g: 1, b: 0, a: 0}
+    - _FogNoiseTimeVelocity: {r: 0.01, g: 0.01, b: 0, a: 0}
+    - _FogNoiseVelocity: {r: 1, g: 0, b: 3, a: 0}
+    - _SunColor: {r: 0.9749493, g: 1, b: 0.8602941, a: 1}
+    - _SunDirection: {r: -0.25643793, g: 0.7363464, b: 0.62612605, a: 0}

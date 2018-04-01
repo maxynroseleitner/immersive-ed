@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba6d3094cf27f44781e52d9fd92adab, type: 3}
+  m_Name: WeatherMakerCloudProfile_HeavyBright
+  m_EditorClassIdentifier: 
+  CloudLayer1: {fileID: 11400000, guid: f5300efc85614ff468ac75da763a3262, type: 2}
+  CloudLayer2: {fileID: 11400000, guid: 699ca5ef14b6a8e4bae25a72c2c00a32, type: 2}
+  CloudLayer3: {fileID: 0}
+  CloudLayer4: {fileID: 0}
+  DirectionalLightIntensityMultiplier: 1
+  DirectionalLightShadowStrengthMultiplier: 1

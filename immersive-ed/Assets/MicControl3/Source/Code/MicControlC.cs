@@ -12,6 +12,8 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using SimpleJSON;
+using System.Security.Cryptography.X509Certificates;
+using System.Net.Security;
 //#if UNITY_EDITOR
 //using System.IO;
 //#endif
@@ -21,81 +23,84 @@ using SimpleJSON;
 public class MicControlC : MonoBehaviour {
 
 
-//should this controller be in loudness or spectrum mode (simple or advanced). This is also used by the editor script to show the correct visuals.
-public bool enableSpectrumData=false;
+	//should this controller be in loudness or spectrum mode (simple or advanced). This is also used by the editor script to show the correct visuals.
+	public bool enableSpectrumData=false;
 
 
-//if false the below will override and set the mic selected in the editor
-public bool useDefaultMic=false;
+	//if false the below will override and set the mic selected in the editor
+	public bool useDefaultMic=false;
 
-public bool ShowDeviceName=true;
-public bool SetDeviceSlot=false;
+	public bool ShowDeviceName=true;
+	public bool SetDeviceSlot=false;
 
-public int InputDevice=0;
-string selectedDevice;
+	public int InputDevice=0;
+	string selectedDevice;
 
 
-public bool advanced=false;
-public bool spectrumDropdown=false;
+	public bool advanced=false;
+	public bool spectrumDropdown=false;
 
-public AudioSource audioSource;
-//The maximum amount of sample data that gets loaded in, best is to leave it on 256, unless you know what you are doing. A higher number gives more accuracy but 
-//lowers performance allot, it is best to leave it at 256.
-public int amountSamples=256;
+	public AudioSource audioSource;
+	//The maximum amount of sample data that gets loaded in, best is to leave it on 256, unless you know what you are doing. A higher number gives more accuracy but 
+	//lowers performance allot, it is best to leave it at 256.
+	public int amountSamples=256;
 
 
 	//the variables that do the users magic
-public float loudness;
-public float rawInput;
-public float[] spectrumData;
-public string[] audBySec = new string[10];
-//public AudioClip audData;
-public string tokenUrl = "https://token.beyondverbal.com/token";
-public string apiKey = "322360d1-236c-4902-bb9c-1ce56fb84578";
-public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
-public string wavFile;
-public string analysisUrl;
-private float timeIdx = 1.0f;
-public string requestData;
-public string token;
-public string startResponseString;
-public string recordingId;
-public JSONNode currentAnalysis;
-private int duration = 0;
-public AudioClip audBuffer;
-private ToneAnalysis vocalToneResults = new ToneAnalysis ();
+	public float loudness;
+	public float rawInput;
+	public float[] spectrumData;
+	public string[] audBySec = new string[10];
+	//public AudioClip audData;
+	public string tokenUrl = "https://token.beyondverbal.com/token";
+	private string apiKey = "412e16e9-e26c-4b9e-a018-3071ffbfad56"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
+	public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
+	public string wavFile;
+	public string analysisUrl;
+	private float timeIdx = 1.0f;
+	public string requestData;
+	public string token;
+	public string startResponseString;
+	public string recordingId;
+	public JSONNode currentAnalysis;
+	public AudioClip audBuffer;
+	private ToneAnalysis vocalToneResults = new ToneAnalysis ();
 
 	//settings
-public float sensitivity=500.0f;
-public Vector2 minMaxSensitivity= new Vector2(0.0f,500.0f);
+	public float sensitivity=500.0f;
+	public Vector2 minMaxSensitivity= new Vector2(0.0f,500.0f);
 
-public int bufferTime=11;
+	public int bufferTime=11;
 
-public enum freqList {_44100HzCD,_48000HzDVD}
-public freqList freq;
-public int setFrequency=8000;
-
-
-public bool Mute=true;
-public bool debug=false;
-
-bool recording=true; 
+	public enum freqList {_44100HzCD,_48000HzDVD}
+	public freqList freq;
+	public int setFrequency=8000;
 
 
-public bool focused=true;
-public bool Initialized=false;
+	public bool Mute=true;
+	public bool debug=false;
+
+	bool recording=true; 
 
 
-public bool doNotDestroyOnLoad=false;
+	public bool focused=true;
+	public bool Initialized=false;
 
-void Start () {
+
+	public bool doNotDestroyOnLoad=false;
+
+	public ToneAnalysis getVocalToneResults(){
+		return vocalToneResults;
+	}
+
+	void Start () {
 		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
 
 		token = authRequest(tokenUrl, Encoding.UTF8.GetBytes(requestData));
 		//start
-//		Debug.Log(token);
+		//		Debug.Log(token);
 		startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
-//		Debug.Log (startResponseString);
+		//		Debug.Log (startResponseString);
 		var startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
 		if (startResponseObj["status"] != "success")
 		{
@@ -107,7 +112,7 @@ void Start () {
 		InvokeRepeating("RecordChunk", 1.0f, 1.0f);
 		InvokeRepeating("Analyze", 10.0f, 1.0f);
 
-}
+	}
 
 	private IEnumerator yieldedStart(){
 
@@ -169,7 +174,9 @@ void Start () {
 				var analysisResponseString = CreateWebRequest(analysisUrl, bytes, token);
 				//							Debug.Log(analysisResponseString);
 				currentAnalysis = JSON.Parse(analysisResponseString);
+				Debug.Log ("Post 10");
 				startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
+				Debug.Log ("Listen 10");
 				var startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
 				if (startResponseObj["status"] != "success")
 				{
@@ -183,12 +190,12 @@ void Start () {
 				vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
 				vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
 				recordingId = startResponseObj["recordingId"];
-//				Debug.Log(vocalToneResults.TemperVal);
-//				Debug.Log(vocalToneResults.TemperGroup);
-//				Debug.Log(vocalToneResults.ArousalVal);
-//				Debug.Log(vocalToneResults.ArousalGroup);
-//				Debug.Log(vocalToneResults.ValenceVal);
-//				Debug.Log(vocalToneResults.ValenceGroup);
+								Debug.Log(vocalToneResults.TemperVal);
+								Debug.Log(vocalToneResults.TemperGroup);
+								Debug.Log(vocalToneResults.ArousalVal);
+								Debug.Log(vocalToneResults.ArousalGroup);
+								Debug.Log(vocalToneResults.ValenceVal);
+								Debug.Log(vocalToneResults.ValenceGroup);
 
 			}).Start();
 		float[] samples = new float[audBuffer.samples * audBuffer.channels];
@@ -199,55 +206,55 @@ void Start () {
 
 
 
-//apply the mic input data stream to a float and or array;
-void Update () {
+	//apply the mic input data stream to a float and or array;
+	void Update () {
 
-	//pause everything when not focused on the app and then re-initialize.
+		//pause everything when not focused on the app and then re-initialize.
 
 
-	if(focused && !LoadingLevel() ){
-		if(!Initialized){
-			InitMic();
-			if(debug){
+		if(focused && !LoadingLevel() ){
+			if(!Initialized){
+				InitMic();
+				if(debug){
 					Debug.Log("mic started: "+ selectedDevice);
+				}
+				//	Initialized=true;
+
 			}
-			//	Initialized=true;
-
 		}
-	}
 
 
-	if (!focused && Initialized){
-		StopMicrophone ();
-		if(debug){
-			Debug.Log("mic stopped");
+		if (!focused && Initialized){
+			StopMicrophone ();
+			if(debug){
+				Debug.Log("mic stopped");
+			}
+			return;
 		}
-		return;
-	}
 
 
-	if (!Application.isPlaying && Initialized) {
-		//stop the microphone if you are clicking inside the editor and the player is stopped
+		if (!Application.isPlaying && Initialized) {
+			//stop the microphone if you are clicking inside the editor and the player is stopped
 			StopMicrophone();
-		if(debug){
-			Debug.Log("mic stopped");
+			if(debug){
+				Debug.Log("mic stopped");
+			}
+			return;
 		}
-		return;
-	}
 
 		if (LoadingLevel() && Initialized) {
-		//stop the microphone if you are clicking inside the editor and the player is stopped
-		StopMicrophone();
-		if(debug){
-			Debug.Log("mic stopped");
+			//stop the microphone if you are clicking inside the editor and the player is stopped
+			StopMicrophone();
+			if(debug){
+				Debug.Log("mic stopped");
+			}
+			return;
 		}
-		return;
-	}
 
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		if(focused && Initialized){
-//			Debug.Log ((Microphone.IsRecording (selectedDevice) && recording));
+			//			Debug.Log ((Microphone.IsRecording (selectedDevice) && recording));
 			//----------//----------//----------//----------//----------//----------//----------//----------//----------//----------
 			if(Microphone.IsRecording(selectedDevice) && recording){
 
@@ -258,10 +265,10 @@ void Update () {
 				//----------//----------//----------//----------//----------//----------//----------//----------//----------//----------//----------
 				//the more advanced spectrum data analyses, for the advanced users. Outputs array of frequencies received from the microphone.
 
-//				if(enableSpectrumData){
-//					spectrumData=  GetSpectrumAnalysis();
-//				}
-					
+				//				if(enableSpectrumData){
+				//					spectrumData=  GetSpectrumAnalysis();
+				//				}
+
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -274,9 +281,32 @@ void Update () {
 
 		}
 
-}
+	}
 
- 
+	public static bool MyRemoteCertificateValidationCallback(System.Object sender,
+		X509Certificate certificate, X509Chain chain, SslPolicyErrors sslPolicyErrors)
+	{
+		bool isOk = true;
+		// If there are errors in the certificate chain,
+		// look at each error to determine the cause.
+		if (sslPolicyErrors != SslPolicyErrors.None) {
+			for (int i=0; i<chain.ChainStatus.Length; i++) {
+				if (chain.ChainStatus[i].Status == X509ChainStatusFlags.RevocationStatusUnknown) {
+					continue;
+				}
+				chain.ChainPolicy.RevocationFlag = X509RevocationFlag.EntireChain;
+				chain.ChainPolicy.RevocationMode = X509RevocationMode.Online;
+				chain.ChainPolicy.UrlRetrievalTimeout = new TimeSpan (0, 1, 0);
+				chain.ChainPolicy.VerificationFlags = X509VerificationFlags.AllFlags;
+				bool chainIsValid = chain.Build ((X509Certificate2)certificate);
+				if (!chainIsValid) {
+					isOk = false;
+					break;
+				}
+			}
+		}
+		return isOk;
+	}
 
 	private static string authRequest(string url, byte[] data)
 	{
@@ -284,15 +314,16 @@ void Update () {
 		HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
 		request.Method = "POST";
 		request.ContentType = "application/x-www-form-urlencoded";
-//		request.ServicePoint.SetTcpKeepAlive(false, 0, 0);
+		//		request.ServicePoint.SetTcpKeepAlive(false, 0, 0);
 		request.ServicePoint.UseNagleAlgorithm = false;
 		request.ReadWriteTimeout = 1000000;
 		request.Timeout = 10000000;
 		request.SendChunked = false;
 		request.AllowWriteStreamBuffering = true;
-//		request.AllowReadStreamBuffering = false;
+		//		request.AllowReadStreamBuffering = false;
 		request.KeepAlive = true;
 
+		ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 		using (var requestStream = request.GetRequestStream())
 		{
 			requestStream.Write(data, 0, data.Length);
@@ -311,18 +342,19 @@ void Update () {
 
 	private static string CreateWebRequest(string url, byte[] data, string token = null)
 	{
-//		JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings() { Formatting = Formatting.Indented };
+		//		JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings() { Formatting = Formatting.Indented };
 		HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
 		request.Method = "POST";
 		request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
 
 		request.KeepAlive = true;
-//		request.ServicePoint.SetTcpKeepAlive(true, 10000, 10000);
+		//		request.ServicePoint.SetTcpKeepAlive(true, 10000, 10000);
 
 		request.Timeout = 10000000;
 		request.SendChunked = true;
 		request.AllowWriteStreamBuffering = true;
-//		request.AllowReadStreamBuffering = false;
+		//		request.AllowReadStreamBuffering = false;
+		ServicePointManager.ServerCertificateValidationCallback = MyRemoteCertificateValidationCallback;
 		if (string.IsNullOrEmpty(token) == false)
 			request.Headers.Add("Authorization", "Bearer " + token);
 
@@ -358,8 +390,8 @@ void Update () {
 			return audioValue / amountSamples;
 		}
 		return 0;
-			
-}
+
+	}
 
 
 
@@ -367,17 +399,17 @@ void Update () {
 	public float[] GetSpectrumAnalysis(){
 
 		float[] dataSpectrum = new float[amountSamples];
-	audioSource.GetSpectrumData(dataSpectrum,0, FFTWindow.Rectangular);
+		audioSource.GetSpectrumData(dataSpectrum,0, FFTWindow.Rectangular);
 
 		for(int i = 0; i<=dataSpectrum.Length-1;i++){
 
 			dataSpectrum[i]= Mathf.Abs(dataSpectrum[i]*sensitivity);
 
+		}
+
+		return dataSpectrum;
+
 	}
-
-	return dataSpectrum;
-
-}
 	public string SaveWavFile (AudioClip aud)
 	{
 		string filepath;
@@ -386,101 +418,101 @@ void Update () {
 	}
 
 
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//Initialize microphone
-public void InitMic(){
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//Initialize microphone
+	public void InitMic(){
 
 
-	//select audio source
-	if(!audioSource){
-		audioSource = transform.GetComponent<AudioSource>();
-	} 
-//	if(!audBuffer){
-//		audBuffer = transform.GetComponent<AudioSource>();
-//	}
-	//only Initialize microphone if a device is detected
-	if(Microphone.devices.Length>=0){
+		//select audio source
+		if(!audioSource){
+			audioSource = transform.GetComponent<AudioSource>();
+		} 
+		//	if(!audBuffer){
+		//		audBuffer = transform.GetComponent<AudioSource>();
+		//	}
+		//only Initialize microphone if a device is detected
+		if(Microphone.devices.Length>=0){
 
-		 int i=0;
-		//count amount of devices connected
-		foreach(string device in Microphone.devices){
-			i++;
-		}
+			int i=0;
+			//count amount of devices connected
+			foreach(string device in Microphone.devices){
+				i++;
+			}
 
-		//set selected device from isnpector as device number. (to find the device).
-		if(i>=1 && !useDefaultMic){
-			selectedDevice= Microphone.devices[InputDevice];
-		}
+			//set selected device from isnpector as device number. (to find the device).
+			if(i>=1 && !useDefaultMic){
+				selectedDevice= Microphone.devices[InputDevice];
+			}
 
-		//set the default device if enabled
-		if(useDefaultMic){
-			selectedDevice= Microphone.devices[0];
-		}
-
-
-
-
-		//Now that we know which device to listen to, lets set the frequency we want to record at
-
-		if(freq== freqList._44100HzCD){
-			setFrequency=8000;
-
-		}
-
-		if(freq == freqList._48000HzDVD){
-			setFrequency=48000;
-
-		}
+			//set the default device if enabled
+			if(useDefaultMic){
+				selectedDevice= Microphone.devices[0];
+			}
 
 
 
-		//detect the selected microphone one time to geth the first buffer.
+
+			//Now that we know which device to listen to, lets set the frequency we want to record at
+
+			if(freq== freqList._44100HzCD){
+				setFrequency=8000;
+
+			}
+
+			if(freq == freqList._48000HzDVD){
+				setFrequency=48000;
+
+			}
+
+
+
+			//detect the selected microphone one time to geth the first buffer.
 			audioSource.clip =  Microphone.Start(selectedDevice, true, 1, setFrequency);
 
 
-		//loop the playing of the recording so it will be realtime
-		audioSource.loop = true;
-		//if you only need the data stream values  check Mute, if you want to hear yourself ingame don't check Mute. 
-		audioSource.mute = Mute;	
+			//loop the playing of the recording so it will be realtime
+			audioSource.loop = true;
+			//if you only need the data stream values  check Mute, if you want to hear yourself ingame don't check Mute. 
+			audioSource.mute = Mute;	
 
 
 
 			AudioMixer mixer = Resources.Load("MicControl3Mixer") as AudioMixer;
-		if(Mute){
-			mixer.SetFloat("MicControl3Volume",-80);
-		}
-		else{
-			mixer.SetFloat("MicControl3Volume",0);
-		}
-
-
-
-
-
-		//don't do anything until the microphone started up
-		while (!(Microphone.GetPosition(selectedDevice) > 0)){
-			if(debug){
-				Debug.Log("Awaiting connection");
+			if(Mute){
+				mixer.SetFloat("MicControl3Volume",-80);
 			}
-		}
-		if(debug){
-			Debug.Log("Connected");
+			else{
+				mixer.SetFloat("MicControl3Volume",0);
+			}
+
+
+
+
+
+			//don't do anything until the microphone started up
+			while (!(Microphone.GetPosition(selectedDevice) > 0)){
+				if(debug){
+					Debug.Log("Awaiting connection");
+				}
+			}
+			if(debug){
+				Debug.Log("Connected");
+			}
+
+			//Now that the basic initialisation is done, we are ready to start the microphone and gather data.
+			StartCoroutine(StartMicrophone ());
+			recording=true; 
+
 		}
 
-		//Now that the basic initialisation is done, we are ready to start the microphone and gather data.
-			StartCoroutine(StartMicrophone ());
-		recording=true; 
+		Initialized=true;
 
 	}
-
-	Initialized=true;
-
-}
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// 
 
 
 
-//for the above control the mic start or stop
+	//for the above control the mic start or stop
 
 
 	public IEnumerator StartMicrophone () {
@@ -489,34 +521,34 @@ public void InitMic(){
 
 		audioSource.clip = Microphone.Start(selectedDevice, true, 1, setFrequency);//Starts recording
 
-	while (!(Microphone.GetPosition(selectedDevice) > 0)){// Wait if a device is detected and  only then start the recording
-		if(debug){
-			Debug.Log("Waiting for connection:"+Time.deltaTime);
-		}
+		while (!(Microphone.GetPosition(selectedDevice) > 0)){// Wait if a device is detected and  only then start the recording
+			if(debug){
+				Debug.Log("Waiting for connection:"+Time.deltaTime);
+			}
 			yield return 0;
-	}
-	if(true){		       
+		}
+		if(true){		       
 			Debug.Log("started"+ ", Freq (Hz): "+setFrequency+", samples: "+ amountSamples+", sensitivity: "+sensitivity); 
-	}
+		}
 
-//	audioSource.Play(); // Play the audio source! 
+		//	audioSource.Play(); // Play the audio source! 
 
 		if(debug){		       
 			Debug.Log("Receiving data"); 
 		}
-}
+	}
 
 
 
 
 
-public void StopMicrophone () {
-	audioSource.Stop();//Stops the audio
-	Microphone.End(selectedDevice);//Stops the recording of the device  
-	Initialized=false;
-	recording=false; 
+	public void StopMicrophone () {
+		audioSource.Stop();//Stops the audio
+		Microphone.End(selectedDevice);//Stops the recording of the device  
+		Initialized=false;
+		recording=false; 
 
-}
+	}
 
 
 
@@ -534,25 +566,25 @@ public void StopMicrophone () {
 
 
 
-		#if!  UNITY_WEBGL
+	#if!  UNITY_WEBGL
 	#if!  UNITY_IOS
-#if !UNITY_ANDROID 
-//start or stop the script from running when the state is paused or not.
+	#if !UNITY_ANDROID 
+	//start or stop the script from running when the state is paused or not.
 	void OnApplicationFocus(bool focus) {
-	focused = focus;
-}
+		focused = focus;
+	}
 
 	void OnApplicationPause(bool focus) {
-	focused = !focus;
-}
+		focused = !focus;
+	}
 
 	void OnApplicationExit(bool focus) {
-	focused = focus;
-}
+		focused = focus;
+	}
 
-#endif
 	#endif
-		#endif
+	#endif
+	#endif
 
 
 	public bool LoadingLevel(){
@@ -561,7 +593,7 @@ public void StopMicrophone () {
 			return false;
 		}
 		return true;
-}
+	}
 
 
 
@@ -573,31 +605,29 @@ public void StopMicrophone () {
 
 
 
-#if UNITY_EDITOR
+	#if UNITY_EDITOR
 
-//draw the gizmo
-void OnDrawGizmos () {
+	//draw the gizmo
+	void OnDrawGizmos () {
 
 		Gizmos.DrawIcon (transform.position, "MicControlGizmo.tif", true);
 
 
 
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	//if gizmo folder does not exist create it
-	if (!Directory.Exists(Application.dataPath+"/Gizmos")){
-		Directory.CreateDirectory(Application.dataPath+"/Gizmos");
-	}
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//if gizmo folder does not exist create it
+		if (!Directory.Exists(Application.dataPath+"/Gizmos")){
+			Directory.CreateDirectory(Application.dataPath+"/Gizmos");
+		}
 
-	if(!File.Exists(Application.dataPath+"/Gizmos/MicControlGizmo.tif")){
+		if(!File.Exists(Application.dataPath+"/Gizmos/MicControlGizmo.tif")){
 			File.Copy(Application.dataPath+"/MicControl3/Resources/MicControlGizmo.tif",Application.dataPath+"/Gizmos/MicControlGizmo.tif");
-	}
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
+		}
+		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	
 
-}
-
-	public ToneAnalysis getVocalToneResults(){
-		return vocalToneResults;
 	}
+
+
 	#endif
 
 

@@ -1,0 +1,39 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 28f4fb0832d64c84b9aaf5fe0c2d2427, type: 3}
+  m_Name: WeatherMakerProfile_Haze
+  m_EditorClassIdentifier: 
+  Disabled: 0
+  TransitionDuration:
+    Minimum: 20
+    Maximum: 60
+  CloudProfile: {fileID: 0}
+  CloudType: 0
+  Precipitation: 0
+  PrecipitationIntensity: 0
+  FogDensity: 0.002
+  FogMode: 3
+  FogHeight: 100
+  WindIntensity: 0
+  MaximumWindSpeed: 100
+  WindMaximumChangeRotation:
+    Minimum: 15
+    Maximum: 60
+  WindMainMultiplier: 0.01
+  LightningEnabled: 0
+  LightningIntenseProbability: 0
+  LightningIntervalTimeRange:
+    Minimum: 10
+    Maximum: 25
+  LightningForcedVisibilityProbability: 0.5
+  LightningGroundChance: 0.3
+  LightningCloudChance: 0.5
+  Sounds: []

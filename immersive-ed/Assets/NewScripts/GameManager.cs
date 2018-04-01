@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
 
 	public GameObject gameManager;
 	public GameObject uiManager;
+	private UIManager uiManagerScript;
 
 	public GameObject facialEmotionAnalyzerObject;
 	public GameObject wordSentimentEmotionAnalyzerObject;
@@ -21,57 +22,124 @@ public class GameManager : MonoBehaviour {
 	public bool useWordSentimentEmotion = false;
 	public bool useVocalToneEmotion = false;
 
-	public EmotionStruct currentFacialEmotion;
-	public EmotionStruct currentWordSentimentEmotion;
-	public ToneAnalysis currentVocalEmotion;
+	public EmotionStruct currentFacialEmotion = new EmotionStruct();
+	public EmotionStruct currentWordSentimentEmotion = new EmotionStruct();
+	public ToneAnalysis currentVocalEmotion = new ToneAnalysis();
 	private float emotionThreshold = 10.0f;
+
+	void Awake()
+	{
+		
+	}
 
 	// Use this for initialization
 	void Start () {
+
+		uiManagerScript = uiManager.GetComponent<UIManager> ();
+
 		// Initialize the current emotion
-		currentFacialEmotion = new EmotionStruct();
-		currentWordSentimentEmotion = new EmotionStruct();
-		currentVocalEmotion = new ToneAnalysis();
+		// currentFacialEmotion = new EmotionStruct();
+		// currentWordSentimentEmotion = new EmotionStruct();
+		// currentVocalEmotion = new ToneAnalysis();
 
-		// Find the script for facial emotion analysis
-		try
+		// Enable and disable emotion modality game objects based on the flags
+		// if (useFacialEmotion)
+		// {
+		// 	facialEmotionAnalyzerObject.SetActive(false);
+		// }
+
+		// if (useWordSentimentEmotion)
+		// {
+		// 	wordSentimentEmotionAnalyzerObject.SetActive(false);
+		// }
+
+		// if (useVocalToneEmotion)
+		// {
+		// 	vocalEmotionAnalyzerObject.SetActive(false);
+		// }
+
+		// // Find the script for facial emotion analysis
+		// try
+		// {
+		// 	facialAnalyzer = (FacialEmotionAnalyzer) facialEmotionAnalyzerObject.GetComponent(typeof(FacialEmotionAnalyzer)); // this seems to fail silently...
+		// }
+		// catch (System.Exception)
+		// {
+		// 	Debug.Log("Unable to find facial emotion analyzer. This functionality will be disabled.");
+		// 	useFacialEmotion = false;
+		// }
+
+		// // Find the script for sentiment analysis of speech to text results
+		// try
+		// {
+		// 	wordAnalyzer = (SentimentAnalyzer) wordSentimentEmotionAnalyzerObject.GetComponent(typeof(SentimentAnalyzer));
+		// }
+		// catch (System.Exception)
+		// {
+		// 	Debug.Log("Unable to find the sentiment analyzer. This functionality will be disabled.");
+		// 	useWordSentimentEmotion = false;
+		// }
+		// // Find the script for vocal analysis results
+		// try
+		// {
+		// 	vocalAnalyzer = (MicControlC) vocalEmotionAnalyzerObject.GetComponent(typeof(MicControlC));
+		// }
+		// catch (System.Exception)
+		// {
+		// 	Debug.Log("Unable to find the vocal analyzer. This functionality will be disabled.");
+		// 	useVocalToneEmotion = false;
+		// }
+
+
+		if (!useFacialEmotion)
 		{
-			facialAnalyzer = (FacialEmotionAnalyzer) facialEmotionAnalyzerObject.GetComponent(typeof(FacialEmotionAnalyzer)); // this seems to fail silently...
+			facialEmotionAnalyzerObject.SetActive(false);
 		}
-		catch (System.Exception)
+		else
 		{
-			Debug.Log("Unable to find facial emotion analyzer. This functionality will be disabled.");
-			useFacialEmotion = false;
+			facialAnalyzer = (FacialEmotionAnalyzer) facialEmotionAnalyzerObject.GetComponent(typeof(FacialEmotionAnalyzer));
 		}
 
-		// Find the script for sentiment analysis of speech to text results
-		try
+		if (!useWordSentimentEmotion)
+		{
+			wordSentimentEmotionAnalyzerObject.SetActive(false);
+		}
+		else
 		{
 			wordAnalyzer = (SentimentAnalyzer) wordSentimentEmotionAnalyzerObject.GetComponent(typeof(SentimentAnalyzer));
 		}
-		catch (System.Exception)
+
+		if (!useVocalToneEmotion)
 		{
-			Debug.Log("Unable to find the sentiment analyzer. This functionality will be disabled.");
-			useWordSentimentEmotion = false;
+			vocalEmotionAnalyzerObject.SetActive(false);
 		}
-		// Find the script for vocal analysis results
-		try
+		else
 		{
 			vocalAnalyzer = (MicControlC) vocalEmotionAnalyzerObject.GetComponent(typeof(MicControlC));
-		}
-		catch (System.Exception)
-		{
-			Debug.Log("Unable to find the vocal analyzer. This functionality will be disabled.");
-			useVocalToneEmotion = false;
 		}
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		// Pull in the most recent emotional state for each of the modalities
-		currentFacialEmotion = facialAnalyzer.getCurrentEmotions();
-		currentWordSentimentEmotion = wordAnalyzer.getCurrentEmotions();
-		currentVocalEmotion = vocalAnalyzer.getVocalToneResults ();
+		if (useFacialEmotion)
+		{
+			currentFacialEmotion = facialAnalyzer.getCurrentEmotions();
+			// Debug.Log("got facial emotion struct");
+		}
+			
+		if (useWordSentimentEmotion)
+		{
+			currentWordSentimentEmotion = wordAnalyzer.getCurrentEmotions();
+		}
+			
+		if (useVocalToneEmotion)
+		{
+			currentVocalEmotion = vocalAnalyzer.getVocalToneResults();
+		}
+
+		//Set mood tracker attributes
+		CalculateMoodTrackerGeometry ();
 	}
 
 	public EmotionStruct getCurrentFacialEmotion()
@@ -137,6 +205,54 @@ public class GameManager : MonoBehaviour {
 		}
 	}
 
+	// Returns the strongest emotion present in the current cumulative emotion
+	public string getValueOfStrongestEmotionString(EmotionStruct emotions)
+	{
+		if (emotions.joy > emotions.fear &&
+			emotions.joy > emotions.disgust &&
+			emotions.joy > emotions.sadness && 
+			emotions.joy > emotions.anger && 
+			emotions.joy > emotions.surprise &&
+			emotions.joy > emotionThreshold)
+		{
+			return "joy";
+		}
+		else if (emotions.fear > emotions.disgust &&
+			emotions.fear > emotions.sadness &&
+			emotions.fear > emotions.anger &&
+			emotions.fear > emotions.surprise &&
+			emotions.fear > emotionThreshold)
+		{
+			return "fear";
+		}
+		else if (emotions.disgust > emotions.sadness &&
+			emotions.disgust > emotions.anger &&
+			emotions.disgust > emotions.surprise &&
+			emotions.disgust > emotionThreshold)
+		{
+			return "disgust";
+		}
+		else if (emotions.sadness > emotions.anger &&
+			emotions.sadness > emotions.surprise &&
+			emotions.sadness > emotionThreshold)
+		{
+			return "sadness";
+		}
+		else if (emotions.anger > emotions.surprise &&
+			emotions.anger > emotionThreshold)
+		{
+			return "anger";
+		}
+		else if(emotions.surprise > emotionThreshold)
+		{
+			return "surprise";
+		}
+		else
+		{
+			return "neutral";
+		}
+	}
+
 	// Returns a color to be used by the user interface based on the current synthesized emotion
 	public Color calculateEmotionColor(EmotionStruct emotions)
 	{
@@ -184,4 +300,12 @@ public class GameManager : MonoBehaviour {
 			return new Color(0.0f, 0.0f, 0.0f, 1.0f);		// black
 		}
 	}
+
+////////////////////////////////////// SET/CALCULATE MOOD TRACKER COORDINATES START /////////////////////////////////////////////////
+	private void CalculateMoodTrackerGeometry (){
+		Vector3 moodTrackerCoordinates = facialAnalyzer.GetMoodTrackerGeometry ();
+		uiManagerScript.SetMoodTrackerGeometry (moodTrackerCoordinates);
+	}
+/////////////////////////////////////// SET/CALCULATE MOOD TRACKER COORDINATES END //////////////////////////////////////////////////
+
 }

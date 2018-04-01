@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 434c9ec812775b74ab2bb5fa1e8f04d9, type: 3}
+  m_Name: WeatherMakerAmbientSound_Crow
+  m_EditorClassIdentifier: Assembly-CSharp:DigitalRuby.WeatherMaker:WeatherMakerAmbientSound
+  Disabled: 0
+  Name: Crow
+  AudioClips:
+  - {fileID: 8300000, guid: c1a5efc6d97bbcd47943b30ef04e645e, type: 3}
+  Looping: 0
+  TimesOfDay: 5
+  HoursOfDay: []
+  IntervalRange:
+    Minimum: 15
+    Maximum: 45
+  DurationRange:
+    Minimum: 0
+    Maximum: 0
+  VolumeRange:
+    Minimum: 0.2
+    Maximum: 0.6
+  FadeDuration:
+    Minimum: 5
+    Maximum: 15
