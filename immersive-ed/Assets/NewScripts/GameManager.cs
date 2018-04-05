@@ -32,6 +32,15 @@ public class GameManager : MonoBehaviour {
 		
 	}
 
+	IEnumerator passAudio()
+	{
+		while (true)
+		{
+			vocalAnalyzer.SetAudClip(wordAnalyzer.GetAudClip());
+			yield return new WaitForSeconds(1.0f);
+		}
+	}
+
 	// Use this for initialization
 	void Start () {
 
@@ -116,6 +125,7 @@ public class GameManager : MonoBehaviour {
 		else
 		{
 			vocalAnalyzer = (MicControlC) vocalEmotionAnalyzerObject.GetComponent(typeof(MicControlC));
+			StartCoroutine (passAudio ());
 		}
 	}
 	

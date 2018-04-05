@@ -294,7 +294,7 @@ public class SentimentAnalyzer : MonoBehaviour
                 {
                     string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
                     Log.Debug("ExampleStreaming.OnRecognize()", text);
-                    ResultsField.text = text;
+//                    ResultsField.text = text;
 
                     int finalPos= text.IndexOf("(Final");
                     int interimPos=text.IndexOf("(Interim");
@@ -403,4 +403,7 @@ public class SentimentAnalyzer : MonoBehaviour
             }
         }
     }
+	public AudioClip GetAudClip(){
+		return _recording;
+	}
 }
