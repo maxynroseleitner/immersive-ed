@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!21 &2100000
+Material:
+  serializedVersion: 6
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_Name: Volumetric Clouds LowQ
+  m_Shader: {fileID: 4800000, guid: 7a5d0014cc034a44c9d4ccd8157b0e74, type: 3}
+  m_ShaderKeywords: Y_AXIS _
+  m_LightmapFlags: 5
+  m_EnableInstancingVariants: 0
+  m_DoubleSidedGI: 0
+  m_CustomRenderQueue: 2501
+  stringTagMap: {}
+  disabledShaderPasses: []
+  m_SavedProperties:
+    serializedVersion: 3
+    m_TexEnvs:
+    - _DensityMap:
+        m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _PerlinNormalMap:
+        m_Texture: {fileID: 2800000, guid: 55f5c739e5711f841b02183ae8d0298c, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    m_Floats:
+    - _Alignement: 0
+    - _Alpha: 4
+    - _AlphaCut: 0.01
+    - _CloudBaseFlatness: 0.1
+    - _Density: 0
+    - _DensityHigh: 1
+    - _DensityLow: -1
+    - _DensityMapOn: 0
+    - _DepthColor: 0
+    - _DistanceBlend: 0.6
+    - _DrawDistance: 1000
+    - _HQPointLight: 0
+    - _IndirectContribution: 1
+    - _LodBase: 0
+    - _LodOffset: 0.7
+    - _MaxSteps: 50
+    - _Normalized: 0
+    - _NormalmapState: 0
+    - _NormalsIntensity: 1
+    - _OpacityGain: 0.1
+    - _OrthographicPerspective: 0
+    - _RSShadows: 0
+    - _RenderQueue: 2501
+    - _RenderShadowsOnly: 0
+    - _SSShadows: 0
+    - _SelfShadowBias: 10
+    - _SelfShadowIntensity: 1
+    - _ShadowDrawDistance: 999
+    - _SphereHorizonStretch: 0.6
+    - _SphereMapped: 0
+    - _SphericalMapping: 0
+    - _StepNearSurface: 0.75
+    - _StepSize: 0.02
+    - _StepSkip: 30
+    - _Tiling: 1500
+    - _TimeMult: 0.1
+    - _TimeMultSecondLayer: 4
+    m_Colors:
+    - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
+    - _CloudSpherePosition: {r: 0, g: 0, b: 0, a: 0}
+    - _CloudTransform: {r: 100, g: 20, b: 0, a: 0}
+    - _LightAttenuation: {r: 0.35, g: 0.35, b: 0.35, a: 0.15}
+    - _Shading: {r: 0, g: 0, b: 0, a: 1}
+    - _ShadowColor: {r: 0, g: 0, b: 0, a: 0.5}
+    - _WindDirection: {r: 1, g: 0, b: 0, a: 0}

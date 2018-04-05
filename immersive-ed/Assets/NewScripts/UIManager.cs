@@ -33,6 +33,7 @@ public class UIManager : MonoBehaviour {
 	private float currentWordSentimentEmotionBarWidth;
 	private float previousWordSentimentEmotionBarWidth;
 
+	// Weather Objects and Variables
 	public GameObject weatherMaker;
 	public WeatherMakerScript weatherScript;
 
@@ -41,6 +42,8 @@ public class UIManager : MonoBehaviour {
 	private Dictionary<string, WeatherMakerCloudType> cloudDict = new Dictionary<string, WeatherMakerCloudType>{{"positive",WeatherMakerCloudType.Light},{"negative",WeatherMakerCloudType.Heavy}};
 	private Dictionary<string, float> dayDict = new Dictionary<string, float>{{"low",86400f},{"neutral",68400f},{"high",43200f}};
 
+	// Volumetric cloud material
+	public RaymarchedClouds cloudScript;
 
 	// Use this for initialization
 	void Start () {
@@ -49,6 +52,7 @@ public class UIManager : MonoBehaviour {
 		//planeRenderer = (Renderer) webcamRenderPlane.GetComponent<Renderer>();
 		quadRenderer = webcamRenderQuad.GetComponent<Renderer> ();
 		weatherScript = (WeatherMakerScript) weatherMaker.GetComponent<WeatherMakerScript>();
+		cloudScript = (RaymarchedClouds) mainCamera.GetComponent<RaymarchedClouds>();
 		
 		// Camera feed parameters
 		if (camInputScript.Texture == null) {
@@ -84,6 +88,11 @@ public class UIManager : MonoBehaviour {
 
 		// Start the background emotion updater
 		StartCoroutine(RequestEmotionUpdate());
+
+		// QUICK TEST: Sending new values to the cloud material shader to use in the raymarching/volume rendering
+		// cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
+		// cloudScript.materialUsed.SetFloat("_Density", 1.0f);
+		// END QUICK TEST
 	}
 	
 	// Update is called once per frame
@@ -95,8 +104,8 @@ public class UIManager : MonoBehaviour {
 		if (gameManagerScript.useVocalToneEmotion)
 		{
 			ToneAnalysis vocalToneResults = gameManagerScript.getCurrentVocalEmotion ();
-			Debug.Log(vocalToneResults.TemperVal);
-			Debug.Log(vocalToneResults.TemperGroup);
+			// Debug.Log(vocalToneResults.TemperVal);
+			// Debug.Log(vocalToneResults.TemperGroup);
 //			Debug.Log(vocalToneResults.ArousalVal);
 //			Debug.Log(vocalToneResults.ArousalGroup);
 //			Debug.Log(vocalToneResults.ValenceVal);
@@ -104,6 +113,7 @@ public class UIManager : MonoBehaviour {
 		}
 
 		SetCurrentWeather ();
+		updateClouds();
 	}
 
 	private IEnumerator RequestEmotionUpdate()
@@ -138,11 +148,11 @@ public class UIManager : MonoBehaviour {
 				currentWordSentimentEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentWordSentimentEmotion());
 
 				EmotionStruct currentEmotions = gameManagerScript.getCurrentWordSentimentEmotion();
-				Debug.Log("Joy: " + currentEmotions.joy);
-				Debug.Log("anger: " + currentEmotions.anger);
-				Debug.Log("fear: " + currentEmotions.fear);
-				Debug.Log("disgust: " + currentEmotions.disgust);
-				Debug.Log("sadness: " + currentEmotions.sadness);
+				// Debug.Log("Joy: " + currentEmotions.joy);
+				// Debug.Log("anger: " + currentEmotions.anger);
+				// Debug.Log("fear: " + currentEmotions.fear);
+				// Debug.Log("disgust: " + currentEmotions.disgust);
+				// Debug.Log("sadness: " + currentEmotions.sadness);
 
 				previousWordSentimentEmotionBarWidth = currentWordSentimentEmotionBarWidth;
 				currentWordSentimentEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentWordSentimentEmotion()) * 2;
@@ -271,7 +281,7 @@ public class UIManager : MonoBehaviour {
 		webcamRenderQuad.transform.localScale = new Vector3 (-10*flipDisplayX*aspectRatio*displayHeight, -10*flipDisplayY*displayHeight, 1.0f);
 
 
-		Debug.Log (" Feed Width: " + feedWidth + " Feed Height: " + feedHeight + " Aspect Ratio: " + aspectRatio);
+		// Debug.Log (" Feed Width: " + feedWidth + " Feed Height: " + feedHeight + " Aspect Ratio: " + aspectRatio);
 
 		//New code
 		//For setting up Cam Quad Display
@@ -281,12 +291,12 @@ public class UIManager : MonoBehaviour {
 	}
 ///////////////////////////////////////////////// SET CAMERA FEED  END //////////////////////////////////////////////////////////////
 
-	public float CalculateLighteningMin (float x) {
+	public float CalculateLightningMin (float x) {
 
 		return (1.5f / 40f) * ((100.0f - x));
 	}
 
-	public float CalculateLighteningMax (float x) {
+	public float CalculateLightningMax (float x) {
 
 		return (2.0f / 40f) * ((100.0f - x)+ 0.5f);
 	}
@@ -296,45 +306,88 @@ public class UIManager : MonoBehaviour {
 	}
 
 	public void SetCurrentWeather (){
+		// Get the strongest facial emotion type and value
+		string currentStrongestEmotionString = gameManagerScript.getValueOfStrongestEmotionString(gameManagerScript.currentFacialEmotion);
+		float currentStrongestEmotionValue = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.currentFacialEmotion);
 
-		string currentStrongestEmotionString = gameManagerScript.getValueOfStrongestEmotionString (gameManagerScript.currentFacialEmotion);
-		float currentStrongestEmotionValue = gameManagerScript.getValueOfStrongestEmotion (gameManagerScript.currentFacialEmotion);
-
-		WeatherMakerScript.Instance.Precipitation = precipitationDict [currentStrongestEmotionString]; //
+		// PRECIPITATION
+		WeatherMakerScript.Instance.Precipitation = precipitationDict[currentStrongestEmotionString];
 		WeatherMakerScript.Instance.PrecipitationIntensity = currentStrongestEmotionValue * 0.01f;
 
-		//Tuning may be required
-		WeatherMakerScript.Instance.FogScript.TransitionFogDensity(fogDict [currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, fogDict [currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, 1.0f);
+		// FOG: May still need to be tuned?
+		WeatherMakerScript.Instance.FogScript.TransitionFogDensity(fogDict[currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, fogDict[currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, 1.0f);
 
-		if (currentStrongestEmotionString == "neutral") {
+		// CLOUDS
+		if (currentStrongestEmotionString == "neutral") 
+		{
 			WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.Medium;
 		}
-
 		if ( cloudDict.ContainsKey(gameManagerScript.getCurrentVocalEmotion().ValenceGroup ) )
-			WeatherMakerScript.Instance.Clouds = cloudDict [gameManagerScript.getCurrentVocalEmotion().ValenceGroup]; //
-		
-		//WeatherMakerCloudType 
-		if (currentStrongestEmotionString == "joy") {
+		{
+			WeatherMakerScript.Instance.Clouds = cloudDict[gameManagerScript.getCurrentVocalEmotion().ValenceGroup];
+		}
+		if (currentStrongestEmotionString == "joy") 
+		{
 			WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.None;
 		}
-		if (dayDict.ContainsKey (gameManagerScript.getCurrentVocalEmotion ().ArousalGroup))
-			WeatherMakerScript.Instance.DayNightScript.TimeOfDay = CalculateTimeOfDay (gameManagerScript.getCurrentVocalEmotion ().ArousalVal);
-//			WeatherMakerScript.Instance.DayNightScript.TimeOfDay = dayDict[gameManagerScript.getCurrentVocalEmotion().ArousalGroup];
 
+		// TIME OF DAY
+		if (dayDict.ContainsKey(gameManagerScript.getCurrentVocalEmotion().ArousalGroup))
+		{
+			WeatherMakerScript.Instance.DayNightScript.TimeOfDay = CalculateTimeOfDay(gameManagerScript.getCurrentVocalEmotion ().ArousalVal);
+		}
+
+		// LIGHTNING
 		WeatherMakerThunderAndLightningScript thunderAndLightningScript = FindObjectOfType<WeatherMakerThunderAndLightningScript> ();
-		if (gameManagerScript.getCurrentVocalEmotion().TemperGroup == "high") {
-			
+		if (gameManagerScript.getCurrentVocalEmotion().TemperGroup == "high") 
+		{
 			thunderAndLightningScript.EnableLightning = true;
-		} else {
+		} 
+		else 
+		{
 			thunderAndLightningScript.EnableLightning = false;
 		}
 
 		thunderAndLightningScript.LightningIntervalTimeRange = new RangeOfFloats {
-			Minimum = CalculateLighteningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal),
-			Maximum = CalculateLighteningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal)
+			Minimum = CalculateLightningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal),
+			Maximum = CalculateLightningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal)		// PROBLEM: This was previously CalculateLightningMin. Is that right?
 		};
 
 		thunderAndLightningScript.LightningIntenseProbability = gameManagerScript.getCurrentVocalEmotion().TemperVal * 0.01f;
+	}
+
+	private void updateClouds()
+	{		
+		if (Input.GetKeyDown(KeyCode.Alpha1))
+		{
+			// No clouds
+			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+			cloudScript.materialUsed.SetFloat("_Density", -0.5f);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha2))
+		{
+			// Light clouds
+			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(0.9f, 0.9f, 0.9f, 1.0f));
+			cloudScript.materialUsed.SetFloat("_Density", -0.2f);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha3))
+		{
+			// Medium clouds
+			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(0.5f, 0.5f, 0.5f, 1.0f));
+			cloudScript.materialUsed.SetFloat("_Density", 0.0f);
+		}
+		if (Input.GetKeyDown(KeyCode.Alpha4))
+		{
+			// Heavy clouds
+			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
+			cloudScript.materialUsed.SetFloat("_Density", 0.5f);
+		}
+		if (Input.GetKeyDown(KeyCode.Space))
+		{
+			// Default cloud values for the material
+			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(1.0f, 1.0f, 1.0f, 1.0f));
+			cloudScript.materialUsed.SetFloat("_Density", 0.0f);
+		}
 	}
 
 }
