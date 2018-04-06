@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DigitalRuby.WeatherMaker;
+using UnityEngine.SceneManagement;
 
 public class StartGameManager : MonoBehaviour {
 
@@ -56,7 +57,7 @@ public class StartGameManager : MonoBehaviour {
 			yield return new WaitForSeconds (5);
 			// Sadness
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["sadness"];
-			WeatherMakerScript.Instance.Clouds = cloudDict ["negative"];
+			// WeatherMakerScript.Instance.Clouds = cloudDict ["negative"];
 			// Heavy clouds
 			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 			cloudScript.materialUsed.SetFloat("_Density", 0.5f);
@@ -64,7 +65,7 @@ public class StartGameManager : MonoBehaviour {
 			yield return new WaitForSeconds (transistionTime);
 			// Fear
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["fear"];
-			WeatherMakerScript.Instance.Clouds = cloudDict ["negative"];
+			// WeatherMakerScript.Instance.Clouds = cloudDict ["negative"];
 			// Heavy clouds
 			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
 			cloudScript.materialUsed.SetFloat("_Density", 0.5f);
@@ -86,6 +87,9 @@ public class StartGameManager : MonoBehaviour {
 			cloudScript.materialUsed.SetFloat("_Density", 0.0f);
 			displayText.text = "neutral";
 			yield return new WaitForSeconds (transistionTime);
+
+			// Load the next scene
+			transitionToNextScene("DefaultScene");
 			// WeatherMakerScript.Instance.Precipitation = precipitationDict["disgust"];
 			// WeatherMakerScript.Instance.Clouds = cloudDict ["negative"];
 			// displayText.text = "disgust";
@@ -98,6 +102,11 @@ public class StartGameManager : MonoBehaviour {
 		}
     }
 
+	// fades to black while transitioning to the next scene
+	public void transitionToNextScene(string sceneName)
+	{
+		SceneManager.LoadSceneAsync(sceneName);
+	}
 
 }
 
