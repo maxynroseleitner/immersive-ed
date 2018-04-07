@@ -17,6 +17,9 @@ public class StartGameManager : MonoBehaviour {
 	public float weatherTransitionTime = 2.0f;
 	public float textTransitionTime = 1.0f;
 
+	public Animator anim;
+	public Image black;
+
 	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{
 																					{"anger", WeatherMakerPrecipitationType.Hail},
 																					{"sadness", WeatherMakerPrecipitationType.Rain},
@@ -83,6 +86,8 @@ public class StartGameManager : MonoBehaviour {
 			yield return new WaitForSeconds (weatherDisplayTime);
 
 			/********************** Load the next scene *************************/
+			anim.SetBool("Fade", true);
+			yield return new WaitUntil( () =>black.color.a == 1);
 			transitionToNextScene("DefaultScene");
 		}
     }
