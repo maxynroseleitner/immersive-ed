@@ -375,12 +375,20 @@ public class SentimentAnalyzer : MonoBehaviour
         var N = JSON.Parse(customData["json"].ToString());
 
         // multiply all emotions by 100 to put them in the same range as the other emotion modalities
-        currentEmotions.joy = Single.Parse(N["keywords"][0]["emotion"]["joy"]) * 100.0f;
-        currentEmotions.anger = Single.Parse(N["keywords"][0]["emotion"]["anger"]) * 100.0f;
-        currentEmotions.fear = Single.Parse(N["keywords"][0]["emotion"]["fear"]) * 100.0f;
-        currentEmotions.disgust = Single.Parse(N["keywords"][0]["emotion"]["disgust"]) * 100.0f;
-        currentEmotions.sadness = Single.Parse(N["keywords"][0]["emotion"]["sadness"]) * 100.0f;
-
+		try{
+        	currentEmotions.joy = Single.Parse(N["keywords"][0]["emotion"]["joy"]) * 100.0f;
+        	currentEmotions.anger = Single.Parse(N["keywords"][0]["emotion"]["anger"]) * 100.0f;
+        	currentEmotions.fear = Single.Parse(N["keywords"][0]["emotion"]["fear"]) * 100.0f;
+        	currentEmotions.disgust = Single.Parse(N["keywords"][0]["emotion"]["disgust"]) * 100.0f;
+        	currentEmotions.sadness = Single.Parse(N["keywords"][0]["emotion"]["sadness"]) * 100.0f;
+		}
+		catch(SystemException e){
+			currentEmotions.joy = 0f;
+			currentEmotions.anger = 0f;
+			currentEmotions.fear = 0f;
+			currentEmotions.disgust = 0f;
+			currentEmotions.sadness = 0f;
+		}
         // Debug.Log("Joy: " + currentEmotions.joy);
         // Debug.Log("anger: " + currentEmotions.anger);
         // Debug.Log("fear: " + currentEmotions.fear);
