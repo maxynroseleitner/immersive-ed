@@ -47,7 +47,7 @@ public class SentimentAnalyzer : MonoBehaviour
     private string _microphoneID = null;
     private AudioClip _recording = null;
     private int _recordingBufferSize = 1;
-    private int _recordingHZ = 22050;
+    private int _recordingHZ = 16000;
     public Text ResponseField;
     private NaturalLanguageUnderstanding _nlu;
     //private string _analysisModel = "en-es";
