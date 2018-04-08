@@ -1542,7 +1542,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   attachToEditorCam: 0
-  materialUsed: {fileID: 2100000, guid: 0fd5e0d9c271a3f4c88e44b7d123f30a, type: 2}
+  materialUsed: {fileID: 2100000, guid: 49a4de9d9129896418e481311028f54c, type: 2}
   hidePlane: 1
   planeOffset: 0.01
   pointLights: []
