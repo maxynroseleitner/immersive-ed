@@ -42,6 +42,12 @@ public class SentimentAnalyzer : MonoBehaviour
     private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
 
     public Text ResultsField;
+	public string[] usernameBucketSTT = { "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c" };
+	public string[] passwordBucketSTT = { "ym6cAkzoa1Lh", "ue1EK5ODGS3j" };
+	public int STTidx = 0;
+	public string[] usernameBucketWatson = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
+	public string[] passwordBucketWatson = { "mzcgORwN52lD", "4fHdSguLMvhS" };
+	public int WatsonIdx = 0;
     private int counter = 0;
     private int _recordingRoutine = 0;
     private string _microphoneID = null;

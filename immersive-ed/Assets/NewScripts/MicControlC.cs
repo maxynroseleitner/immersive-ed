@@ -26,7 +26,9 @@ public class MicControlC : MonoBehaviour {
 
 	public string[] audBySec = new string[10];
 	public string tokenUrl = "https://token.beyondverbal.com/token";
-	private string apiKey = "322360d1-236c-4902-bb9c-1ce56fb84578"; //"322360d1-236c-4902-bb9c-1ce56fb84578";
+	public string[] apiKeyBucket = {"322360d1-236c-4902-bb9c-1ce56fb84578","22147938-29cc-4a2c-9720-2c4ddcb493e8","8f6d2151-d5b5-4928-bae7-a4febea3a4ea","412e16e9-e26c-4b9e-a018-3071ffbfad56","74b28335-c258-4cc9-98a3-2f02570a8827","22147938-29cc-4a2c-9720-2c4ddcb493e8","636ca4e3-d830-4f4d-9c30-30514817b0f0"};
+	public string apiKey = "322360d1-236c-4902-bb9c-1ce56fb84578";
+	public int bucketIdx = 0;
 	public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
 	public string wavFile;
 	public string analysisUrl;
@@ -123,6 +125,21 @@ public class MicControlC : MonoBehaviour {
 				vocalToneResults.TemperGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Group"];
 				vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
 				vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
+				bucketIdx=(bucketIdx+1) % apiKeyBucket.Length;
+				apiKey = apiKeyBucket[bucketIdx];
+				requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
+
+				token = authRequest(tokenUrl, Encoding.UTF8.GetBytes(requestData));
+				//start
+				//		Debug.Log(token);
+				startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
+				//		Debug.Log (startResponseString);
+				startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
+				if (startResponseObj["status"] != "success")
+				{
+					Debug.Log("Response Status: " + startResponseObj["status"]);
+					return;
+				}
 				recordingId = startResponseObj["recordingId"];
 				Debug.Log(vocalToneResults.TemperVal);
 				Debug.Log(vocalToneResults.TemperGroup);
