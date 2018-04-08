@@ -42,12 +42,18 @@ public class SentimentAnalyzer : MonoBehaviour
     private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
 
     public Text ResultsField;
+	public string[] usernameBucketSTT = { "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c" };
+	public string[] passwordBucketSTT = { "ym6cAkzoa1Lh", "ue1EK5ODGS3j" };
+	public int STTidx = 0;
+	public string[] usernameBucketWatson = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
+	public string[] passwordBucketWatson = { "mzcgORwN52lD", "4fHdSguLMvhS" };
+	public int WatsonIdx = 0;
     private int counter = 0;
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
     private AudioClip _recording = null;
     private int _recordingBufferSize = 1;
-    private int _recordingHZ = 22050;
+    private int _recordingHZ = 16000;
     public Text ResponseField;
     private NaturalLanguageUnderstanding _nlu;
     //private string _analysisModel = "en-es";
@@ -294,7 +300,7 @@ public class SentimentAnalyzer : MonoBehaviour
                 {
                     string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
                     Log.Debug("ExampleStreaming.OnRecognize()", text);
-                    ResultsField.text = text;
+//                    ResultsField.text = text;
 
                     int finalPos= text.IndexOf("(Final");
                     int interimPos=text.IndexOf("(Interim");
@@ -375,12 +381,20 @@ public class SentimentAnalyzer : MonoBehaviour
         var N = JSON.Parse(customData["json"].ToString());
 
         // multiply all emotions by 100 to put them in the same range as the other emotion modalities
-        currentEmotions.joy = Single.Parse(N["keywords"][0]["emotion"]["joy"]) * 100.0f;
-        currentEmotions.anger = Single.Parse(N["keywords"][0]["emotion"]["anger"]) * 100.0f;
-        currentEmotions.fear = Single.Parse(N["keywords"][0]["emotion"]["fear"]) * 100.0f;
-        currentEmotions.disgust = Single.Parse(N["keywords"][0]["emotion"]["disgust"]) * 100.0f;
-        currentEmotions.sadness = Single.Parse(N["keywords"][0]["emotion"]["sadness"]) * 100.0f;
-
+		try{
+        	currentEmotions.joy = Single.Parse(N["keywords"][0]["emotion"]["joy"]) * 100.0f;
+        	currentEmotions.anger = Single.Parse(N["keywords"][0]["emotion"]["anger"]) * 100.0f;
+        	currentEmotions.fear = Single.Parse(N["keywords"][0]["emotion"]["fear"]) * 100.0f;
+        	currentEmotions.disgust = Single.Parse(N["keywords"][0]["emotion"]["disgust"]) * 100.0f;
+        	currentEmotions.sadness = Single.Parse(N["keywords"][0]["emotion"]["sadness"]) * 100.0f;
+		}
+		catch(SystemException e){
+			currentEmotions.joy = 0f;
+			currentEmotions.anger = 0f;
+			currentEmotions.fear = 0f;
+			currentEmotions.disgust = 0f;
+			currentEmotions.sadness = 0f;
+		}
         // Debug.Log("Joy: " + currentEmotions.joy);
         // Debug.Log("anger: " + currentEmotions.anger);
         // Debug.Log("fear: " + currentEmotions.fear);
@@ -403,4 +417,7 @@ public class SentimentAnalyzer : MonoBehaviour
             }
         }
     }
+	public AudioClip GetAudClip(){
+		return _recording;
+	}
 }
