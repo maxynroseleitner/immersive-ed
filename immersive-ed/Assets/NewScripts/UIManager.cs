@@ -37,7 +37,7 @@ public class UIManager : MonoBehaviour {
 	public GameObject weatherMaker;
 	public WeatherMakerScript weatherScript;
 
-	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{{"anger", WeatherMakerPrecipitationType.Hail},{"sadness", WeatherMakerPrecipitationType.Rain},{"fear",WeatherMakerPrecipitationType.None}, {"joy",WeatherMakerPrecipitationType.None}, {"neutral",WeatherMakerPrecipitationType.None}, {"disgust",WeatherMakerPrecipitationType.None}, {"surprise",WeatherMakerPrecipitationType.None}};
+	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{{"anger", WeatherMakerPrecipitationType.Hail},{"sadness", WeatherMakerPrecipitationType.Rain},{"fear",WeatherMakerPrecipitationType.None}, {"joy",WeatherMakerPrecipitationType.Custom}, {"neutral",WeatherMakerPrecipitationType.None}, {"disgust",WeatherMakerPrecipitationType.None}, {"surprise",WeatherMakerPrecipitationType.None}};
 	private Dictionary<string, float> fogDict = new Dictionary<string, float>{{"anger",0.0f},{"sadness",0.0f},{"fear",1.0f}, {"joy",0.0f}, {"neutral",0.0f}, {"disgust",0.0f}, {"surprise",0.0f}};
 	private Dictionary<string, WeatherMakerCloudType> cloudDict = new Dictionary<string, WeatherMakerCloudType>{{"positive",WeatherMakerCloudType.Light},{"negative",WeatherMakerCloudType.Heavy}};
 	private Dictionary<string, float> dayDict = new Dictionary<string, float>{{"low",86400f},{"neutral",68400f},{"high",43200f}};

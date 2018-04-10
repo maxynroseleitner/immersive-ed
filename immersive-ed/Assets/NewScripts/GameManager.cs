@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour {
 	{
 		while (true)
 		{
+			Debug.Log (wordAnalyzer);
 			vocalAnalyzer.SetAudClip(wordAnalyzer.GetAudClip());
 			yield return new WaitForSeconds(1.0f);
 		}
@@ -118,7 +119,7 @@ public class GameManager : MonoBehaviour {
 			wordAnalyzer = (SentimentAnalyzer) wordSentimentEmotionAnalyzerObject.GetComponent(typeof(SentimentAnalyzer));
 		}
 
-		if (!useVocalToneEmotion)
+		if (!useVocalToneEmotion | !useWordSentimentEmotion)
 		{
 			vocalEmotionAnalyzerObject.SetActive(false);
 		}

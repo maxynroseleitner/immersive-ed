@@ -37,17 +37,15 @@ public class SentimentAnalyzer : MonoBehaviour
     // private string _username = "55095a1d-71db-4b7b-9007-2de45bbfc8ef";
     // private string _password = "4AydC5ntEOUs";
 
-    private string _username = "91962287-1aa6-4dbf-a193-6f4e9e95d34e";
-    private string _password = "6YMPWyz5SUBd";
-    private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
-
+    public string urlSTT = "https://stream.watsonplatform.net/speech-to-text/api";
+	public string urlNLU = "https://gateway.watsonplatform.net/natural-language-understanding/api";
     public Text ResultsField;
 	public string[] usernameBucketSTT = { "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c" };
 	public string[] passwordBucketSTT = { "ym6cAkzoa1Lh", "ue1EK5ODGS3j" };
-	public int STTidx = 0;
-	public string[] usernameBucketWatson = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
-	public string[] passwordBucketWatson = { "mzcgORwN52lD", "4fHdSguLMvhS" };
-	public int WatsonIdx = 0;
+	public int idxSTT = 0;
+	public string[] usernameBucketNLU = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
+	public string[] passwordBucketNLU = { "mzcgORwN52lD", "4fHdSguLMvhS" };
+	public int idxNLU = 0;
     private int counter = 0;
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
@@ -86,20 +84,12 @@ public class SentimentAnalyzer : MonoBehaviour
         LogSystem.InstallDefaultReactors();
 
         //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
-
-        _speechToText = new SpeechToText(credentials);
-        Credentials naturalLanguageUnderstandingCredentials = new Credentials()
-        {
-            // Original Watson NLP credentials
-            // Username = "b2e711a5-5d95-4988-a355-8653923d7769",
-            // Password = "1VRamFU1cXr1",
-
-            Username = "b2e711a5-5d95-4988-a355-8653923d7769",
-            Password = "1VRamFU1cXr1",
-            Url = "https://gateway.watsonplatform.net/natural-language-understanding/api"
-        };
-        _nlu = new NaturalLanguageUnderstanding(naturalLanguageUnderstandingCredentials);
+		Credentials credentialsSTT = new Credentials(usernameBucketSTT[idxSTT], passwordBucketSTT[idxSTT], urlSTT);
+        _speechToText = new SpeechToText(credentialsSTT);
+		idxSTT = (idxSTT + 1) % usernameBucketSTT.Length;
+		Credentials credentialsNLU = new Credentials(usernameBucketNLU[idxNLU], passwordBucketNLU[idxNLU], urlNLU);
+        _nlu = new NaturalLanguageUnderstanding(credentialsNLU);
+		idxNLU = (idxNLU + 1) % usernameBucketNLU.Length;
         Active = true;
         StartCoroutine(coroutineA());
         StartRecording();
@@ -140,37 +130,12 @@ public class SentimentAnalyzer : MonoBehaviour
             UnityObjectUtil.StartDestroyQueue();
            _recordingRoutine = Runnable.Run(RecordingHandler());
           
-            //Runnable.Run(GetResult());
         }
-    }
-    /*private IEnumerator WaitAndPrint(float waitTime)
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(waitTime);
-            Log.Debug("WaitAndPrint " + Time.time,"" ,"dfsdf");
-        }
-    }*/
+    } 
 
     IEnumerator coroutineA()
     {
-        // // wait for 1 second
-        // while (true)
-        // {
-        //    // Debug.Log("coroutineA created");
-        //     string analyseText = "";
-        //     foreach (string item in al)
-        //     {
-        //         analyseText += item;
-        //     }
-        //     al.Clear();
-        //     analyse(analyseText);
-            
-        //     yield return new WaitForSeconds(10.0f);
-            
-        //     //Debug.Log("coroutineA running again");
-        // }
-        // wait for 1 second
+
         int timeInt =10;
         
         while (true)
@@ -300,7 +265,6 @@ public class SentimentAnalyzer : MonoBehaviour
                 {
                     string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
                     Log.Debug("ExampleStreaming.OnRecognize()", text);
-//                    ResultsField.text = text;
 
                     int finalPos= text.IndexOf("(Final");
                     int interimPos=text.IndexOf("(Interim");
@@ -395,11 +359,6 @@ public class SentimentAnalyzer : MonoBehaviour
 			currentEmotions.disgust = 0f;
 			currentEmotions.sadness = 0f;
 		}
-        // Debug.Log("Joy: " + currentEmotions.joy);
-        // Debug.Log("anger: " + currentEmotions.anger);
-        // Debug.Log("fear: " + currentEmotions.fear);
-        // Debug.Log("disgust: " + currentEmotions.disgust);
-        // Debug.Log("sadness: " + currentEmotions.sadness);
     }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
