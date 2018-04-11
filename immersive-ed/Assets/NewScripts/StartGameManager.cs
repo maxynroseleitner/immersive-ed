@@ -4,18 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using DigitalRuby.WeatherMaker;
 using UnityEngine.SceneManagement;
+using TrueClouds;
 
 public class StartGameManager : MonoBehaviour {
 
 	public Camera mainCamera;
 	public Text displayText;
 	public GameObject weatherMaker;
-	public WeatherMakerScript weatherScript;
-	private RaymarchedClouds cloudScript;
+	private WeatherMakerScript weatherScript;
 
 	public float weatherDisplayTime = 5.0f;
 	public float weatherTransitionTime = 2.0f;
 	public float textTransitionTime = 1.0f;
+
+	private CloudCamera3D cloudScript;
+	public GameObject cloudRoot;
+	public float cloudScale = 1.0f;
 
 	public Animator anim;
 	public Image black;
@@ -23,25 +27,22 @@ public class StartGameManager : MonoBehaviour {
 	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{
 																					{"anger", WeatherMakerPrecipitationType.Hail},
 																					{"sadness", WeatherMakerPrecipitationType.Rain},
-																					{"fear",WeatherMakerPrecipitationType.Sleet}, 
+																					{"fear",WeatherMakerPrecipitationType.Snow}, 
 																					{"joy",WeatherMakerPrecipitationType.None}, 
-																					{"neutral",WeatherMakerPrecipitationType.None}, 
-																					{"disgust",WeatherMakerPrecipitationType.None}, 
-																					{"surprise",WeatherMakerPrecipitationType.None}};
+																					{"neutral",WeatherMakerPrecipitationType.None}};
 
-
-	private Dictionary<string, float> fogDict = new Dictionary<string, float>{{"anger",0.0f},{"sadness",0.0f},{"fear",1.0f}, {"joy",0.0f}, {"neutral",0.0f}, {"disgust",0.0f}, {"surprise",0.0f}};
-	private Dictionary<string, WeatherMakerCloudType> cloudDict = new Dictionary<string, WeatherMakerCloudType>{{"positive",WeatherMakerCloudType.Light},{"negative",WeatherMakerCloudType.Heavy}};
-	private Dictionary<string, float> dayDict = new Dictionary<string, float>{{"low",86400f},{"neutral",68400f},{"high",43200f}};
 
 	void Start () 
 	{
-		cloudScript = (RaymarchedClouds) mainCamera.GetComponent<RaymarchedClouds>();
+		cloudScript = (CloudCamera3D) mainCamera.GetComponent<CloudCamera3D>();
 		weatherScript = (WeatherMakerScript) weatherMaker.GetComponent<WeatherMakerScript>();
 		displayText.text = "";
+
 		// Default to no clouds
-		cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-		cloudScript.materialUsed.SetFloat("_Density", -0.5f);
+		cloudScale = 0.0f;
+		cloudRoot.transform.localScale = new Vector3(cloudScale, cloudScale, cloudScale);
+
+		// Begin the weather tutorial
 		StartCoroutine(LoopThroughWeather());
 	}
 
@@ -63,13 +64,13 @@ public class StartGameManager : MonoBehaviour {
 			
 			/******************************* Sadness *******************************/
 			StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Sadness"));
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "heavy"));
+			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "medium"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["sadness"];
 			yield return new WaitForSeconds (weatherDisplayTime);
 
 			/******************************* Fear *******************************/
 			StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Fear"));
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "heavy"));
+			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "light"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["fear"];
 			yield return new WaitForSeconds (weatherDisplayTime);
 
@@ -81,14 +82,14 @@ public class StartGameManager : MonoBehaviour {
 
 			/******************************* Neutral *******************************/
 			StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Neutral"));
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "medium"));
+			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "neutral"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["neutral"];
 			yield return new WaitForSeconds (weatherDisplayTime);
 
 			/********************** Load the next scene *************************/
 			anim.SetBool("Fade", true);
 			yield return new WaitUntil( () =>black.color.a == 1);
-			transitionToNextScene("DefaultScene");
+			transitionToNextScene("NewDefaultScene");
 		}
     }
 
@@ -128,7 +129,7 @@ public class StartGameManager : MonoBehaviour {
 		while (elapsedTime < duration)
 		{
 			elapsedTime += Time.deltaTime;
-			if (index % 10 == 0)
+			if (index % 20 == 0)
 				WeatherMakerScript.Instance.LightningScript.CallIntenseLightning();
 			index++;
 			yield return null;
@@ -138,40 +139,48 @@ public class StartGameManager : MonoBehaviour {
 	// Fades from the current clouds to the given cloudType over t seconds
 	public IEnumerator FadeCloudsToNext(float t, string cloudType)
 	{
-		Vector4 startColor = cloudScript.materialUsed.GetVector("_BaseColor");
-		float startDensity = cloudScript.materialUsed.GetFloat("_Density");
+		Color startLightColor = cloudScript.LightColor;
+		Color startShadowColor = cloudScript.ShadowColor;
+		float startScale = cloudScale;
 
-		Vector4 finalColor = new Vector4(0.0f, 0.0f, 0.0f, 0.0f);
-		float finalDensity = 0.0f;
+		Color finalLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+		Color finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+		float finalScale = 0.0f;
 
 		if (cloudType == "none")
 		{
 			// Set the final cloud color and density
-			finalColor = new Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-			finalDensity = -0.5f;
+			finalLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+			finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+			finalScale = 0.0f;
 		}
 		else if (cloudType == "light")
 		{
 			// Set the final cloud color and density
-			finalColor = new Vector4(0.9f, 0.9f, 0.9f, 1.0f);
-			finalDensity = -0.2f;
+			finalLightColor = new Color(0.75f, 0.75f, 0.75f, 1.0f);
+			finalShadowColor = new Color(0.65f, 0.65f, 0.65f, 1.0f);
+			finalScale = 1.0f;
 		}
 		else if (cloudType == "medium")
 		{
 			// Set the final cloud color and density
-			finalColor = new Vector4(0.5f, 0.5f, 0.5f, 1.0f);
-			finalDensity = 0.0f;
+			finalLightColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
+			finalShadowColor = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+			finalScale = 1.0f;
 		}
 		else if (cloudType == "heavy")
 		{
 			// Set the final cloud color and density
-			finalColor = new Vector4(0.2f, 0.2f, 0.2f, 1.0f);
-			finalDensity = 0.5f;
+			finalLightColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
+			finalShadowColor = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+			finalScale = 1.0f;
 		}
-		else 
+		else // neutral
 		{
-			// The given cloud type is not valid, so do nothing
-			yield return null;
+			// Set the final cloud color and density
+			finalLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+			finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+			finalScale = 1.0f;
 		}
 
 		// Interpolate cloud properties over time
@@ -179,16 +188,21 @@ public class StartGameManager : MonoBehaviour {
      	while (elapsedTime < t)
      	{
 			// Perform interpolation between the start and final cloud values
-			Vector4 interpColor = Vector4.Lerp(startColor, finalColor, (elapsedTime / t));
-			float interpDensity = Mathf.Lerp(startDensity, finalDensity, (elapsedTime / t));
+			Color interpLightColor = Color.Lerp(startLightColor, finalLightColor, (elapsedTime / t));
+			Color interpShadowColor = Color.Lerp(startShadowColor, finalShadowColor, (elapsedTime / t));
+			float interpScale = Mathf.Lerp(startScale, finalScale, (elapsedTime / t));
 			elapsedTime += Time.deltaTime;
 			
 			// Set the color and density in the material's shader
-			cloudScript.materialUsed.SetVector("_BaseColor", interpColor);
-			cloudScript.materialUsed.SetFloat("_Density", interpDensity);
-			
+			cloudScript.LightColor = interpLightColor;
+			cloudScript.ShadowColor = interpShadowColor;
+			cloudScale = interpScale;
+
+			// Set the scale of all the clouds in the scene to reflect the change in cloudScale
+			cloudRoot.transform.localScale = new Vector3(cloudScale, cloudScale, cloudScale);
 			yield return null;
      	}
+
 	}
 }
 

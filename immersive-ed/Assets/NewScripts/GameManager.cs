@@ -24,7 +24,8 @@ public class GameManager : MonoBehaviour {
 
 	public EmotionStruct currentFacialEmotion = new EmotionStruct();
 	public EmotionStruct currentWordSentimentEmotion = new EmotionStruct();
-	public ToneAnalysis currentVocalEmotion = new ToneAnalysis();
+	// public ToneAnalysis currentVocalEmotion = new ToneAnalysis();
+	public EmotionStruct currentVocalEmotion = new EmotionStruct();
 	private float emotionThreshold = 10.0f;
 
 	void Awake()
@@ -145,7 +146,7 @@ public class GameManager : MonoBehaviour {
 			
 		if (useVocalToneEmotion)
 		{
-			currentVocalEmotion = vocalAnalyzer.getVocalToneResults();
+			currentVocalEmotion = convertToneAnalysisToEmotionStruct(vocalAnalyzer.getVocalToneResults());
 		}
 
 		//Set mood tracker attributes
@@ -162,9 +163,15 @@ public class GameManager : MonoBehaviour {
 		return currentWordSentimentEmotion;
 	}
 
-	public ToneAnalysis getCurrentVocalEmotion()
+	public EmotionStruct getCurrentVocalEmotion()
 	{
 		return currentVocalEmotion;
+	}
+
+	public EmotionStruct convertToneAnalysisToEmotionStruct(ToneAnalysis toneValues)
+	{
+		// TODO: Implement the mapping properly
+		return new EmotionStruct();
 	}
 
 	// Returns the strongest emotion present in the current cumulative emotion
@@ -212,54 +219,6 @@ public class GameManager : MonoBehaviour {
 		else
 		{
 			return 0.0f;
-		}
-	}
-
-	// Returns the strongest emotion present in the current cumulative emotion
-	public string getValueOfStrongestEmotionString(EmotionStruct emotions)
-	{
-		if (emotions.joy > emotions.fear &&
-			emotions.joy > emotions.disgust &&
-			emotions.joy > emotions.sadness && 
-			emotions.joy > emotions.anger && 
-			emotions.joy > emotions.surprise &&
-			emotions.joy > emotionThreshold)
-		{
-			return "joy";
-		}
-		else if (emotions.fear > emotions.disgust &&
-			emotions.fear > emotions.sadness &&
-			emotions.fear > emotions.anger &&
-			emotions.fear > emotions.surprise &&
-			emotions.fear > emotionThreshold)
-		{
-			return "fear";
-		}
-		else if (emotions.disgust > emotions.sadness &&
-			emotions.disgust > emotions.anger &&
-			emotions.disgust > emotions.surprise &&
-			emotions.disgust > emotionThreshold)
-		{
-			return "disgust";
-		}
-		else if (emotions.sadness > emotions.anger &&
-			emotions.sadness > emotions.surprise &&
-			emotions.sadness > emotionThreshold)
-		{
-			return "sadness";
-		}
-		else if (emotions.anger > emotions.surprise &&
-			emotions.anger > emotionThreshold)
-		{
-			return "anger";
-		}
-		else if(emotions.surprise > emotionThreshold)
-		{
-			return "surprise";
-		}
-		else
-		{
-			return "neutral";
 		}
 	}
 

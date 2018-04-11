@@ -11,6 +11,8 @@ public class EmotionStruct {
 	public float fear;
 	public float disgust;
 
+	public float emotionThreshold = 10.0f;
+
 	public EmotionStruct()
 	{
 		joy = 0.0f;
@@ -21,4 +23,34 @@ public class EmotionStruct {
 		disgust = 0.0f;
 	}
 
+	// Note that this does NOT consider surprise or disgust when finding the highest value
+	public string getSingleHighestEmotionString()
+	{
+		if (joy > fear &&
+			joy > sadness && 
+			joy > anger && 
+			joy > emotionThreshold)
+		{
+			return "joy";
+		}
+		else if (fear > sadness &&
+				 fear > anger &&
+				 fear > emotionThreshold)
+		{
+			return "fear";
+		}
+		else if (sadness > anger &&
+				 sadness > emotionThreshold)
+		{
+			return "sadness";
+		}
+		else if (anger > emotionThreshold)
+		{
+			return "anger";
+		}
+		else
+		{
+			return "neutral";
+		}
+	}
 }

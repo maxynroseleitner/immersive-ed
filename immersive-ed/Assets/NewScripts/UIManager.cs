@@ -34,25 +34,18 @@ public class UIManager : MonoBehaviour {
 	private float previousWordSentimentEmotionBarWidth;
 
 	// Weather Objects and Variables
-	public GameObject weatherMaker;
-	public WeatherMakerScript weatherScript;
+	public GameObject weatherManagerObject;
+	private WeatherManager weatherManagerScript;
 
-	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{{"anger", WeatherMakerPrecipitationType.Hail},{"sadness", WeatherMakerPrecipitationType.Rain},{"fear",WeatherMakerPrecipitationType.None}, {"joy",WeatherMakerPrecipitationType.None}, {"neutral",WeatherMakerPrecipitationType.None}, {"disgust",WeatherMakerPrecipitationType.None}, {"surprise",WeatherMakerPrecipitationType.None}};
-	private Dictionary<string, float> fogDict = new Dictionary<string, float>{{"anger",0.0f},{"sadness",0.0f},{"fear",1.0f}, {"joy",0.0f}, {"neutral",0.0f}, {"disgust",0.0f}, {"surprise",0.0f}};
-	private Dictionary<string, WeatherMakerCloudType> cloudDict = new Dictionary<string, WeatherMakerCloudType>{{"positive",WeatherMakerCloudType.Light},{"negative",WeatherMakerCloudType.Heavy}};
-	private Dictionary<string, float> dayDict = new Dictionary<string, float>{{"low",86400f},{"neutral",68400f},{"high",43200f}};
-
-	// Volumetric cloud material
-	public RaymarchedClouds cloudScript;
+	// Emotion updating variables
+	public float requestEmotionUpdateTime = 1.0f; // the number of seconds between each request for an update from the emotion modality analyzers
 
 	// Use this for initialization
 	void Start () {
 		gameManagerScript = (GameManager) gameManagerObject.GetComponent(typeof(GameManager));
 		camInputScript = (CameraInput) inputDeviceCamera.GetComponent<CameraInput>();
-		//planeRenderer = (Renderer) webcamRenderPlane.GetComponent<Renderer>();
+		weatherManagerScript = (WeatherManager) weatherManagerObject.GetComponent<WeatherManager>();
 		quadRenderer = webcamRenderQuad.GetComponent<Renderer> ();
-		weatherScript = (WeatherMakerScript) weatherMaker.GetComponent<WeatherMakerScript>();
-		cloudScript = (RaymarchedClouds) mainCamera.GetComponent<RaymarchedClouds>();
 		
 		// Camera feed parameters
 		if (camInputScript.Texture == null) {
@@ -81,117 +74,142 @@ public class UIManager : MonoBehaviour {
 		currentWordSentimentEmotionBarWidth = 0.0f;
 		previousWordSentimentEmotionBarWidth = 0.0f;
 
-		// Initialize the weather
-		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
-		WeatherMakerScript.Instance.PrecipitationIntensity = 1.0f;
-		WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.Light;
-
 		// Start the background emotion updater
 		StartCoroutine(RequestEmotionUpdate());
-
-		// QUICK TEST: Sending new values to the cloud material shader to use in the raymarching/volume rendering
-		// cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(1.0f, 0.0f, 0.0f, 1.0f));
-		// cloudScript.materialUsed.SetFloat("_Density", 1.0f);
-		// END QUICK TEST
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		// Display the webcam input
-		//planeRenderer.material.mainTexture = camInputScript.Texture;
+		// Display the webcam input	
 		quadRenderer.material.mainTexture = camInputScript.Texture;
-
-		if (gameManagerScript.useVocalToneEmotion)
-		{
-			ToneAnalysis vocalToneResults = gameManagerScript.getCurrentVocalEmotion ();
-			// Debug.Log(vocalToneResults.TemperVal);
-			// Debug.Log(vocalToneResults.TemperGroup);
-//			Debug.Log(vocalToneResults.ArousalVal);
-//			Debug.Log(vocalToneResults.ArousalGroup);
-//			Debug.Log(vocalToneResults.ValenceVal);
-//			Debug.Log(vocalToneResults.ValenceGroup);
-		}
-
-		SetCurrentWeather ();
-		updateClouds();
 	}
 
+	// Pulls the most recent emotion values from the GameManager
 	private IEnumerator RequestEmotionUpdate()
 	{
-		// Debug.Log("Entered REQUEST EMOTION UPDATE COROUTINE.");
-		while (true) 
+		while (true)
 		{
-			yield return new WaitForSeconds(colorUpdateTime);
-
-			if (gameManagerScript.useFacialEmotion)
-			{
-				EmotionStruct currentEmotions = gameManagerScript.getCurrentFacialEmotion();
-				// Debug.Log("Joy: " + currentEmotions.joy);
-				// Debug.Log("anger: " + currentEmotions.anger);
-				// Debug.Log("fear: " + currentEmotions.fear);
-				// Debug.Log("disgust: " + currentEmotions.disgust);
-				// Debug.Log("sadness: " + currentEmotions.sadness);
-
-				// Update facial emotion colors
-				previousFacialEmotionColor = currentFacialEmotionColor;
-				currentFacialEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentFacialEmotion());
-
-				// Update the emotion bars
-				previousFacialEmotionBarWidth = currentFacialEmotionBarWidth;
-				currentFacialEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentFacialEmotion()) * 2;
-			}
-
-			if (gameManagerScript.useWordSentimentEmotion)
-			{
-				// Update word sentiment emotion colors
-				previousWordSentimentEmotionColor = currentWordSentimentEmotionColor;
-				currentWordSentimentEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentWordSentimentEmotion());
-
-				EmotionStruct currentEmotions = gameManagerScript.getCurrentWordSentimentEmotion();
-				// Debug.Log("Joy: " + currentEmotions.joy);
-				// Debug.Log("anger: " + currentEmotions.anger);
-				// Debug.Log("fear: " + currentEmotions.fear);
-				// Debug.Log("disgust: " + currentEmotions.disgust);
-				// Debug.Log("sadness: " + currentEmotions.sadness);
-
-				previousWordSentimentEmotionBarWidth = currentWordSentimentEmotionBarWidth;
-				currentWordSentimentEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentWordSentimentEmotion()) * 2;
-			}
-
-			StartCoroutine(UpdateBackgroundColor());
+			EmotionStruct aggregateEmotion = calculateAverageEmotionValues();
+			Debug.Log("Joy: " + aggregateEmotion.joy);
+			Debug.Log("Fear: " + aggregateEmotion.fear);
+			Debug.Log("Anger: " + aggregateEmotion.anger);
+			Debug.Log("Sadness: " + aggregateEmotion.sadness);
+			weatherManagerScript.updateWeather(aggregateEmotion, requestEmotionUpdateTime);
+			yield return new WaitForSeconds(requestEmotionUpdateTime);
 		}
+
+		// while (true) 
+		// {
+		// 	yield return new WaitForSeconds(colorUpdateTime);
+
+		// 	if (gameManagerScript.useFacialEmotion)
+		// 	{
+		// 		EmotionStruct currentEmotions = gameManagerScript.getCurrentFacialEmotion();
+
+		// 		// Update facial emotion colors
+		// 		previousFacialEmotionColor = currentFacialEmotionColor;
+		// 		currentFacialEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentFacialEmotion());
+
+		// 		// Update the emotion bars
+		// 		previousFacialEmotionBarWidth = currentFacialEmotionBarWidth;
+		// 		currentFacialEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentFacialEmotion()) * 2;
+		// 	}
+
+		// 	if (gameManagerScript.useWordSentimentEmotion)
+		// 	{
+		// 		// Update word sentiment emotion colors
+		// 		previousWordSentimentEmotionColor = currentWordSentimentEmotionColor;
+		// 		currentWordSentimentEmotionColor = gameManagerScript.calculateEmotionColor(gameManagerScript.getCurrentWordSentimentEmotion());
+
+		// 		EmotionStruct currentEmotions = gameManagerScript.getCurrentWordSentimentEmotion();
+
+		// 		previousWordSentimentEmotionBarWidth = currentWordSentimentEmotionBarWidth;
+		// 		currentWordSentimentEmotionBarWidth = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.getCurrentWordSentimentEmotion()) * 2;
+		// 	}
+
+		// 	if (gameManagerScript.useVocalToneEmotion)
+		// 	{
+		// 		// Update vocal tone emotion
+		// 	}
+
+		// 	StartCoroutine(UpdateBackgroundColor());
+		// }
+	}
+
+	private EmotionStruct calculateAverageEmotionValues()
+	{
+		int numModalities = 0;
+		EmotionStruct aggregateEmotion = new EmotionStruct();
+		// Calculate the sum of current emotions detected
+		if (gameManagerScript.useFacialEmotion)
+		{
+			EmotionStruct face = gameManagerScript.getCurrentFacialEmotion();
+			aggregateEmotion.joy += face.joy;
+			aggregateEmotion.anger += face.anger;
+			aggregateEmotion.sadness += face.sadness;
+			aggregateEmotion.fear += face.fear;
+			numModalities++;
+		}
+		if (gameManagerScript.useWordSentimentEmotion)
+		{
+			EmotionStruct word = gameManagerScript.getCurrentWordSentimentEmotion();
+			aggregateEmotion.joy += word.joy;
+			aggregateEmotion.anger += word.anger;
+			aggregateEmotion.sadness += word.sadness;
+			aggregateEmotion.fear += word.fear;
+			numModalities++;
+		}
+		if (gameManagerScript.useWordSentimentEmotion)
+		{
+			EmotionStruct tone = gameManagerScript.getCurrentVocalEmotion();
+			aggregateEmotion.joy += tone.joy;
+			aggregateEmotion.anger += tone.anger;
+			aggregateEmotion.sadness += tone.sadness;
+			aggregateEmotion.fear += tone.fear;
+			numModalities++;
+		}
+
+		// Calculate the average of the current emotions detected
+		if (numModalities > 0)
+		{
+			aggregateEmotion.joy /= numModalities;
+			aggregateEmotion.anger /= numModalities;
+			aggregateEmotion.sadness /= numModalities;
+			aggregateEmotion.fear /= numModalities;
+		}
+		return aggregateEmotion;
 	}
 
 	// Coroutine enumerator for updating the current emotion color using linear interpolation over a predefined amount of time
-	private IEnumerator UpdateBackgroundColor()
-	{		
-		// Debug.Log("Entered UPDATE BACKGROUND COLOR COROUTINE.");
-		float t = 0;
-		while (t < 1)
-		{
-			// Now the loop will execute on every end of frame until the condition is true
-			if (gameManagerScript.useFacialEmotion)
-			{
-				// Update the facial emotion bar
-				facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousFacialEmotionBarWidth, currentFacialEmotionBarWidth, t),
-					facialEmotionBar.rectTransform.sizeDelta.y);
-				facialEmotionBar.color = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
-			}
+	// private IEnumerator UpdateBackgroundColor()
+	// {		
+	// 	// Debug.Log("Entered UPDATE BACKGROUND COLOR COROUTINE.");
+	// 	float t = 0;
+	// 	while (t < 1)
+	// 	{
+	// 		// Now the loop will execute on every end of frame until the condition is true
+	// 		if (gameManagerScript.useFacialEmotion)
+	// 		{
+	// 			// Update the facial emotion bar
+	// 			facialEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousFacialEmotionBarWidth, currentFacialEmotionBarWidth, t),
+	// 				facialEmotionBar.rectTransform.sizeDelta.y);
+	// 			facialEmotionBar.color = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
+	// 		}
 
-			if (gameManagerScript.useWordSentimentEmotion)
-			{
-				// Update the word sentiment emotion bar
-				wordSentimentEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousWordSentimentEmotionBarWidth, currentWordSentimentEmotionBarWidth, t),
-					wordSentimentEmotionBar.rectTransform.sizeDelta.y);
-				wordSentimentEmotionBar.color = Color.Lerp(previousWordSentimentEmotionColor, currentWordSentimentEmotionColor, t);	
-			}
-			// mainCamera.backgroundColor = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
+	// 		if (gameManagerScript.useWordSentimentEmotion)
+	// 		{
+	// 			// Update the word sentiment emotion bar
+	// 			wordSentimentEmotionBar.rectTransform.sizeDelta = new Vector2(Mathf.Lerp(previousWordSentimentEmotionBarWidth, currentWordSentimentEmotionBarWidth, t),
+	// 				wordSentimentEmotionBar.rectTransform.sizeDelta.y);
+	// 			wordSentimentEmotionBar.color = Color.Lerp(previousWordSentimentEmotionColor, currentWordSentimentEmotionColor, t);	
+	// 		}
+	// 		// mainCamera.backgroundColor = Color.Lerp(previousFacialEmotionColor, currentFacialEmotionColor, t);
 
-			t += Time.deltaTime / lerpTime;
+	// 		t += Time.deltaTime / lerpTime;
 
-			yield return new WaitForEndOfFrame();
-		}
-	}
+	// 		yield return new WaitForEndOfFrame();
+	// 	}
+	// }
 
 	/////////////////////////////////////////// SET MOOD TRACKER ATTRIBUTES  START //////////////////////////////////////////////////////
 	[HideInInspector] public Vector3 normalizedMoodTrackerCoordinates;
@@ -290,104 +308,4 @@ public class UIManager : MonoBehaviour {
 
 	}
 ///////////////////////////////////////////////// SET CAMERA FEED  END //////////////////////////////////////////////////////////////
-
-	public float CalculateLightningMin (float x) {
-
-		return (1.5f / 40f) * ((100.0f - x));
-	}
-
-	public float CalculateLightningMax (float x) {
-
-		return (2.0f / 40f) * ((100.0f - x)+ 0.5f);
-	}
-
-	public float CalculateTimeOfDay(float x) {
-		return (86400 - 432.0f * x);
-	}
-
-	public void SetCurrentWeather (){
-		// Get the strongest facial emotion type and value
-		string currentStrongestEmotionString = gameManagerScript.getValueOfStrongestEmotionString(gameManagerScript.currentFacialEmotion);
-		float currentStrongestEmotionValue = gameManagerScript.getValueOfStrongestEmotion(gameManagerScript.currentFacialEmotion);
-
-		// PRECIPITATION
-		WeatherMakerScript.Instance.Precipitation = precipitationDict[currentStrongestEmotionString];
-		WeatherMakerScript.Instance.PrecipitationIntensity = currentStrongestEmotionValue * 0.01f;
-
-		// FOG: May still need to be tuned?
-		WeatherMakerScript.Instance.FogScript.TransitionFogDensity(fogDict[currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, fogDict[currentStrongestEmotionString] * currentStrongestEmotionValue * 0.01f, 1.0f);
-
-		// CLOUDS
-		if (currentStrongestEmotionString == "neutral") 
-		{
-			WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.Medium;
-		}
-		if ( cloudDict.ContainsKey(gameManagerScript.getCurrentVocalEmotion().ValenceGroup ) )
-		{
-			WeatherMakerScript.Instance.Clouds = cloudDict[gameManagerScript.getCurrentVocalEmotion().ValenceGroup];
-		}
-		if (currentStrongestEmotionString == "joy") 
-		{
-			WeatherMakerScript.Instance.Clouds = WeatherMakerCloudType.None;
-		}
-
-		// TIME OF DAY
-		if (dayDict.ContainsKey(gameManagerScript.getCurrentVocalEmotion().ArousalGroup))
-		{
-			WeatherMakerScript.Instance.DayNightScript.TimeOfDay = CalculateTimeOfDay(gameManagerScript.getCurrentVocalEmotion ().ArousalVal);
-		}
-
-		// LIGHTNING
-		WeatherMakerThunderAndLightningScript thunderAndLightningScript = FindObjectOfType<WeatherMakerThunderAndLightningScript> ();
-		if (gameManagerScript.getCurrentVocalEmotion().TemperGroup == "high") 
-		{
-			thunderAndLightningScript.EnableLightning = true;
-		} 
-		else 
-		{
-			thunderAndLightningScript.EnableLightning = false;
-		}
-
-		thunderAndLightningScript.LightningIntervalTimeRange = new RangeOfFloats {
-			Minimum = CalculateLightningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal),
-			Maximum = CalculateLightningMin (gameManagerScript.getCurrentVocalEmotion().TemperVal)		// PROBLEM: This was previously CalculateLightningMin. Is that right?
-		};
-
-		thunderAndLightningScript.LightningIntenseProbability = gameManagerScript.getCurrentVocalEmotion().TemperVal * 0.01f;
-	}
-
-	private void updateClouds()
-	{		
-		if (Input.GetKeyDown(KeyCode.Alpha1))
-		{
-			// No clouds
-			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-			cloudScript.materialUsed.SetFloat("_Density", -0.5f);
-		}
-		if (Input.GetKeyDown(KeyCode.Alpha2))
-		{
-			// Light clouds
-			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(0.9f, 0.9f, 0.9f, 1.0f));
-			cloudScript.materialUsed.SetFloat("_Density", -0.2f);
-		}
-		if (Input.GetKeyDown(KeyCode.Alpha3))
-		{
-			// Medium clouds
-			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(0.5f, 0.5f, 0.5f, 1.0f));
-			cloudScript.materialUsed.SetFloat("_Density", 0.0f);
-		}
-		if (Input.GetKeyDown(KeyCode.Alpha4))
-		{
-			// Heavy clouds
-			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(0.2f, 0.2f, 0.2f, 1.0f));
-			cloudScript.materialUsed.SetFloat("_Density", 0.5f);
-		}
-		if (Input.GetKeyDown(KeyCode.Space))
-		{
-			// Default cloud values for the material
-			cloudScript.materialUsed.SetVector("_BaseColor", new Vector4(1.0f, 1.0f, 1.0f, 1.0f));
-			cloudScript.materialUsed.SetFloat("_Density", 0.0f);
-		}
-	}
-
 }
