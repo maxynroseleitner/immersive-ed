@@ -37,17 +37,15 @@ public class SentimentAnalyzer : MonoBehaviour
     // private string _username = "55095a1d-71db-4b7b-9007-2de45bbfc8ef";
     // private string _password = "4AydC5ntEOUs";
 
-    private string _username = "91962287-1aa6-4dbf-a193-6f4e9e95d34e";
-    private string _password = "6YMPWyz5SUBd";
-    private string _url = "https://stream.watsonplatform.net/speech-to-text/api";
-
+    public string urlSTT = "https://stream.watsonplatform.net/speech-to-text/api";
+	public string urlNLU = "https://gateway.watsonplatform.net/natural-language-understanding/api";
     public Text ResultsField;
-	public string[] usernameBucketSTT = { "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c" };
-	public string[] passwordBucketSTT = { "ym6cAkzoa1Lh", "ue1EK5ODGS3j" };
-	public int STTidx = 0;
-	public string[] usernameBucketWatson = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
-	public string[] passwordBucketWatson = { "mzcgORwN52lD", "4fHdSguLMvhS" };
-	public int WatsonIdx = 0;
+	public string[] usernameBucketSTT = { "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c","59baba4f-060d-4017-b953-f16bfb11ef13"};
+	public string[] passwordBucketSTT = { "ym6cAkzoa1Lh", "ue1EK5ODGS3j","wOZ5wMN2r4ui"};
+	public int idxSTT = 0;
+	public string[] usernameBucketNLU = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
+	public string[] passwordBucketNLU = { "mzcgORwN52lD", "4fHdSguLMvhS" };
+	public int idxNLU = 0;
     private int counter = 0;
     private int _recordingRoutine = 0;
     private string _microphoneID = null;
@@ -55,11 +53,11 @@ public class SentimentAnalyzer : MonoBehaviour
     private int _recordingBufferSize = 1;
     private int _recordingHZ = 16000;
     public Text ResponseField;
-    private NaturalLanguageUnderstanding _nlu;
+	private NaturalLanguageUnderstanding[] _nlu;
     //private string _analysisModel = "en-es";
     private bool _getModelsTested = false;
     private bool _analyzeTested = false;
-    private SpeechToText _speechToText;
+	private SpeechToText[] _speechToText;
     ArrayList al = new ArrayList();
     ArrayList bufferfor10 = new ArrayList();
     string recordData=""; 
@@ -84,22 +82,20 @@ public class SentimentAnalyzer : MonoBehaviour
         currentEmotions = new EmotionStruct();
 
         LogSystem.InstallDefaultReactors();
-
+		_speechToText = new SpeechToText[usernameBucketSTT.Length];
+		_nlu = new NaturalLanguageUnderstanding[usernameBucketNLU.Length];
         //  Create credential and instantiate service
-        Credentials credentials = new Credentials(_username, _password, _url);
+		for (int i = 0; i < usernameBucketSTT.Length; i++) {
+			Credentials credentialsSTT = new Credentials(usernameBucketSTT[i], passwordBucketSTT[i], urlSTT);
+			_speechToText[i] = new SpeechToText(credentialsSTT);
+		}
 
-        _speechToText = new SpeechToText(credentials);
-        Credentials naturalLanguageUnderstandingCredentials = new Credentials()
-        {
-            // Original Watson NLP credentials
-            // Username = "b2e711a5-5d95-4988-a355-8653923d7769",
-            // Password = "1VRamFU1cXr1",
-
-            Username = "b2e711a5-5d95-4988-a355-8653923d7769",
-            Password = "1VRamFU1cXr1",
-            Url = "https://gateway.watsonplatform.net/natural-language-understanding/api"
-        };
-        _nlu = new NaturalLanguageUnderstanding(naturalLanguageUnderstandingCredentials);
+//		idxSTT = (idxSTT + 1) % usernameBucketSTT.Length;
+		for (int i = 0; i < usernameBucketNLU.Length; i++) {
+			Credentials credentialsNLU = new Credentials(usernameBucketNLU[i], passwordBucketNLU[i], urlNLU);
+			_nlu[i] = new NaturalLanguageUnderstanding(credentialsNLU);
+		}
+//		idxNLU = (idxNLU + 1) % usernameBucketNLU.Length;
         Active = true;
         StartCoroutine(coroutineA());
         StartRecording();
@@ -107,28 +103,29 @@ public class SentimentAnalyzer : MonoBehaviour
 
     public bool Active
     {
-        get { return _speechToText.IsListening; }
+		get { return _speechToText[idxSTT].IsListening; }
         set
         {
-            if (value && !_speechToText.IsListening)
+			if (value && !_speechToText[idxSTT].IsListening)
             {
-                _speechToText.DetectSilence = true;
-                _speechToText.EnableWordConfidence = true;
-                _speechToText.EnableTimestamps = true;
-                _speechToText.SilenceThreshold = 0.01f;
-                _speechToText.MaxAlternatives = 0;
-                _speechToText.EnableInterimResults = true;
-                _speechToText.OnError = OnError;
-                _speechToText.InactivityTimeout = -1;
-                _speechToText.ProfanityFilter = false;
-                _speechToText.SmartFormatting = true;
-                _speechToText.SpeakerLabels = false;
-                _speechToText.WordAlternativesThreshold = null;
-                _speechToText.StartListening(OnRecognize, OnRecognizeSpeaker);
+				_speechToText[idxSTT].DetectSilence = true;
+				_speechToText[idxSTT].EnableWordConfidence = true;
+				_speechToText[idxSTT].EnableTimestamps = true;
+				_speechToText[idxSTT].SilenceThreshold = 0.01f;
+				_speechToText[idxSTT].MaxAlternatives = 0;
+				_speechToText[idxSTT].EnableInterimResults = true;
+				_speechToText[idxSTT].OnError = OnError;
+				_speechToText[idxSTT].InactivityTimeout = -1;
+				_speechToText[idxSTT].ProfanityFilter = false;
+				_speechToText[idxSTT].SmartFormatting = true;
+				_speechToText[idxSTT].SpeakerLabels = false;
+				_speechToText[idxSTT].WordAlternativesThreshold = null;
+				_speechToText[idxSTT].StartListening(OnRecognize, OnRecognizeSpeaker);
             }
-            else if (!value && _speechToText.IsListening)
+			else if (!value && _speechToText[idxSTT].IsListening)
             {
-                _speechToText.StopListening();
+				_speechToText[idxSTT].StopListening();
+				idxSTT = (idxSTT + 1) % usernameBucketSTT.Length;
             }
         }
     }
@@ -140,37 +137,12 @@ public class SentimentAnalyzer : MonoBehaviour
             UnityObjectUtil.StartDestroyQueue();
            _recordingRoutine = Runnable.Run(RecordingHandler());
           
-            //Runnable.Run(GetResult());
         }
-    }
-    /*private IEnumerator WaitAndPrint(float waitTime)
-    {
-        while (true)
-        {
-            yield return new WaitForSeconds(waitTime);
-            Log.Debug("WaitAndPrint " + Time.time,"" ,"dfsdf");
-        }
-    }*/
+    } 
 
     IEnumerator coroutineA()
     {
-        // // wait for 1 second
-        // while (true)
-        // {
-        //    // Debug.Log("coroutineA created");
-        //     string analyseText = "";
-        //     foreach (string item in al)
-        //     {
-        //         analyseText += item;
-        //     }
-        //     al.Clear();
-        //     analyse(analyseText);
-            
-        //     yield return new WaitForSeconds(10.0f);
-            
-        //     //Debug.Log("coroutineA running again");
-        // }
-        // wait for 1 second
+
         int timeInt =10;
         
         while (true)
@@ -190,7 +162,6 @@ public class SentimentAnalyzer : MonoBehaviour
                     index++;
                 }
                 analyse(analyseText);
-
                 // Remove the first element
                 bufferfor10.RemoveAt(0);
             }
@@ -270,9 +241,14 @@ public class SentimentAnalyzer : MonoBehaviour
                 record.MaxLevel = Mathf.Max(Mathf.Abs(Mathf.Min(samples)), Mathf.Max(samples));
                 record.Clip = AudioClip.Create("Recording", midPoint, _recording.channels, _recordingHZ, false);
                 record.Clip.SetData(samples, 0);
-
-                _speechToText.OnListen(record);
-
+				try{
+					_speechToText[idxSTT].OnListen(record);
+				}
+				catch(SystemException e){
+					Active = false;
+					Active = true;
+					_speechToText[idxSTT].OnListen(record);
+				}
                 bFirstBlock = !bFirstBlock;
             }
             else
@@ -292,53 +268,46 @@ public class SentimentAnalyzer : MonoBehaviour
    
     private void OnRecognize(SpeechRecognitionEvent result)
     {
-        if (result != null && result.results.Length > 0)
-        {
-            foreach (var res in result.results)
-            {
-                foreach (var alt in res.alternatives)
-                {
-                    string text = string.Format("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
-                    Log.Debug("ExampleStreaming.OnRecognize()", text);
-//                    ResultsField.text = text;
+		if (result != null && result.results.Length > 0) {
+			foreach (var res in result.results) {
+				foreach (var alt in res.alternatives) {
+					string text = string.Format ("{0} ({1}, {2:0.00})\n", alt.transcript, res.final ? "Final" : "Interim", alt.confidence);
+					Log.Debug ("ExampleStreaming.OnRecognize()", text);
 
-                    int finalPos= text.IndexOf("(Final");
-                    int interimPos=text.IndexOf("(Interim");
-                    if (finalPos>0){
-                        string replaceText=text.Substring(finalPos);
-                        text=text.Replace(replaceText, "");                                                                                                                                                                                                                
-                    }
-                    
-                    else if(interimPos>0){
-                        string replaceText=text.Substring(interimPos);
-                        text=text.Replace(replaceText, "");
-                    }
+					int finalPos = text.IndexOf ("(Final");
+					int interimPos = text.IndexOf ("(Interim");
+					if (finalPos > 0) {
+						string replaceText = text.Substring (finalPos);
+						text = text.Replace (replaceText, "");                                                                                                                                                                                                                
+					} else if (interimPos > 0) {
+						string replaceText = text.Substring (interimPos);
+						text = text.Replace (replaceText, "");
+					}
 
-                    //al.Add(text);
-                    if (recordData=="")
-                        recordData=text;
-                    else recordData=recordData+" "+text;
-                }
+					//al.Add(text);
+					if (recordData == "")
+						recordData = text;
+					else
+						recordData = recordData + " " + text;
+				}
 
-                if (res.keywords_result != null && res.keywords_result.keyword != null)
-                {
-                    foreach (var keyword in res.keywords_result.keyword)
-                    {
-                        Log.Debug("ExampleStreaming.OnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
-                    }
-                }
+				if (res.keywords_result != null && res.keywords_result.keyword != null) {
+					foreach (var keyword in res.keywords_result.keyword) {
+						Log.Debug ("ExampleStreaming.OnRecognize()", "keyword: {0}, confidence: {1}, start time: {2}, end time: {3}", keyword.normalized_text, keyword.confidence, keyword.start_time, keyword.end_time);
+					}
+				}
 
-                if (res.word_alternatives != null)
-                {
-                    foreach (var wordAlternative in res.word_alternatives)
-                    {
-                        Log.Debug("ExampleStreaming.OnRecognize()", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
-                        foreach (var alternative in wordAlternative.alternatives)
-                            Log.Debug("ExampleStreaming.OnRecognize()", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
-                    }
-                }
-            }
-        }
+				if (res.word_alternatives != null) {
+					foreach (var wordAlternative in res.word_alternatives) {
+						Log.Debug ("ExampleStreaming.OnRecognize()", "Word alternatives found. Start time: {0} | EndTime: {1}", wordAlternative.start_time, wordAlternative.end_time);
+						foreach (var alternative in wordAlternative.alternatives)
+							Log.Debug ("ExampleStreaming.OnRecognize()", "\t word: {0} | confidence: {1}", alternative.word, alternative.confidence);
+					}
+				}
+			}
+		} else if(result != null){
+			Debug.LogError (result.results);
+		}
     }
     public void analyse(string inputText)
     {
@@ -371,7 +340,7 @@ public class SentimentAnalyzer : MonoBehaviour
             }
         };
 
-        _nlu.Analyze(OnAnalyseResponse, OnFail, parameters);
+		_nlu[idxNLU].Analyze(OnAnalyseResponse, OnFail, parameters);
     }
     private void OnAnalyseResponse(AnalysisResults response, Dictionary<string, object> customData)
     {
@@ -395,16 +364,16 @@ public class SentimentAnalyzer : MonoBehaviour
 			currentEmotions.disgust = 0f;
 			currentEmotions.sadness = 0f;
 		}
-        // Debug.Log("Joy: " + currentEmotions.joy);
-        // Debug.Log("anger: " + currentEmotions.anger);
-        // Debug.Log("fear: " + currentEmotions.fear);
-        // Debug.Log("disgust: " + currentEmotions.disgust);
-        // Debug.Log("sadness: " + currentEmotions.sadness);
     }
 
     private void OnFail(RESTConnector.Error error, Dictionary<string, object> customData)
     {
-        Log.Debug("SentimentAnalysisDemo.OnFail()", "Error (0)", error.ToString());
+		Log.Debug("SentimentAnalysisDemo.OnFail()", "Error (0)", error.ToString());
+		if (error.ErrorCode == 429) {
+			Credentials credentialsNLU = new Credentials(usernameBucketNLU[idxNLU], passwordBucketNLU[idxNLU], urlNLU);
+			idxNLU = (idxNLU + 1) % usernameBucketNLU.Length;
+			_nlu[idxSTT] = new NaturalLanguageUnderstanding(credentialsNLU);
+		}
     }
 
     private void OnRecognizeSpeaker(SpeakerRecognitionEvent result)

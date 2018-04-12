@@ -20,9 +20,9 @@ public class WeatherManager : MonoBehaviour {
 
 	public Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{
 																					{"anger", WeatherMakerPrecipitationType.Hail},
-																					{"sadness", WeatherMakerPrecipitationType.Rain},
+																					{"sadness", WeatherMakerPrecipitationType.Sleet},
 																					{"fear",WeatherMakerPrecipitationType.Snow}, 
-																					{"joy",WeatherMakerPrecipitationType.None}, 
+																					{"joy",WeatherMakerPrecipitationType.Custom}, 
 																					{"neutral",WeatherMakerPrecipitationType.None}};
 
 	// Emotion activation thresholds (when modifying, ensure that they are in ascending order)

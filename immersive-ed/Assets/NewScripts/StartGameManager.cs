@@ -26,9 +26,9 @@ public class StartGameManager : MonoBehaviour {
 
 	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{
 																					{"anger", WeatherMakerPrecipitationType.Hail},
-																					{"sadness", WeatherMakerPrecipitationType.Rain},
+																					{"sadness", WeatherMakerPrecipitationType.Sleet},
 																					{"fear",WeatherMakerPrecipitationType.Snow}, 
-																					{"joy",WeatherMakerPrecipitationType.None}, 
+																					{"joy",WeatherMakerPrecipitationType.Custom}, 
 																					{"neutral",WeatherMakerPrecipitationType.None}};
 
 
@@ -89,7 +89,7 @@ public class StartGameManager : MonoBehaviour {
 			/********************** Load the next scene *************************/
 			anim.SetBool("Fade", true);
 			yield return new WaitUntil( () =>black.color.a == 1);
-			transitionToNextScene("NewDefaultScene");
+			transitionToNextScene("DefaultScene");
 		}
     }
 

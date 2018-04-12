@@ -26,8 +26,8 @@ public class MicControlC : MonoBehaviour {
 
 	public string[] audBySec = new string[10];
 	public string tokenUrl = "https://token.beyondverbal.com/token";
-	public string[] apiKeyBucket = {"322360d1-236c-4902-bb9c-1ce56fb84578","22147938-29cc-4a2c-9720-2c4ddcb493e8","8f6d2151-d5b5-4928-bae7-a4febea3a4ea","412e16e9-e26c-4b9e-a018-3071ffbfad56","74b28335-c258-4cc9-98a3-2f02570a8827","22147938-29cc-4a2c-9720-2c4ddcb493e8","636ca4e3-d830-4f4d-9c30-30514817b0f0"};
-	public string apiKey = "322360d1-236c-4902-bb9c-1ce56fb84578";
+	public string[] apiKeyBucket = {"22147938-29cc-4a2c-9720-2c4ddcb493e8","8f6d2151-d5b5-4928-bae7-a4febea3a4ea","412e16e9-e26c-4b9e-a018-3071ffbfad56","74b28335-c258-4cc9-98a3-2f02570a8827","22147938-29cc-4a2c-9720-2c4ddcb493e8","636ca4e3-d830-4f4d-9c30-30514817b0f0"};
+	private string apiKey = "22147938-29cc-4a2c-9720-2c4ddcb493e8";
 	public int bucketIdx = 0;
 	public string startUrl = "https://apiv4.beyondverbal.com/v4/recording/";
 	public string wavFile;
@@ -39,7 +39,6 @@ public class MicControlC : MonoBehaviour {
 	public JSONNode currentAnalysis;
 	public AudioClip audClip;
 	public AudioClip audBuffer;
-
 	private ToneAnalysis vocalToneResults = new ToneAnalysis ();
 	private float timeIdx = 1.0f;
 
@@ -50,6 +49,7 @@ public class MicControlC : MonoBehaviour {
 	}
 
 	void Start () {
+		Debug.Log (apiKey);
 		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
 
 		token = authRequest(tokenUrl, Encoding.UTF8.GetBytes(requestData));
@@ -72,7 +72,7 @@ public class MicControlC : MonoBehaviour {
 
 		//wait till level is loaded
 		yield return new WaitUntil(() => audClip != null);
-		Debug.Log ("STARTING BEYOND VERBAL!!!");
+//		Debug.Log ("STARTING BEYOND VERBAL!!!");
 		InvokeRepeating("RecordChunk", 1.0f, 1.0f);
 //		InvokeRepeating("Analyze", 10.0f, 1.0f);
 		yield return 0;
@@ -108,15 +108,15 @@ public class MicControlC : MonoBehaviour {
 				Thread.CurrentThread.IsBackground = true; 
 				/* run your code here */ 
 				var bytes = File.ReadAllBytes(wavFile);
-				Debug.Log ("POST 10");
+//				Debug.Log ("POST 10");
 				var analysisResponseString = CreateWebRequest(analysisUrl, bytes, token);
-				Debug.Log ("Listen 10");
+//				Debug.Log ("Listen 10");
 				currentAnalysis = JSON.Parse(analysisResponseString);
 				startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
 				var startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
 				if (startResponseObj["status"] != "success")
 				{
-					Debug.Log("Response Status: " + startResponseObj["status"]);
+//					Debug.Log("Response Status: " + startResponseObj["status"]);
 					return;
 				}
 				vocalToneResults.TemperVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Value"]);
@@ -137,16 +137,16 @@ public class MicControlC : MonoBehaviour {
 				startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
 				if (startResponseObj["status"] != "success")
 				{
-					Debug.Log("Response Status: " + startResponseObj["status"]);
+//					Debug.Log("Response Status: " + startResponseObj["status"]);
 					return;
 				}
 				recordingId = startResponseObj["recordingId"];
-				Debug.Log(vocalToneResults.TemperVal);
-				Debug.Log(vocalToneResults.TemperGroup);
-				Debug.Log(vocalToneResults.ArousalVal);
-				Debug.Log(vocalToneResults.ArousalGroup);
-				Debug.Log(vocalToneResults.ValenceVal);
-				Debug.Log(vocalToneResults.ValenceGroup);
+//				Debug.Log(vocalToneResults.TemperVal);
+//				Debug.Log(vocalToneResults.TemperGroup);
+//				Debug.Log(vocalToneResults.ArousalVal);
+//				Debug.Log(vocalToneResults.ArousalGroup);
+//				Debug.Log(vocalToneResults.ValenceVal);
+//				Debug.Log(vocalToneResults.ValenceGroup);
 
 			}).Start();
 		float[] samples = new float[audBuffer.samples * audBuffer.channels];
@@ -234,9 +234,9 @@ public class MicControlC : MonoBehaviour {
 
 
 	public void SetAudClip(AudioClip externClip){
-		Debug.Log("SET CLIP");
+//		Debug.Log("SET CLIP");
 		audClip = externClip;
-		Debug.Log (audClip);
+//		Debug.Log (audClip);
 	}
 		
 
