@@ -157,14 +157,12 @@ public class MicControlC : MonoBehaviour {
 	}
 	private IEnumerator Analysis(string url, string token = null)
 	{
-		Debug.Log ("ANALYSIS!");
 		var data = File.ReadAllBytes(wavFile);
 		UnityWebRequest request = UnityWebRequest.Put (url, data);
 		request.method = UnityWebRequest.kHttpVerbPOST;
 		request.SetRequestHeader("Authorization","Bearer "+token);
 		yield return request.SendWebRequest ();
 		var res = request.downloadHandler.text;
-		Debug.Log (apiKey);
 		Debug.Log (res);
 		currentAnalysis = JSON.Parse(res);
 		vocalToneResults.TemperVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Value"]);
