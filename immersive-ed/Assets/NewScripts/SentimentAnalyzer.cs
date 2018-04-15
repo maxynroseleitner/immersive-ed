@@ -311,7 +311,7 @@ public class SentimentAnalyzer : MonoBehaviour
     }
     public void analyse(string inputText)
     {
-        if (inputText=="")
+		if (inputText.Trim()=="")
             return;
         Parameters parameters = new Parameters()
         {
