@@ -172,7 +172,44 @@ public class GameManager : MonoBehaviour {
 	public EmotionStruct convertToneAnalysisToEmotionStruct(ToneAnalysis toneValues)
 	{
 		// TODO: Implement the mapping properly
-		return new EmotionStruct();
+		EmotionStruct vocalEmotions = new EmotionStruct();
+		if (toneValues.TemperGroup == "high") {
+			vocalEmotions.anger += 33.33f;
+		}
+		else if (toneValues.TemperGroup == "med") {
+			vocalEmotions.joy += 33.33f;
+		}
+		else if (toneValues.TemperGroup == "low") {
+			vocalEmotions.sadness += 33.33f;
+			vocalEmotions.fear += 33.33f;
+		}
+		if (toneValues.ValenceGroup == "positive") {
+			vocalEmotions.joy += 33.33f;
+		}
+//		else if (toneValues.ValenceGroup == "neutral") {
+//			
+//		}
+		else if (toneValues.ValenceGroup == "negative") {
+			vocalEmotions.anger += 33.33f;
+			vocalEmotions.sadness += 33.33f;
+			vocalEmotions.fear += 33.33f;
+		}
+		if (toneValues.ArousalGroup == "high") {
+			vocalEmotions.joy += 33.33f;
+			vocalEmotions.anger += 33.33f;
+		}
+		else if (toneValues.ArousalGroup == "med") {
+			vocalEmotions.fear += 33.33f;
+		}
+		else if (toneValues.ArousalGroup == "low") {
+			vocalEmotions.sadness += 33.33f;
+		}
+		Debug.Log (vocalEmotions.anger);
+		Debug.Log (vocalEmotions.joy);
+		Debug.Log (vocalEmotions.sadness);
+		Debug.Log (vocalEmotions.fear);
+
+		return vocalEmotions;
 	}
 
 	// Returns the strongest emotion present in the current cumulative emotion
