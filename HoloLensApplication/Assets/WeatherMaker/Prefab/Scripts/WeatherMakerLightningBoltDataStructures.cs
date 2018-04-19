@@ -2019,10 +2019,10 @@ namespace DigitalRuby.WeatherMaker
                     action();
                     goto tryActionAgain;
                 }
-                //catch (ThreadAbortException)
-//                {
-//
-//                }
+                catch (ThreadAbortException)
+                {
+
+                }
                 catch (Exception ex)
                 {
                     Debug.LogErrorFormat("Lightning thread exception: {0}", ex);
