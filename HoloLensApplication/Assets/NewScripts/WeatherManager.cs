@@ -82,7 +82,7 @@ public class WeatherManager : MonoBehaviour {
 	{
 		if (joyVal > joyThreshold[0])
 		{
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "none"));
+			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "joy"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["neutral"];
 		}
 		if (joyVal > joyThreshold[1])
@@ -106,7 +106,7 @@ public class WeatherManager : MonoBehaviour {
 	{
 		if (angerVal > angerThreshold[0])
 		{
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "heavy"));
+			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "anger"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["neutral"];
 		}
 		if (angerVal > angerThreshold[1])
@@ -131,7 +131,7 @@ public class WeatherManager : MonoBehaviour {
 	{
 		if (sadnessVal > sadnessThreshold[0])
 		{
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "medium"));
+			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "sadness"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["neutral"];
 		}
 		if (sadnessVal > sadnessThreshold[1])
@@ -155,7 +155,7 @@ public class WeatherManager : MonoBehaviour {
 	{
 		if (fearVal > fearThreshold[0])
 		{
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "light"));
+			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "fear"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["neutral"];
 		}
 		if (fearVal > fearThreshold[1])
@@ -193,39 +193,39 @@ public class WeatherManager : MonoBehaviour {
 		Color finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
 		float finalScale = 0.0f;
 
-		if (cloudType == "none")
+		if (cloudType == "joy")
 		{
 			// Set the final cloud color and density
 			finalLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 			finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
 			finalScale = 0.0f;
 		}
-		else if (cloudType == "light")
+		else if (cloudType == "fear")
 		{
 			// Set the final cloud color and density
-			finalLightColor = new Color(0.75f, 0.75f, 0.75f, 1.0f);
-			finalShadowColor = new Color(0.65f, 0.65f, 0.65f, 1.0f);
+			finalLightColor = new Color32(249, 208, 249, 255);
+			finalShadowColor = new Color32(115, 1, 113, 255);
 			finalScale = 1.0f;
 		}
-		else if (cloudType == "medium")
+		else if (cloudType == "sadness")
 		{
 			// Set the final cloud color and density
-			finalLightColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
-			finalShadowColor = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+			finalLightColor = new Color32(98, 112, 255, 255);
+			finalShadowColor = new Color32(23, 34, 142, 255);
 			finalScale = 1.0f;
 		}
-		else if (cloudType == "heavy")
+		else if (cloudType == "anger")
 		{
 			// Set the final cloud color and density
-			finalLightColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
-			finalShadowColor = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+			finalLightColor = new Color32(255, 187, 197, 255);
+			finalShadowColor = new Color32(142, 0, 21, 255);
 			finalScale = 1.0f;
 		}
-		else // neutral or null
+		else // neutral
 		{
 			// Set the final cloud color and density
-			finalLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-			finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+			finalLightColor = new Color32(255, 255, 255, 255);
+			finalShadowColor = new Color32(157, 157, 157, 255);
 			finalScale = 1.0f;
 		}
 

@@ -24,6 +24,14 @@ public class StartGameManager : MonoBehaviour {
 	public Animator anim;
 	public Image black;
 
+	private Coroutine tutorial;
+	
+	
+	private Coroutine currentCoroutine1;
+	private Coroutine currentCoroutine2;
+	private Coroutine lightningCoroutine;
+
+
 	private Dictionary<string, WeatherMakerPrecipitationType> precipitationDict = new Dictionary<string, WeatherMakerPrecipitationType>{
 																					{"anger", WeatherMakerPrecipitationType.Hail},
 																					{"sadness", WeatherMakerPrecipitationType.Sleet},
@@ -43,7 +51,7 @@ public class StartGameManager : MonoBehaviour {
 		cloudRoot.transform.localScale = new Vector3(cloudScale, cloudScale, cloudScale);
 
 		// Begin the weather tutorial
-		StartCoroutine(LoopThroughWeather());
+		tutorial = StartCoroutine(LoopThroughWeather());
 	}
 
 	void Update ()
@@ -51,45 +59,40 @@ public class StartGameManager : MonoBehaviour {
 
 	}
 
-	// The main tutorial loop that cycles through all the emotion to weather mappings
+	// The main tutorial loop that cycles through all the emotion to weather mappings indefinitely
 	IEnumerator LoopThroughWeather ()
 	{
 		while (true) { 
 			/******************************* Anger *******************************/
-			StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Anger"));
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "heavy"));
-			StartCoroutine(SummonIntenseLightning(weatherDisplayTime));
+			currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Anger"));
+			currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "anger"));
+			lightningCoroutine = StartCoroutine(SummonIntenseLightning(weatherDisplayTime));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["anger"];
 			yield return new WaitForSeconds (weatherDisplayTime);
 			
 			/******************************* Sadness *******************************/
-			StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Sadness"));
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "medium"));
+			currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Sadness"));
+			currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "sadness"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["sadness"];
 			yield return new WaitForSeconds (weatherDisplayTime);
 
 			/******************************* Fear *******************************/
-			StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Fear"));
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "light"));
+			currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Fear"));
+			currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "fear"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["fear"];
 			yield return new WaitForSeconds (weatherDisplayTime);
 
 			/******************************* Joy *******************************/
-			StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Joy"));
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "none"));
+			currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Joy"));
+			currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "joy"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["joy"];
 			yield return new WaitForSeconds (weatherDisplayTime);
 
 			/******************************* Neutral *******************************/
-			StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Neutral"));
-			StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "neutral"));
+			currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Neutral"));
+			currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "neutral"));
 			WeatherMakerScript.Instance.Precipitation = precipitationDict["neutral"];
 			yield return new WaitForSeconds (weatherDisplayTime);
-
-			/********************** Load the next scene *************************/
-			anim.SetBool("Fade", true);
-			yield return new WaitUntil( () =>black.color.a == 1);
-			transitionToNextScene("DefaultScene");
 		}
     }
 
@@ -147,39 +150,39 @@ public class StartGameManager : MonoBehaviour {
 		Color finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
 		float finalScale = 0.0f;
 
-		if (cloudType == "none")
+		if (cloudType == "joy")
 		{
 			// Set the final cloud color and density
 			finalLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 			finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
 			finalScale = 0.0f;
 		}
-		else if (cloudType == "light")
+		else if (cloudType == "fear")
 		{
 			// Set the final cloud color and density
-			finalLightColor = new Color(0.75f, 0.75f, 0.75f, 1.0f);
-			finalShadowColor = new Color(0.65f, 0.65f, 0.65f, 1.0f);
+			finalLightColor = new Color32(249, 208, 249, 255);
+			finalShadowColor = new Color32(115, 1, 113, 255);
 			finalScale = 1.0f;
 		}
-		else if (cloudType == "medium")
+		else if (cloudType == "sadness")
 		{
 			// Set the final cloud color and density
-			finalLightColor = new Color(0.5f, 0.5f, 0.5f, 1.0f);
-			finalShadowColor = new Color(0.4f, 0.4f, 0.4f, 1.0f);
+			finalLightColor = new Color32(98, 112, 255, 255);
+			finalShadowColor = new Color32(23, 34, 142, 255);
 			finalScale = 1.0f;
 		}
-		else if (cloudType == "heavy")
+		else if (cloudType == "anger")
 		{
 			// Set the final cloud color and density
-			finalLightColor = new Color(0.2f, 0.2f, 0.2f, 1.0f);
-			finalShadowColor = new Color(0.1f, 0.1f, 0.1f, 1.0f);
+			finalLightColor = new Color32(255, 187, 197, 255);
+			finalShadowColor = new Color32(142, 0, 21, 255);
 			finalScale = 1.0f;
 		}
 		else // neutral
 		{
 			// Set the final cloud color and density
-			finalLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
-			finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
+			finalLightColor = new Color32(255, 255, 255, 255);
+			finalShadowColor = new Color32(157, 157, 157, 255);
 			finalScale = 1.0f;
 		}
 
@@ -204,5 +207,87 @@ public class StartGameManager : MonoBehaviour {
      	}
 
 	}
+
+	// Load sad emotion
+	public void sadEmo() {
+		stopAllCoroutine();
+		StopCoroutine(tutorial);
+
+		// Start displaying the associated weather effects
+		currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Sadness"));
+		currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "sadness"));
+		WeatherMakerScript.Instance.Precipitation = precipitationDict["sadness"];	
+	}
+
+	// Load joy emotion
+	public void joyEmo() {
+		// Ensure no other coroutines are running
+		stopAllCoroutine();
+		StopCoroutine(tutorial);
+		
+		// Start displaying the associated weather effects
+		currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Joy"));
+		currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "joy"));
+		WeatherMakerScript.Instance.Precipitation = precipitationDict["joy"];
+	}
+
+	// Load angry emotion
+	public void angryEmo() {
+		// Ensure no other coroutines are running
+		stopAllCoroutine(); 
+		StopCoroutine(tutorial);
+
+		// Start displaying the associated weather effects
+		currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Anger"));
+		currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "anger"));
+		lightningCoroutine = StartCoroutine(SummonIntenseLightning(weatherDisplayTime));
+		WeatherMakerScript.Instance.Precipitation = precipitationDict["anger"];
+	}
+
+	//Load neutral emotion
+	public void neutralEmo() {
+		// Ensure no other coroutines are running
+		stopAllCoroutine();
+		StopCoroutine(tutorial);
+
+		// Start displaying the associated weather effects
+		currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Neutral"));
+		currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "neutral"));
+		WeatherMakerScript.Instance.Precipitation = precipitationDict["neutral"];
+	}
+
+	// Load fear emotion
+	public void fearEmo() {
+		// Ensure no other coroutines are running
+		stopAllCoroutine(); 
+		StopCoroutine(tutorial);
+
+		// Start displaying the associated weather effects
+		currentCoroutine1 = StartCoroutine(FadeTextToNext(textTransitionTime, displayText, "Fear"));
+		currentCoroutine2 = StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "fear"));
+		WeatherMakerScript.Instance.Precipitation = precipitationDict["fear"];
+	}
+
+
+	// Stop all emotion coroutines
+	private void stopAllCoroutine() {
+		if(currentCoroutine1 != null) StopCoroutine(currentCoroutine1);
+		if(currentCoroutine2 != null) StopCoroutine(currentCoroutine2);
+		if(lightningCoroutine != null) StopCoroutine(lightningCoroutine);
+	}
+
+	// Switch scene
+	public void switchScene() {
+		StopCoroutine(tutorial);
+		StartCoroutine(endScene());
+	} 
+
+	// End the current scene and transition to the DefaultScene
+	public IEnumerator endScene() {
+		anim.SetBool("Fade", true);
+		yield return new WaitUntil( () =>black.color.a == 1);
+		transitionToNextScene("DefaultScene");
+	}
+
 }
 
