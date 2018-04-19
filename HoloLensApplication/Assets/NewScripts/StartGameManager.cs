@@ -38,6 +38,13 @@ public class StartGameManager : MonoBehaviour {
 																					{"fear",WeatherMakerPrecipitationType.Snow}, 
 																					{"joy",WeatherMakerPrecipitationType.Custom}, 
 																					{"neutral",WeatherMakerPrecipitationType.None}};
+	public Dictionary<string,Vector3> posOffsets = new Dictionary<string,Vector3>{
+		{"anger", new Vector3(0f, 50f, 120f)  },
+		{"sadness", new Vector3(0f, 80f, 150f) },
+		{"fear", new Vector3(0f, 60f, 200f) },
+		{"joy", new Vector3(0f, 8f, 10f) },
+		{"neutral", new Vector3(0f,0f,0f) }
+	};
 
 
 	void Start () 
@@ -56,7 +63,14 @@ public class StartGameManager : MonoBehaviour {
 
 	void Update ()
 	{
-
+		weatherScript.HailScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["anger"].x, cloudRoot.transform.position.y + posOffsets ["anger"].y, cloudRoot.transform.position.z + posOffsets ["anger"].z);
+		weatherScript.SleetScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["sadness"].x, cloudRoot.transform.position.y + posOffsets ["sadness"].y, cloudRoot.transform.position.z + posOffsets ["sadness"].z);
+		weatherScript.SnowScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["fear"].x, cloudRoot.transform.position.y + posOffsets ["fear"].y, cloudRoot.transform.position.z + posOffsets ["fear"].z);
+		weatherScript.CustomPrecipitationScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["joy"].x, cloudRoot.transform.position.y + posOffsets ["joy"].y, cloudRoot.transform.position.z + posOffsets ["joy"].z);
+//		weatherScript.HailScript.ParticleSystemSecondary.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["anger"].x, cloudRoot.transform.position.y + posOffsets ["anger"].y, cloudRoot.transform.position.z + posOffsets ["anger"].z);
+//		weatherScript.SleetScript.ParticleSystemSecondary.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["sadness"].x, cloudRoot.transform.position.y + posOffsets ["sadness"].y, cloudRoot.transform.position.z + posOffsets ["sadness"].z);
+		weatherScript.SnowScript.ParticleSystemSecondary.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["fear"].x, cloudRoot.transform.position.y + posOffsets ["fear"].y, cloudRoot.transform.position.z + posOffsets ["fear"].z);
+		weatherScript.CustomPrecipitationScript.ParticleSystemSecondary.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["joy"].x, cloudRoot.transform.position.y + posOffsets ["joy"].y, cloudRoot.transform.position.z + posOffsets ["joy"].z);
 	}
 
 	// The main tutorial loop that cycles through all the emotion to weather mappings indefinitely

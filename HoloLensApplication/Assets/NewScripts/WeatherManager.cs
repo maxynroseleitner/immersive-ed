@@ -30,6 +30,13 @@ public class WeatherManager : MonoBehaviour {
 	private float[] angerThreshold = {25.0f, 50.0f, 75.0f, 100.0f};
 	private float[] sadnessThreshold = {25.0f, 50.0f, 75.0f, 100.0f};
 	private float[] fearThreshold = {25.0f, 50.0f, 75.0f, 100.0f};
+	public Dictionary<string,Vector3> posOffsets = new Dictionary<string,Vector3>{
+		{"anger", new Vector3(0f, 50f, 120f)  },
+		{"sadness", new Vector3(0f, 80f, 150f) },
+		{"fear", new Vector3(0f, 60f, 200f) },
+		{"joy", new Vector3(0f, 8f, 10f) },
+		{"neutral", new Vector3(0f,0f,0f) }
+	};
 
 	// Use this for initialization
 	void Start () 
@@ -45,7 +52,14 @@ public class WeatherManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-
+		weatherMakerScript.HailScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["anger"].x, cloudRoot.transform.position.y + posOffsets ["anger"].y, cloudRoot.transform.position.z + posOffsets ["anger"].z);
+		weatherMakerScript.SleetScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["sadness"].x, cloudRoot.transform.position.y + posOffsets ["sadness"].y, cloudRoot.transform.position.z + posOffsets ["sadness"].z);
+		weatherMakerScript.SnowScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["fear"].x, cloudRoot.transform.position.y + posOffsets ["fear"].y, cloudRoot.transform.position.z + posOffsets ["fear"].z);
+		weatherMakerScript.CustomPrecipitationScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["joy"].x, cloudRoot.transform.position.y + posOffsets ["joy"].y, cloudRoot.transform.position.z + posOffsets ["joy"].z);
+		weatherMakerScript.HailScript.ParticleSystemSecondary.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["anger"].x, cloudRoot.transform.position.y + posOffsets ["anger"].y, cloudRoot.transform.position.z + posOffsets ["anger"].z);
+		weatherMakerScript.SleetScript.ParticleSystemSecondary.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["sadness"].x, cloudRoot.transform.position.y + posOffsets ["sadness"].y, cloudRoot.transform.position.z + posOffsets ["sadness"].z);
+		weatherMakerScript.SnowScript.ParticleSystemSecondary.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["fear"].x, cloudRoot.transform.position.y + posOffsets ["fear"].y, cloudRoot.transform.position.z + posOffsets ["fear"].z);
+		weatherMakerScript.CustomPrecipitationScript.ParticleSystemSecondary.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["joy"].x, cloudRoot.transform.position.y + posOffsets ["joy"].y, cloudRoot.transform.position.z + posOffsets ["joy"].z);
 	}
 
 	// Updates the weather effects in the scene based on the given aggregate emotion detected.

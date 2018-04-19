@@ -191,10 +191,10 @@ namespace DigitalRuby.WeatherMaker
             if (!isReflection && camera.cameraType == CameraType.Game)
             {
                 // move particle system around camera
-                TransformParticleSystem(ParticleSystem, camera, ForwardOffset, Height, 1.0f);
-                TransformParticleSystem(ParticleSystemSecondary, camera, SecondaryForwardOffset, SecondaryHeight, 1.0f);
-                TransformParticleSystem(MistParticleSystem, camera, 0.0f, MistHeight, 0.0f);
-
+//                TransformParticleSystem(ParticleSystem, camera, ForwardOffset, Height, 1.0f);
+//                TransformParticleSystem(ParticleSystemSecondary, camera, SecondaryForwardOffset, SecondaryHeight, 1.0f);
+//                TransformParticleSystem(MistParticleSystem, camera, 0.0f, MistHeight, 0.0f);
+//
                 if (AnimatedTextureRenderer != null)
                 {
                     if (AnimatedTextureRendererIntensityThreshold >= 1.0f)

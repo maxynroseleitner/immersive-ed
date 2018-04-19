@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4506457, g: 0.5006119, b: 0.5749636, a: 1}
+  m_IndirectSpecularColor: {r: 0.45066404, g: 0.5006293, b: 0.57497114, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -785,6 +785,10 @@ Prefab:
     - target: {fileID: 19850872, guid: 9ad916646a2533048ac587c9126fa7f5, type: 2}
       propertyPath: InitialModule.gravityModifier.scalar
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19850872, guid: 9ad916646a2533048ac587c9126fa7f5, type: 2}
+      propertyPath: InitialModule.maxNumParticles
+      value: 250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9ad916646a2533048ac587c9126fa7f5, type: 2}
@@ -1625,8 +1629,8 @@ MonoBehaviour:
   IntensityMultiplier: 1
   SecondaryIntensityMultiplier: 1
   MistIntensityMultiplier: 1
-  BaseEmissionRate: 180
-  BaseEmissionRateSecondary: 175
+  BaseEmissionRate: 100
+  BaseEmissionRateSecondary: 100
   BaseMistEmissionRate: 50
   ParticleSystem: {fileID: 455719849}
   ParticleSystemSecondary: {fileID: 1783287604}
@@ -3108,6 +3112,10 @@ Prefab:
     - target: {fileID: 19800902, guid: 3879ec93984ff324b88ff81e3b3c4218, type: 2}
       propertyPath: InitialModule.gravityModifier.scalar
       value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800902, guid: 3879ec93984ff324b88ff81e3b3c4218, type: 2}
+      propertyPath: InitialModule.maxNumParticles
+      value: 250
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 3879ec93984ff324b88ff81e3b3c4218, type: 2}
