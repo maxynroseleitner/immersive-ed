@@ -372,7 +372,7 @@ MonoBehaviour:
   displayFPS: {fileID: 114514690863551202}
   displayHeightMultiplier: 1
   displayLogData: 0
-  viewFeedOnDevice: 0
+  viewFeedOnDevice: 1
   flipHorizontal: 0
   flipVertical: 0
   startSending: 1

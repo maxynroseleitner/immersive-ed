@@ -65,13 +65,16 @@ public class VideoPanel : MonoBehaviour
 		finalHeight = height;
 		finalFrameRate = framerate;
 
+		//Adjust resized Height as per aspect ratio of original feed
+		float aspectRatio = (float)finalWidth / (float)finalHeight;
+		resizeToHeight = Mathf.CeilToInt((float)resizeToWidth/aspectRatio);
+
 		if (viewFeedOnDevice) {
 			// Maintain orientation of display
 			float flipDisplayX = flipHorizontal ? 1f : -1f;
 			float flipDisplayY = flipVertical ? 1f : -1f;
 
 			// Set the webcam-Render-Quad to have the same aspect ratio as the video feed
-			float aspectRatio = (float)finalWidth / (float)finalHeight;
 			camDisplayQuad.transform.localScale = new Vector3 (-10 * flipDisplayX * aspectRatio * displayHeightMultiplier, -10 * flipDisplayY * displayHeightMultiplier, 1.0f);
 			Debug.Log ("Feed Width: " + finalWidth + " Feed Height: " + finalHeight + " Aspect Ratio: " + aspectRatio);
 

@@ -51,7 +51,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 01815af930cc7d34ca57802881de5296, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  receiverIPAddress: 192.168.137.62
+  receiverIPAddress: 192.168.137.1
   receiverPort: 8010
   recevingBufferSize: 0
   latestByte: 
