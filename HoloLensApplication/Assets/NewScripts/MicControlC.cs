@@ -104,11 +104,11 @@ public class MicControlC : MonoBehaviour {
 		analysisUrl = startUrl + recordingId;
 		StartCoroutine (Analysis (analysisUrl,token));
 
-		bucketIdx=(bucketIdx+1) % apiKeyBucket.Length;
-		apiKey = apiKeyBucket[bucketIdx];
-		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
-
-		token = authRequest(tokenUrl, Encoding.UTF8.GetBytes(requestData));
+//		bucketIdx=(bucketIdx+1) % apiKeyBucket.Length;
+//		apiKey = apiKeyBucket[bucketIdx];
+//		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
+//
+//		token = authRequest(tokenUrl, Encoding.UTF8.GetBytes(requestData));
 		var startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
 		var startResponseObj2 = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
 		if (startResponseObj2["status"] != "success")

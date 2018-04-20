@@ -23,6 +23,8 @@ public class WeatherManager : MonoBehaviour {
 	public GameObject moonObject;
 	private float moonScale = 0.0f;
 
+	public GameObject LightningRod;
+
 	public Dictionary<string,Vector3> posOffsets = new Dictionary<string,Vector3>{
 		{"anger", new Vector3(0f, 50f, 120f)  },
 		{"sadness", new Vector3(0f, 80f, 150f) },
@@ -43,14 +45,15 @@ public class WeatherManager : MonoBehaviour {
 		sunObject.transform.localScale = new Vector3(sunScale, sunScale, sunScale);
 		moonObject.transform.localScale = new Vector3(moonScale, moonScale, moonScale);
 		WeatherMakerScript.Instance.LightningScript.LightningBoltScript.Source = cloudRoot;
+		WeatherMakerScript.Instance.LightningScript.LightningBoltScript.Destination = LightningRod;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
 		weatherMakerScript.SleetScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x, 
-																						cloudRoot.transform.position.y,
-																						cloudRoot.transform.position.z);
+																						cloudRoot.transform.position.y-1f,
+																						cloudRoot.transform.position.z-1f);
 	}
 
 	// Updates the weather effects in the scene based on the given aggregate emotion detected.
@@ -87,7 +90,8 @@ public class WeatherManager : MonoBehaviour {
 	{
 		StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "joy"));
 		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
-		// TODO: Add sun fade in animation or whatever here
+		sunObject.GetComponent<Light> ().enabled = true;
+		moonObject.GetComponent<Light> ().enabled = false;
 
 		yield return null;
 	}
@@ -98,6 +102,8 @@ public class WeatherManager : MonoBehaviour {
 		StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "anger"));
 		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
 		StartCoroutine(SummonIntenseLightning(1.0f)); // Run for 1 second
+		sunObject.GetComponent<Light> ().enabled = false;
+		moonObject.GetComponent<Light> ().enabled = false;
 
 		yield return null;
 	}
@@ -108,7 +114,8 @@ public class WeatherManager : MonoBehaviour {
 		StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "sadness"));
 		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.Sleet;
 		WeatherMakerScript.Instance.PrecipitationIntensity = 1.0f;
-		
+		sunObject.GetComponent<Light> ().enabled = false;
+		moonObject.GetComponent<Light> ().enabled = false;
 		yield return null;
 	}
 
@@ -117,7 +124,8 @@ public class WeatherManager : MonoBehaviour {
 	{
 		StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "fear"));
 		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
-		// TODO: Add moon fade in animation or whatever here
+		sunObject.GetComponent<Light> ().enabled = false;
+		moonObject.GetComponent<Light> ().enabled = true;
 
 		yield return null;
 	}
@@ -127,6 +135,8 @@ public class WeatherManager : MonoBehaviour {
 	{
 		StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "neutral"));
 		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
+		sunObject.GetComponent<Light> ().enabled = false;
+		moonObject.GetComponent<Light> ().enabled = false;
 
 		yield return null;
 	}

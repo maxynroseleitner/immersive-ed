@@ -8738,7 +8738,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.5
+      scalar: 0.5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -8883,8 +8883,8 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 0.2
-      minScalar: 0.4
+      scalar: 0.1
+      minScalar: 0.2
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -8912,8 +8912,8 @@ ParticleSystem:
     startSizeY:
       serializedVersion: 2
       minMaxState: 3
-      scalar: 2
-      minScalar: 3
+      scalar: 1
+      minScalar: 1.5
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -48272,15 +48272,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Light Snow
       Transitions:
-      - valueBytes: "\t\x03"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48290,15 +48293,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11478248}
         FieldName: Clouds
-      - valueBytes: "\t\x02"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48310,18 +48316,22 @@ MonoBehaviour:
         FieldName: Precipitation
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 0.7859537
+          - serializedVersion: 2
+            time: 0.7859537
             value: 0.2298113
             inSlope: 1.0170646
             outSlope: 1.0170646
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -48333,13 +48343,16 @@ MonoBehaviour:
         FieldName: PrecipitationIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -48353,15 +48366,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Medium Snow
       Transitions:
-      - valueBytes: "\t\x04"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48371,15 +48387,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11478248}
         FieldName: Clouds
-      - valueBytes: "\t\x02"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48391,18 +48410,22 @@ MonoBehaviour:
         FieldName: Precipitation
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 0.7859537
+          - serializedVersion: 2
+            time: 0.7859537
             value: 0.2298113
             inSlope: 1.0170646
             outSlope: 1.0170646
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -48414,13 +48437,16 @@ MonoBehaviour:
         FieldName: PrecipitationIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -48434,15 +48460,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Heavy Snow
       Transitions:
-      - valueBytes: "\t\x04"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48452,15 +48481,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11478248}
         FieldName: Clouds
-      - valueBytes: "\t\x02"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48472,18 +48504,22 @@ MonoBehaviour:
         FieldName: Precipitation
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 0.7859537
+          - serializedVersion: 2
+            time: 0.7859537
             value: 0.2298113
             inSlope: 1.0170646
             outSlope: 1.0170646
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -48495,13 +48531,16 @@ MonoBehaviour:
         FieldName: PrecipitationIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -48515,15 +48554,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Blizzard
       Transitions:
-      - valueBytes: "\t\x04"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48533,15 +48575,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11478248}
         FieldName: Clouds
-      - valueBytes: "\t\x02"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48553,18 +48598,22 @@ MonoBehaviour:
         FieldName: Precipitation
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 0.7859537
+          - serializedVersion: 2
+            time: 0.7859537
             value: 0.2298113
             inSlope: 1.0170646
             outSlope: 1.0170646
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -48576,13 +48625,16 @@ MonoBehaviour:
         FieldName: PrecipitationIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -48596,15 +48648,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Sunny
       Transitions:
-      - valueBytes: "\t"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48618,15 +48673,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Light Clouds
       Transitions:
-      - valueBytes: "\t\x01"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48638,13 +48696,16 @@ MonoBehaviour:
         FieldName: Clouds
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -48658,15 +48719,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Medium Clouds
       Transitions:
-      - valueBytes: "\t\x02"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48678,13 +48742,16 @@ MonoBehaviour:
         FieldName: Clouds
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -48698,15 +48765,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Heavy Clouds
       Transitions:
-      - valueBytes: "\t\x03"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -48718,13 +48788,16 @@ MonoBehaviour:
         FieldName: Clouds
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -49646,15 +49719,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Light Rain
       Transitions:
-      - valueBytes: "\t\x03"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -49664,15 +49740,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11478248}
         FieldName: Clouds
-      - valueBytes: "\t\x01"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -49684,18 +49763,22 @@ MonoBehaviour:
         FieldName: Precipitation
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 0.7859537
+          - serializedVersion: 2
+            time: 0.7859537
             value: 0.2298113
             inSlope: 1.0170646
             outSlope: 1.0170646
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -49707,13 +49790,16 @@ MonoBehaviour:
         FieldName: PrecipitationIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -49727,15 +49813,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Medium Rain
       Transitions:
-      - valueBytes: "\t\x04"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -49745,15 +49834,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11478248}
         FieldName: Clouds
-      - valueBytes: "\t\x01"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -49765,18 +49857,22 @@ MonoBehaviour:
         FieldName: Precipitation
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 0.7859537
+          - serializedVersion: 2
+            time: 0.7859537
             value: 0.2298113
             inSlope: 1.0170646
             outSlope: 1.0170646
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -49788,13 +49884,16 @@ MonoBehaviour:
         FieldName: PrecipitationIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -49808,15 +49907,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Heavy Rain
       Transitions:
-      - valueBytes: "\t\x04"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -49826,15 +49928,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11478248}
         FieldName: Clouds
-      - valueBytes: "\t\x01"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -49846,18 +49951,22 @@ MonoBehaviour:
         FieldName: Precipitation
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 0.7859537
+          - serializedVersion: 2
+            time: 0.7859537
             value: 0.2298113
             inSlope: 1.0170646
             outSlope: 1.0170646
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -49869,13 +49978,16 @@ MonoBehaviour:
         FieldName: PrecipitationIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -49889,15 +50001,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Thunderstorm
       Transitions:
-      - valueBytes: "\t\x04"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -49907,15 +50022,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11478248}
         FieldName: Clouds
-      - valueBytes: "\t\x01"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -49927,18 +50045,22 @@ MonoBehaviour:
         FieldName: Precipitation
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 0.7859537
+          - serializedVersion: 2
+            time: 0.7859537
             value: 0.2298113
             inSlope: 1.0170646
             outSlope: 1.0170646
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -49950,13 +50072,16 @@ MonoBehaviour:
         FieldName: PrecipitationIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -49968,13 +50093,16 @@ MonoBehaviour:
         FieldName: WindIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 2
             outSlope: 2
@@ -49984,15 +50112,18 @@ MonoBehaviour:
           m_RotationOrder: 4
         Target: {fileID: 11473276}
         FieldName: CloudLightningChance
-      - valueBytes: "\v"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0
@@ -50006,15 +50137,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Sunny
       Transitions:
-      - valueBytes: "\t"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -50028,15 +50162,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Light Clouds
       Transitions:
-      - valueBytes: "\t\x01"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -50048,13 +50185,16 @@ MonoBehaviour:
         FieldName: Clouds
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 2
             outSlope: 2
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -50068,15 +50208,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Medium Clouds
       Transitions:
-      - valueBytes: "\t\x02"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -50088,13 +50231,16 @@ MonoBehaviour:
         FieldName: Clouds
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 2
             outSlope: 2
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -50108,15 +50254,18 @@ MonoBehaviour:
     TransitionGroup:
       Title: Heavy Clouds
       Transitions:
-      - valueBytes: "\t\x03"
+      - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 1
             inSlope: 0
             outSlope: 0
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -50128,13 +50277,16 @@ MonoBehaviour:
         FieldName: Clouds
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 2
             outSlope: 2
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -50150,13 +50302,16 @@ MonoBehaviour:
       Transitions:
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 2
             outSlope: 2
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 0
             outSlope: 0
@@ -50168,13 +50323,16 @@ MonoBehaviour:
         FieldName: WindIntensity
       - valueBytes: 
         Curve:
+          serializedVersion: 2
           m_Curve:
-          - time: 0
+          - serializedVersion: 2
+            time: 0
             value: 0
             inSlope: 0
             outSlope: 1
             tangentMode: 0
-          - time: 1
+          - serializedVersion: 2
+            time: 1
             value: 1
             inSlope: 1
             outSlope: 0

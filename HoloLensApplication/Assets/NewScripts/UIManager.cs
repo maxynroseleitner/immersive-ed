@@ -45,8 +45,11 @@ public class UIManager : MonoBehaviour {
 		gameManagerScript = (GameManager) gameManagerObject.GetComponent(typeof(GameManager));
 //		camInputScript = (CameraInput) inputDeviceCamera.GetComponent<CameraInput>();
 		weatherManagerScript = (WeatherManager) weatherManagerObject.GetComponent<WeatherManager>();
-		quadRenderer = webcamRenderQuad.GetComponent<Renderer> ();
-		
+
+		if (webcamRenderQuad != null) {
+			quadRenderer = webcamRenderQuad.GetComponent<Renderer> ();
+		}
+
 		// Camera feed parameters
 //		if (camInputScript.Texture == null) {
 //			Debug.Log ("Camera not started");
