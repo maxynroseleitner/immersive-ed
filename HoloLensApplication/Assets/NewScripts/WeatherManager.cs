@@ -42,14 +42,15 @@ public class WeatherManager : MonoBehaviour {
 		cloudRoot.transform.localScale = new Vector3(cloudScale, cloudScale, cloudScale);
 		sunObject.transform.localScale = new Vector3(sunScale, sunScale, sunScale);
 		moonObject.transform.localScale = new Vector3(moonScale, moonScale, moonScale);
+		WeatherMakerScript.Instance.LightningScript.LightningBoltScript.Source = cloudRoot;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		weatherMakerScript.SleetScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x + posOffsets ["sadness"].x, 
-																						cloudRoot.transform.position.y + posOffsets ["sadness"].y,
-																						cloudRoot.transform.position.z + posOffsets ["sadness"].z);
+		weatherMakerScript.SleetScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x, 
+																						cloudRoot.transform.position.y,
+																						cloudRoot.transform.position.z);
 	}
 
 	// Updates the weather effects in the scene based on the given aggregate emotion detected.
