@@ -31,30 +31,45 @@ public class Receiver2 : MonoBehaviour {
 	void Start()
 	{
 		receivedTexture = new Texture2D(0, 0);
-
 		StartCoroutine(ReceiveData());
 	}
 
-	int m_frameCounter = 0;
-	float m_timeCounter = 0.0f;
-	float m_lastFramerate = 0.0f;
-	public float m_refreshTime = 5f;
+	int numberOfFramesReceived = 0;
+	float timeCounter = 0.0f;
+	float currentReceivingFPS = 0.0f;
+	float previousReceivingFPS = -1.0f;
+	public float refreshTime;
 	void Update(){
 
 		//Calculate FPS
-		if( m_timeCounter < m_refreshTime )
+		if( timeCounter < refreshTime )
 		{
-			m_timeCounter += Time.deltaTime;
+			timeCounter += Time.deltaTime;
 		}
 		else
 		{
-			//This code will break if you set your m_refreshTime to 0, which makes no sense.
-			m_lastFramerate = (float)m_frameCounter/m_timeCounter;
-			m_frameCounter = 0;
-			m_timeCounter = 0.0f;
+			//This code will break if you set your refreshTime to 0, which makes no sense.
+			if (connectionReady) {
+				previousReceivingFPS = currentReceivingFPS;
+			}
+			currentReceivingFPS = (float)numberOfFramesReceived/timeCounter;
+			numberOfFramesReceived = 0;
+			timeCounter = 0.0f;
 		}
 
-		//Debug.Log ("Current FPS: " + m_lastFramerate.ToString());
+		// Bring to initial state when connectivity is lost
+		// So that client can connect again
+		if (previousReceivingFPS == 0 && currentReceivingFPS == 0) {
+			Debug.Log("No Connection");
+			if (connectionReady) {
+				Debug.Log("Killing connection");
+				KillConnection();
+				Debug.Log("Starting connection");
+				StartCoroutine (ReceiveData());
+			}
+		}
+
+		LOGDATA("Current FPS: " + currentReceivingFPS.ToString());
 	}
 
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -80,7 +95,6 @@ public class Receiver2 : MonoBehaviour {
 		// Wait for senderClient to connect in another Thread 
 		Loom.RunAsync(() =>
 			{
-				//while (!connectionReady)
 				while (!stop)
 				{
 					LOGWARNING("Connecting to sender ... ");
@@ -110,7 +124,7 @@ public class Receiver2 : MonoBehaviour {
 			yield return null;
 		}
 
-		LOGWARNING("Connected with sender");
+		LOGWARNING("Connected with sender " + connectionReady.ToString());
 
 		ImageReceiver();
 	}
@@ -121,18 +135,18 @@ public class Receiver2 : MonoBehaviour {
 		//While loop in another Thread is fine so we don't block main Unity Thread
 		Loom.RunAsync(() =>
 			{
-				//Debug.Log ("I am here 5 " + stop.ToString());
+				//Debug.Log ("I am here 5 " + stop.ToString() + " " + connectionReady.ToString());
 				while (!stop)
 				{
 					//Read Image Count
 					int imageSize = readImageByteSize(SEND_RECEIVE_COUNT);
-					LOGWARNING("Received Image byte Length: " + imageSize);
+					LOG("Received Image byte Length: " + imageSize);
 
 					//Read Image Bytes and Display it
 					readFrameBytesAndDisplay(imageSize);
 
 					//For calculating FPS
-					m_frameCounter++;
+					numberOfFramesReceived++;
 				}
 			});
 	}
@@ -224,7 +238,7 @@ public class Receiver2 : MonoBehaviour {
 	void displayReceivedImage(byte[] receivedImageBytes)
 	{
 		countOfFramesReceived++;
-		Debug.Log("Count of frames received: " + countOfFramesReceived);
+		//Debug.Log("Count of frames received: " + countOfFramesReceived);
 		receivedTexture.LoadImage(receivedImageBytes);
 		receivedTexture.Apply();
 	}
@@ -235,15 +249,17 @@ public class Receiver2 : MonoBehaviour {
 	/// //Set data to be sent here
 	byte[] updatedEmotionData;
 	public void UpdateEmotionData (byte[] newData) {
-		updatedEmotionData = newData;
-		SendData();
+		if (connectionReady) {
+			updatedEmotionData = newData;
+			SendData();
+		}
 	}
 
 	int loopcheck = 0;
 	void SendData()
 	{
 		loopcheck++;
-		Debug.Log("Sent data-packets: " + loopcheck);
+		//Debug.Log("Sent data-packets: " + loopcheck);
 
 		byte[] dataPacketSize = new byte[SEND_RECEIVE_COUNT];
 
@@ -291,15 +307,32 @@ public class Receiver2 : MonoBehaviour {
 			Debug.LogWarning(messsage);
 	}
 
-	void OnApplicationQuit()
+	void KillConnection()
 	{
+		previousReceivingFPS = -1.0f;
+		connectionReady = false;
+		StopCoroutine(ReceiveData());
 		if (networkListener != null)
 		{
 			networkListener.Stop();
 		}
 
+		if (senderClientStream != null) {
+			senderClientStream.Close();
+		}
+
 		foreach (TcpClient c in senderClients)
 			c.Close();
+	}
+
+	void OnDestroy()
+	{
+		KillConnection();
+	}
+
+	void OnApplicationQuit()
+	{
+		KillConnection();
 	}
 
 	WaitForEndOfFrame endOfFrame = new WaitForEndOfFrame();
