@@ -51,7 +51,7 @@ public class WeatherManager : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
-		weatherMakerScript.SleetScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x, 
+		weatherMakerScript.SleetScript.ParticleSystem.transform.position = new Vector3 (cloudRoot.transform.position.x-0.2f, 
 																						cloudRoot.transform.position.y-1f,
 																						cloudRoot.transform.position.z-1f);
 	}

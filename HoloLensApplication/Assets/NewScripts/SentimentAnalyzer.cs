@@ -40,11 +40,19 @@ public class SentimentAnalyzer : MonoBehaviour
     public string urlSTT = "https://stream.watsonplatform.net/speech-to-text/api";
 	public string urlNLU = "https://gateway.watsonplatform.net/natural-language-understanding/api";
     public Text ResultsField;
-	public string[] usernameBucketSTT = { "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c","59baba4f-060d-4017-b953-f16bfb11ef13"};
-	public string[] passwordBucketSTT = { "ym6cAkzoa1Lh", "ue1EK5ODGS3j","wOZ5wMN2r4ui"};
+	//with new
+	private string[] usernameBucketSTT = { "24c64f6f-120d-4927-9333-a4a40d286af7", "f3f76893-bca7-4b12-b705-6ccbc9400444", "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c","59baba4f-060d-4017-b953-f16bfb11ef13"};
+	private string[] passwordBucketSTT = { "GyfsICyeaURt", "DvsYEvqg2JtX", "ym6cAkzoa1Lh", "ue1EK5ODGS3j","wOZ5wMN2r4ui"};
+	//old
+	//private string[] usernameBucketSTT = { "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c","59baba4f-060d-4017-b953-f16bfb11ef13"};
+	//private string[] passwordBucketSTT = { "ym6cAkzoa1Lh", "ue1EK5ODGS3j","wOZ5wMN2r4ui"};
 	public int idxSTT = 0;
-	public string[] usernameBucketNLU = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
-	public string[] passwordBucketNLU = { "mzcgORwN52lD", "4fHdSguLMvhS" };
+	//with new
+	private string[] usernameBucketNLU = { "7ed39b0a-1aa6-4518-81ee-c65ccd94909f", "c17c312c-cb7d-47df-85be-d5ec7c1e3318", "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
+	private string[] passwordBucketNLU = { "Fe5Mfi2lCxFp", "4kWhdjWWbej4", "mzcgORwN52lD", "4fHdSguLMvhS" };
+	//old
+	//private string[] usernameBucketNLU = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
+	//private string[] passwordBucketNLU = { "mzcgORwN52lD", "4fHdSguLMvhS" };
 	public int idxNLU = 0;
     private int counter = 0;
     private int _recordingRoutine = 0;

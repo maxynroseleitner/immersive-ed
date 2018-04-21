@@ -33,6 +33,7 @@ public class VideoPanel : MonoBehaviour
 	public int resizeToWidth;
 	public int resizeToHeight;
 	public int requestedFrameRate;
+	public int reduceFrameRateTo;
 
 	int finalWidth;
 	int finalHeight;
@@ -96,9 +97,9 @@ public class VideoPanel : MonoBehaviour
     }
 		
 	///////////////////////////////////////////////// SET CAMERA FEED  END //////////////////////////////////////////////////////////////
-
+	int preProcessCounter = 0;
 	public void SetBytes(byte[] image)
-    { 
+    {			
 		countOfFramesActual++;
 		if(queueOfFrames.Count < bufferSize)
 			queueOfFrames.Enqueue (image);

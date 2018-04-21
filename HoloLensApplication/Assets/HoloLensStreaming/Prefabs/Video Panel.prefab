@@ -62,7 +62,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1835173482278570
 GameObject:
   m_ObjectHideFlags: 0
@@ -375,13 +375,14 @@ MonoBehaviour:
   viewFeedOnDevice: 0
   flipHorizontal: 0
   flipVertical: 0
-  startSending: 0
+  startSending: 1
   useQuality: 1
   quality: 75
   bufferSize: 1
   resizeToWidth: 256
   resizeToHeight: 144
   requestedFrameRate: 5
+  reduceFrameRateTo: 1
   compressedImage: 
   compressedImageSize: 0
   resizedFrameTexture: {fileID: 0}
