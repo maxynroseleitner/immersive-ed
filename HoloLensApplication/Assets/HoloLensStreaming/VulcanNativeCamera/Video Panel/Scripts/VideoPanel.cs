@@ -103,6 +103,12 @@ public class VideoPanel : MonoBehaviour
 		countOfFramesActual++;
 		if(queueOfFrames.Count < bufferSize)
 			queueOfFrames.Enqueue (image);
+
+		++preProcessCounter;
+		if (preProcessCounter > finalFrameRate) {
+			preProcessCounter = 0;
+		}
+
     }
 
 	public void PreProcessFrame(){
@@ -190,7 +196,15 @@ public class VideoPanel : MonoBehaviour
 	}
 
 	void Update(){
-		PreProcessFrame();
+
+		if (preProcessCounter < reduceFrameRateTo) {
+			PreProcessFrame();
+		}
+
+
+
+
+
 		DisplayFrame();
 	}
 		
