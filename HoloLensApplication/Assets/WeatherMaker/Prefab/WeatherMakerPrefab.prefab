@@ -3529,7 +3529,7 @@ MonoBehaviour:
   CameraMode: 0
   UseWorldSpace: 1
   CompensateForParentTransform: 0
-  QualitySetting: 0
+  QualitySetting: 1
   MultiThreaded: 1
   SoftParticlesFactor: 3
   RenderQueue: -1
@@ -3547,12 +3547,12 @@ MonoBehaviour:
   GlowTintColor: {r: 0.8823529, g: 0.85294116, b: 1, a: 1}
   SourceBlendMode: 5
   DestinationBlendMode: 1
-  JitterMultiplier: 1
-  Turbulence: 5
+  JitterMultiplier: 1.75
+  Turbulence: 0.5
   TurbulenceVelocity: {x: 0, y: 0, z: 0}
   IntervalRange:
-    Minimum: 0.2
-    Maximum: 0.5
+    Minimum: 0.5
+    Maximum: 1
   CountRange:
     Minimum: 1
     Maximum: 4
@@ -3564,12 +3564,12 @@ MonoBehaviour:
     Minimum: 0.05
     Maximum: 0.13
   TrunkWidthRange:
-    Minimum: 0.5
-    Maximum: 2
+    Minimum: 0.12
+    Maximum: 0.5
   LifeTime: 0
-  Generations: 6
-  ChaosFactor: 0.15
-  GlowIntensity: 0.251
+  Generations: 3
+  ChaosFactor: 0.04
+  GlowIntensity: 0.189
   GlowWidthMultiplier: 1.3
   Forkedness: 0.5
   ForkLengthMultiplier: 0.4
@@ -5005,7 +5005,7 @@ MonoBehaviour:
     TintIntensity: 1
   Precipitation: 0
   PrecipitationIntensity: 0.5
-  PrecipitationChangeDuration: 4
+  PrecipitationChangeDuration: 1
   PrecipitationChangeDelay: 0
   PrecipitationChangeThreshold: 0.1
   PrecipitationCollisionEnabled: 0
@@ -8731,14 +8731,14 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 627580859
+  randomSeed: 189467609
   InitialModule:
     serializedVersion: 3
     enabled: 1
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.5
+      scalar: 0.125
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -9055,7 +9055,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 0
     randomizeRotationDirection: 0
-    maxNumParticles: 9000
+    maxNumParticles: 5000
     size3D: 1
     rotation3D: 0
     gravityModifier:
@@ -9102,7 +9102,7 @@ ParticleSystem:
   ShapeModule:
     serializedVersion: 5
     enabled: 1
-    type: 10
+    type: 0
     angle: 45
     length: 35
     boxThickness: {x: 0, y: 0, z: 0}
@@ -24720,7 +24720,7 @@ ParticleSystem:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 108456}
   serializedVersion: 5
-  lengthInSec: 5
+  lengthInSec: 1
   simulationSpeed: 1
   stopAction: 0
   looping: 1
@@ -24773,7 +24773,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: -40136765
+  randomSeed: 186492231
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -25133,7 +25133,7 @@ ParticleSystem:
         m_PostInfinity: 2
         m_RotationOrder: 4
     randomizeRotationDirection: 0
-    maxNumParticles: 9000
+    maxNumParticles: 5000
     size3D: 1
     rotation3D: 0
     gravityModifier:
@@ -34424,7 +34424,7 @@ ParticleSystem:
   moveWithTransform: 1
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 1230268758
+  randomSeed: 570878729
   InitialModule:
     serializedVersion: 3
     enabled: 1

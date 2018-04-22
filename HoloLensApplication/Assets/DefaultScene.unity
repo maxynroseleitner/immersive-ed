@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.45066404, g: 0.5006293, b: 0.57497114, a: 1}
+  m_IndirectSpecularColor: {r: 0.4506457, g: 0.5006119, b: 0.5749636, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -354,13 +354,13 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 268952508}
-  m_LocalRotation: {x: -0, y: -0.75743896, z: -0, w: 0.652906}
-  m_LocalPosition: {x: 35.20726, y: -22, z: 1.2036743}
+  m_LocalRotation: {x: 0, y: -0.7660445, z: 0, w: 0.64278764}
+  m_LocalPosition: {x: 0, y: -4, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 468057488}
   m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -100, z: 0}
 --- !u!1 &296887527
 GameObject:
   m_ObjectHideFlags: 0
@@ -611,6 +611,10 @@ Mesh:
   m_BakedConvexCollisionMesh: 
   m_BakedTriangleCollisionMesh: 
   m_MeshOptimized: 0
+--- !u!1 &363920345 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 191438, guid: fa24d737a143bf54fae3d795f39b93f1, type: 2}
+  m_PrefabInternal: {fileID: 314999426}
 --- !u!1 &401542063
 GameObject:
   m_ObjectHideFlags: 0
@@ -939,6 +943,23 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 11478248, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: Camera
+      value: 
+      objectReference: {fileID: 1666115602}
+    - target: {fileID: 33039862103222892, guid: 66bd18e21212b8c4ab51a96f918b3197,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 141925244}
+    - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: Source
+      value: 
+      objectReference: {fileID: 363920345}
+    - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: Destination
+      value: 
+      objectReference: {fileID: 268952508}
     - target: {fileID: 33346566102666426, guid: 66bd18e21212b8c4ab51a96f918b3197,
         type: 2}
       propertyPath: m_Mesh
@@ -949,26 +970,21 @@ Prefab:
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 934455414}
-    - target: {fileID: 33039862103222892, guid: 66bd18e21212b8c4ab51a96f918b3197,
-        type: 2}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 141925244}
-    - target: {fileID: 11478248, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: Camera
-      value: 
-      objectReference: {fileID: 1666115602}
     - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: Source
-      value: 
-      objectReference: {fileID: 468057487}
-    - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: Destination
-      value: 
-      objectReference: {fileID: 268952508}
-    - target: {fileID: 101112, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: m_IsActive
+      propertyPath: CompensateForParentTransform
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: LightningTintColor.r
+      value: 0.8161765
+      objectReference: {fileID: 0}
+    - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: LightningTintColor.g
+      value: 0.8161765
+      objectReference: {fileID: 0}
+    - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: LightningTintColor.b
+      value: 0.8161765
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
@@ -1387,6 +1403,11 @@ Prefab:
     - target: {fileID: 4933798248763884, guid: b3f5b0420d73b834590f23a234d819aa, type: 2}
       propertyPath: m_RootOrder
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 114531640407323470, guid: b3f5b0420d73b834590f23a234d819aa,
+        type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b3f5b0420d73b834590f23a234d819aa, type: 2}
@@ -2061,7 +2082,7 @@ MonoBehaviour:
   vocalEmotionAnalyzerObject: {fileID: 1710911521}
   useFacialEmotion: 1
   useWordSentimentEmotion: 1
-  useVocalToneEmotion: 0
+  useVocalToneEmotion: 1
   normalizedMoodTrackerCoordinates: {x: 0, y: 0, z: 0}
   moodTrackerSize: {x: 0, y: 0, z: 0}
 --- !u!4 &1913766374

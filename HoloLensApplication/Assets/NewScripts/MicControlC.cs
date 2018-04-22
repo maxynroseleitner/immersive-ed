@@ -14,11 +14,6 @@ using System.Threading;
 using SimpleJSON;
 using UnityEngine.Networking;
 
-//#if UNITY_EDITOR
-//using System.IO;
-//#endif
-
-
 public class MicControlC : MonoBehaviour {
 
 
@@ -54,17 +49,9 @@ public class MicControlC : MonoBehaviour {
 		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
 
 		token = authRequest(tokenUrl, Encoding.UTF8.GetBytes(requestData));
-//		Debug.Log ("TOKEN: " + token);
-		startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
-
-		var startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
-		if (startResponseObj["status"] != "success")
-		{
-			Debug.Log("Response Status: " + startResponseObj["status"]);
-			return;
-		}
-		recordingId = startResponseObj["recordingId"];
-		StartCoroutine (yieldedStart ());
+		Debug.LogWarning ("TOKEN: " + token);
+		StartCoroutine(CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token));
+		StartCoroutine (yieldedStart());
 	}
 
 	private IEnumerator yieldedStart(){
@@ -82,8 +69,6 @@ public class MicControlC : MonoBehaviour {
 
 	}
 
-
-
 	void RecordChunk(){
 		if (!audBuffer) {
 			audBuffer = AudioClip.Create ("audioBuffer", audClip.samples*10, audClip.channels, audClip.frequency, false);
@@ -95,37 +80,33 @@ public class MicControlC : MonoBehaviour {
 		if (timeIdx < 10.0f) {
 			timeIdx += 1.0f;
 		} else {
-			Analyze ();
+			Analyze();
 		}
 	}
 
 	void Analyze(){
 		wavFile = SaveWavFile (audBuffer);
 		analysisUrl = startUrl + recordingId;
-		StartCoroutine (Analysis (analysisUrl,token));
+		StartCoroutine (Analysis(analysisUrl, token));
 
-//		bucketIdx=(bucketIdx+1) % apiKeyBucket.Length;
-//		apiKey = apiKeyBucket[bucketIdx];
-//		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
-//
-//		token = authRequest(tokenUrl, Encoding.UTF8.GetBytes(requestData));
-		var startResponseString = CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token);
-		var startResponseObj2 = JsonConvert.DeserializeObject<Dictionary<string, string>>(startResponseString);
-		if (startResponseObj2["status"] != "success")
-		{
-			Debug.Log("Response Status: " + startResponseObj2["status"]);
+		bucketIdx=(bucketIdx+1) % apiKeyBucket.Length;
+		apiKey = apiKeyBucket[bucketIdx];
+		requestData = "apiKey=" + apiKey + "&grant_type=client_credentials";
+
+		//token = authRequestTest(tokenUrl, Encoding.UTF8.GetBytes(requestData));
+		Debug.LogWarning(token);
+		if (token == "") {
 			return;
+		} else {
+			float[] samples = new float[audBuffer.samples * audBuffer.channels];
+			audBuffer.GetData(samples, Mathf.RoundToInt((1.0f) * audClip.frequency));
+			audBuffer.SetData (samples, 0);
 		}
-		recordingId = startResponseObj2["recordingId"];
-		float[] samples = new float[audBuffer.samples * audBuffer.channels];
-		audBuffer.GetData(samples, Mathf.RoundToInt((1.0f) * audClip.frequency));
-		audBuffer.SetData (samples, 0);
 	}
 
 	void Update () {
 
 	}
-
 
 	private static string authRequest(string url, byte[] data)
 	{
@@ -142,37 +123,45 @@ public class MicControlC : MonoBehaviour {
 		return responseContent["access_token"];
 	}
 
-	private static string CreateWebRequest(string url, byte[] data, string token = null)
+	private IEnumerator CreateWebRequest(string url, byte[] data, string token = null)
 	{
-
+		Debug.LogWarning ("START");
 		UnityWebRequest request = UnityWebRequest.Put (url, data);
 		request.method = UnityWebRequest.kHttpVerbPOST;
 		request.SetRequestHeader("Authorization","Bearer "+token);
-		request.SendWebRequest ();
-		while (!request.isDone) {
-
-		}
+		yield return request.SendWebRequest ();
+		Debug.LogWarning ("Got recordingid");
 		var res = request.downloadHandler.text;
-		return res;
+		Debug.LogWarning (res);
+		var startResponseObj = JsonConvert.DeserializeObject<Dictionary<string, string>>(res);
+		recordingId = startResponseObj["recordingId"];
 	}
+
 	private IEnumerator Analysis(string url, string token = null)
 	{
 		var data = File.ReadAllBytes(wavFile);
 		UnityWebRequest request = UnityWebRequest.Put (url, data);
 		request.method = UnityWebRequest.kHttpVerbPOST;
 		request.SetRequestHeader("Authorization","Bearer "+token);
-		yield return request.SendWebRequest ();
+		yield return request.SendWebRequest();
 		var res = request.downloadHandler.text;
-		Debug.Log (res);
-		currentAnalysis = JSON.Parse(res);
-		vocalToneResults.TemperVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Value"]);
-		vocalToneResults.ArousalVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Value"]);
-		vocalToneResults.ValenceVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Value"]);
-		vocalToneResults.TemperGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Group"];
-		vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
-		vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
-
-
+		Debug.LogWarning (res);
+		if (res == null) {
+			yield return null;
+		} else {
+			if (res == "" || res == "Api key is missing") {
+				yield return null;
+			} else {
+				currentAnalysis = JSON.Parse(res);
+				vocalToneResults.TemperVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Value"]);
+				vocalToneResults.ArousalVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Value"]);
+				vocalToneResults.ValenceVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Value"]);
+				vocalToneResults.TemperGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Group"];
+				vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
+				vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
+			}
+		}
+		StartCoroutine(CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token));
 
 	}
 
@@ -182,7 +171,6 @@ public class MicControlC : MonoBehaviour {
 		WavUtility.FromAudioClip(aud, out filepath, true);
 		return filepath;
 	}
-
 
 	public void SetAudClip(AudioClip externClip){
 		audClip = externClip;
