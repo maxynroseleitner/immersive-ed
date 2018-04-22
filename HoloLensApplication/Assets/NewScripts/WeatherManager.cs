@@ -101,7 +101,7 @@ public class WeatherManager : MonoBehaviour {
 	{
 		StartCoroutine(FadeCloudsToNext(weatherTransitionTime, "anger"));
 		WeatherMakerScript.Instance.Precipitation = WeatherMakerPrecipitationType.None;
-		StartCoroutine(SummonIntenseLightning(1.0f)); // Run for 1 second
+//		StartCoroutine(SummonIntenseLightning(1.0f)); // Run for 1 second
 		sunObject.GetComponent<Light> ().enabled = false;
 		moonObject.GetComponent<Light> ().enabled = false;
 
@@ -164,6 +164,7 @@ public class WeatherManager : MonoBehaviour {
 			finalCloudScale = 0.0f;
 			finalSunScale = 1.0f;
 			finalMoonScale = 0.0f;
+			WeatherMakerScript.Instance.LightningScript.LightningBoltScript.enabled = false;
 		}
 		else if (cloudType == "fear")
 		{
@@ -173,6 +174,7 @@ public class WeatherManager : MonoBehaviour {
 			finalCloudScale = 1.0f;
 			finalSunScale = 0.0f;
 			finalMoonScale = 1.0f;
+			WeatherMakerScript.Instance.LightningScript.LightningBoltScript.enabled = false;
 		}
 		else if (cloudType == "sadness")
 		{
@@ -182,6 +184,7 @@ public class WeatherManager : MonoBehaviour {
 			finalCloudScale = 1.0f;
 			finalSunScale = 0.0f;
 			finalMoonScale = 0.0f;
+			WeatherMakerScript.Instance.LightningScript.LightningBoltScript.enabled = false;
 		}
 		else if (cloudType == "anger")
 		{
@@ -191,6 +194,7 @@ public class WeatherManager : MonoBehaviour {
 			finalCloudScale = 1.0f;
 			finalSunScale = 0.0f;
 			finalMoonScale = 0.0f;
+			WeatherMakerScript.Instance.LightningScript.LightningBoltScript.enabled = true;
 		}
 		else // neutral
 		{
@@ -200,6 +204,7 @@ public class WeatherManager : MonoBehaviour {
 			finalCloudScale = 1.0f;
 			finalSunScale = 0.0f;
 			finalMoonScale = 0.0f;
+			WeatherMakerScript.Instance.LightningScript.LightningBoltScript.enabled = false;
 		}
 
 		// Interpolate cloud properties over time

@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4506457, g: 0.5006119, b: 0.5749636, a: 1}
+  m_IndirectSpecularColor: {r: 0.45066404, g: 0.5006293, b: 0.57497114, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -939,33 +939,25 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 11478248, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: Camera
-      value: 
-      objectReference: {fileID: 1666115602}
-    - target: {fileID: 33039862103222892, guid: 66bd18e21212b8c4ab51a96f918b3197,
-        type: 2}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 141925244}
-    - target: {fileID: 33316728840560068, guid: 66bd18e21212b8c4ab51a96f918b3197,
-        type: 2}
-      propertyPath: m_Mesh
-      value: 
-      objectReference: {fileID: 934455414}
     - target: {fileID: 33346566102666426, guid: 66bd18e21212b8c4ab51a96f918b3197,
         type: 2}
       propertyPath: m_Mesh
       value: 
       objectReference: {fileID: 346614891}
-    - target: {fileID: 19811512, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: ShapeModule.radius.value
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 19811512, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: randomSeed
-      value: 627580859
-      objectReference: {fileID: 0}
+    - target: {fileID: 33316728840560068, guid: 66bd18e21212b8c4ab51a96f918b3197,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 934455414}
+    - target: {fileID: 33039862103222892, guid: 66bd18e21212b8c4ab51a96f918b3197,
+        type: 2}
+      propertyPath: m_Mesh
+      value: 
+      objectReference: {fileID: 141925244}
+    - target: {fileID: 11478248, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: Camera
+      value: 
+      objectReference: {fileID: 1666115602}
     - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
       propertyPath: Source
       value: 
@@ -974,77 +966,9 @@ Prefab:
       propertyPath: Destination
       value: 
       objectReference: {fileID: 268952508}
-    - target: {fileID: 11432214, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: ManualMode
+    - target: {fileID: 101112, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: m_IsActive
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: StartYBase.Minimum
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: StartYVariance.Minimum
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: StartYVariance.Maximum
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: StartXVariance.Minimum
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: StartXVariance.Maximum
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: StartZVariance.Minimum
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: StartZVariance.Maximum
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: EndXVariance.Minimum
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: EndXVariance.Maximum
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: EndYVariance.Minimum
-      value: 30
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: EndZVariance.Minimum
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: EndZVariance.Maximum
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 415136, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: m_LocalPosition.y
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 415136, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: m_LocalPosition.x
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 415136, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: m_LocalPosition.z
-      value: 35
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: StartYBase.Maximum
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 11473276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
-      propertyPath: EndYVariance.Maximum
-      value: 50
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
