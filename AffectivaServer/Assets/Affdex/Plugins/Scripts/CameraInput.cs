@@ -231,7 +231,7 @@ namespace Affdex
 			else if (receivedCamTexture != null)
             {
 
-            	//Debug.Log("I am receiving");
+            	Debug.Log("I am receiving");
 				if (detector.IsRunning)
                 {
 					if (NetworkingOn)

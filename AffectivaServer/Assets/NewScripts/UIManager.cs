@@ -30,6 +30,7 @@ public class UIManager : MonoBehaviour {
 	void Start () {
 		gameManagerScript = gameManagerObject.GetComponent<GameManager>();
 		camInputScript = inputDeviceCamera.GetComponent<CameraInput>();
+		//planeRenderer = webcamRenderPlane.GetComponent<Renderer> ();
 		tempRawImage = webcamRenderRawImage.GetComponent<RawImage>();
 		receiverScript = inputDeviceCamera.GetComponent<Receiver2>();
 
@@ -296,6 +297,25 @@ public class UIManager : MonoBehaviour {
 		return combinedByte;
 	}
 
+//	byte[] CombineBytes(byte[] first, byte[] second, byte[] third, byte[] fourth)
+//	{
+//
+//		int x = BitConverter.ToInt32(first, 0);
+//		int y = BitConverter.ToInt32(second, 0);
+//		int z = BitConverter.ToInt32(third, 0);
+//		int e = BitConverter.ToInt32(fourth, 0);
+//
+//		string message = "x = " + x + " y = " + y + " z = " + z + " e = " + e;
+//		Debug.Log(message);
+//
+//		byte[] combinedByte = new byte[4*PacketDataSize];
+//		Buffer.BlockCopy(first, 0, combinedByte, 0, PacketDataSize);
+//		Buffer.BlockCopy(second, 0, combinedByte, PacketDataSize, PacketDataSize);
+//		Buffer.BlockCopy(third, 0, combinedByte, 2*PacketDataSize, PacketDataSize);
+//		Buffer.BlockCopy(fourth, 0, combinedByte, 3*PacketDataSize, PacketDataSize);
+//		return combinedByte;
+//	}
+
 /////////////////////////////////////////// SET MOOD TRACKER ATTRIBUTES  END ////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////// SET CAMERA FEED  START /////////////////////////////////////////////////////////////
@@ -328,6 +348,8 @@ public class UIManager : MonoBehaviour {
 		Debug.Log (" Feed Width: " + feedWidth + " Feed Height: " + feedHeight + " Aspect Ratio: " + aspectRatio);
 
 		// Display the webcam input
+		//planeRenderer.material.mainTexture = camInputScript.Texture;
+		//rawImageTexture = camInputScript.Texture;
 		tempRawImage.texture = camInputScript.Texture;
 	}
 
