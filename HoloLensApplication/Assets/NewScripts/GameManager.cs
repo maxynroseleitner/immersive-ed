@@ -87,6 +87,13 @@ public class GameManager : MonoBehaviour {
 			vocalAnalyzer = (MicControlC) vocalEmotionAnalyzerObject.GetComponent(typeof(MicControlC));
 			StartCoroutine (passAudio ());
 		}
+
+		if (tcpNetworkingScript.GetNetworkIsNotActive()) {
+			if(videoPanelScript.startSending){
+				tcpNetworkingScript.SetNetworkIsNotActive();
+				tcpNetworkingScript.InitializeCommunicationOverTCP();
+			}
+		}
 	}
 	
 	// Update is called once per frame
@@ -121,7 +128,7 @@ public class GameManager : MonoBehaviour {
 		if (tcpNetworkingScript.GetNetworkIsNotActive()) {
 			if(videoPanelScript.startSending){
 				tcpNetworkingScript.SetNetworkIsNotActive();
-				tcpNetworkingScript.InitializeCommunicationOverTCP ();
+				tcpNetworkingScript.InitializeCommunicationOverTCP();
 			}
 		}
 

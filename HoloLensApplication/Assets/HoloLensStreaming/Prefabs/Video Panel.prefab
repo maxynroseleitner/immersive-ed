@@ -377,12 +377,12 @@ MonoBehaviour:
   flipVertical: 0
   startSending: 1
   useQuality: 1
-  quality: 75
+  quality: 50
   bufferSize: 1
   resizeToWidth: 256
   resizeToHeight: 144
   requestedFrameRate: 5
-  reduceFrameRateTo: 15
+  reduceFrameRateTo: 1
   compressedImage: 
   compressedImageSize: 0
   resizedFrameTexture: {fileID: 0}

@@ -9,9 +9,17 @@ using System.Collections.Generic;
 
 using VacuumShaders.TextureExtensions;
 
+#if !UNITY_EDITOR && (UNITY_WSA || NETFX_CORE)
+using Windows.Foundation;
+using Windows.System.Threading;
+using System.Threading.Tasks;
+#else
+using System.Threading;
+using System.Threading.Tasks;
+#endif
+
 public class VideoPanel : MonoBehaviour
 {
-
 	public GameManager gameManagerScript;
 	[Space(10)]
 	public GameObject camDisplayQuad;
@@ -42,7 +50,7 @@ public class VideoPanel : MonoBehaviour
 	string status;
 	int countOfFramesApp = 0;
 	int countOfFramesActual = 0;
-	int countOfFramesSent = 0;
+	int countOfFramesProcessed = 0;
 	byte[] stackedImage;
 
 	[HideInInspector]
@@ -100,7 +108,7 @@ public class VideoPanel : MonoBehaviour
 	int preProcessCounter = 0;
 	public void SetBytes(byte[] image)
     {			
-		countOfFramesActual++;
+		++countOfFramesActual;
 		if(queueOfFrames.Count < bufferSize)
 			queueOfFrames.Enqueue (image);
 
@@ -111,23 +119,70 @@ public class VideoPanel : MonoBehaviour
 
     }
 
+	IEnumerator WorkOnTexture(){
+		countOfFramesProcessed++;
+		Debug.LogWarning("Number of frames process" + countOfFramesProcessed);
+		byte[] stackedImage = queueOfFrames.Dequeue();
+		stackedFrameTexture.LoadRawTextureData(stackedImage);
+		stackedFrameTexture.Apply();
+		yield return null;
+	}
+
+	private bool LoadTexture(){
+		//Debug.LogWarning("Number of frames process" + countOfFramesProcessed);
+		byte[] stackedImage = queueOfFrames.Dequeue();
+		stackedFrameTexture.LoadRawTextureData(stackedImage);
+		stackedFrameTexture.Apply();
+		return true;
+	}
+
+	public IEnumerator PreProcessFrameRoutine(){
+		countOfFramesProcessed++;
+		status = "Starting pre-processing";
+		if (queueOfFrames.Count > 0) {
+			bool textureLoaded;
+			yield return textureLoaded = LoadTexture();
+			status = "Texture Applied";
+
+			TextureResizePro.ResizePro(stackedFrameTexture, resizeToWidth, resizeToHeight, out resizedFrameTexture, false);
+			status = "Texture Resized";
+
+			//Encode to JPG for smallest size, Encode to PNG for better quality
+			if (useQuality) {
+				yield return compressedImage = resizedFrameTexture.EncodeToJPG (quality);	
+			} else {
+				yield return compressedImage = resizedFrameTexture.EncodeToJPG();
+			}
+
+			gameManagerScript.PrepareToSend(compressedImage);
+			compressedImageSize = compressedImage.Length;
+			status = "Compression done" + compressedImage.Length;
+
+			if (!startSending)
+				startSending = true;
+
+			Resources.UnloadUnusedAssets();
+			//Debug.Log(status);
+		}
+
+		yield return null;
+	}
+
 	public void PreProcessFrame(){
 
 		status = "Starting pre-processing";
-
 		if (queueOfFrames.Count < 1) {
 			return;
 		}
 
-		countOfFramesSent++;
+		countOfFramesProcessed++;
 		byte[] stackedImage = queueOfFrames.Dequeue();
+
 		stackedFrameTexture.LoadRawTextureData(stackedImage);
 		stackedFrameTexture.Apply();
-
 		status = "Texture Applied";
 
 		TextureResizePro.ResizePro(stackedFrameTexture, resizeToWidth, resizeToHeight, out resizedFrameTexture, false);
-
 		status = "Texture Resized";
 
 		//Encode to JPG for smallest size, Encode to PNG for better quality
@@ -138,7 +193,6 @@ public class VideoPanel : MonoBehaviour
 		}
 
 		gameManagerScript.PrepareToSend(compressedImage);
-
 		compressedImageSize = compressedImage.Length;
 		status = "Compression done" + compressedImage.Length;
 
@@ -173,7 +227,7 @@ public class VideoPanel : MonoBehaviour
 			countOfFramesApp++;
 			string message1 = "Frames: " + countOfFramesApp + "\nWidth: " + finalWidth + "\nHeight: " + finalHeight;
 			string message2 = "Status: " + status + "\nCompressed: " + compressedImageSize;
-			string message3 = "Camera FPS: " + finalFrameRate + "\nCamera frames: " + countOfFramesActual + "\nFrames sent: " + countOfFramesSent + "\nBuffered Frames: " + queueOfFrames.Count;
+			string message3 = "Camera FPS: " + finalFrameRate + "\nCamera frames: " + countOfFramesActual + "\nFrames sent: " + countOfFramesProcessed + "\nBuffered Frames: " + queueOfFrames.Count;
 			displayInfo.ClearAndSetDisplayText (message1 + "\n" + message2 + "\n" + message3);
 		}
 	}
@@ -198,12 +252,18 @@ public class VideoPanel : MonoBehaviour
 	void Update(){
 
 		if (preProcessCounter < reduceFrameRateTo) {
-			PreProcessFrame();
+			//PreProcessFrame();
+			//StartCoroutine(PreProcessFrameRoutine());
+			PreProcessFrameAsync();
 		}
 
+//		if (preProcessCounter == (finalFrameRate - reduceFrameRateTo)) {
+//			//PreProcessFrame();
+//			StartCoroutine(PreProcessFrameRoutine());
+//		}
 
 		//PreProcessFrame();
-
+		//StartCoroutine(PreProcessFrameRoutine());
 
 		DisplayFrame();
 	}
@@ -215,5 +275,57 @@ public class VideoPanel : MonoBehaviour
 			return false;
 		}
 		return true;
+	}
+
+	////////////////////////////// ASYNC FUNCTIONS ///////////////////////////////////////
+	public async void PreProcessFrameAsync(){
+		countOfFramesProcessed++;
+		status = "Starting pre-processing";
+		//Debug.Log(status + " " + countOfFramesProcessed);
+		if (queueOfFrames.Count > 0) {
+			await LoadTextureAsync();
+			status = "Texture Applied";
+			Debug.Log(status + " " + countOfFramesProcessed);
+
+
+			TextureResizePro.ResizePro(stackedFrameTexture, resizeToWidth, resizeToHeight, out resizedFrameTexture, false);
+			status = "Texture Resized";
+			Debug.Log(status + " " + countOfFramesProcessed);
+
+			//Encode to JPG for smallest size, Encode to PNG for better quality
+			await EncodeToJPEG();
+
+			gameManagerScript.PrepareToSend(compressedImage);
+			compressedImageSize = compressedImage.Length;
+			status = "Compression done " + compressedImage.Length;
+			Debug.Log(status + " " + countOfFramesProcessed);
+
+			if (!startSending)
+				startSending = true;
+
+			await UnloadResourcesFromGraphicsCard();
+			//Debug.Log(status);
+		}
+	}
+
+	private async Task<int> LoadTextureAsync(){
+		//Debug.LogWarning("Number of frames process" + countOfFramesProcessed);
+		byte[] stackedImage = queueOfFrames.Dequeue();
+		stackedFrameTexture.LoadRawTextureData(stackedImage);
+		stackedFrameTexture.Apply ();
+		return 1;
+	}
+
+	private async Task<int> EncodeToJPEG(){
+		if (useQuality) {
+			compressedImage = resizedFrameTexture.EncodeToJPG (quality);
+		} else {
+			compressedImage = resizedFrameTexture.EncodeToJPG();
+		}
+		return 1;
+	}
+	private async Task<int> UnloadResourcesFromGraphicsCard(){
+		Resources.UnloadUnusedAssets();
+		return 1;
 	}
 }

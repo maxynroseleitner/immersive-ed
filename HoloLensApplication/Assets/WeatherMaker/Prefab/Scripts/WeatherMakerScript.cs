@@ -1044,9 +1044,7 @@ namespace DigitalRuby.WeatherMaker
             {
                 Debug.LogError("For correct rendering, weather maker prefab should have position and rotation of 0, and scale of 1.");
             }
-
 #endif
-
             // only for editor mode, detect when inspector has dragged in a new profile
             if (_WeatherProfile != lastProfile)
             {

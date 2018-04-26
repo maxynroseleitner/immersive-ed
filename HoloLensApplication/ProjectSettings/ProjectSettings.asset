@@ -11,8 +11,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: immersive-ed
+  companyName: MindBox
+  productName: Prismo Face
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -39,8 +39,10 @@ PlayerSettings:
     width: 1
     height: 1
   m_SplashScreenLogos: []
-  m_VirtualRealitySplashScreen: {fileID: 0}
-  m_HolographicTrackingLossScreen: {fileID: 0}
+  m_VirtualRealitySplashScreen: {fileID: 2800000, guid: 7e4178393fe5d304ab7ce27e1819dbe7,
+    type: 3}
+  m_HolographicTrackingLossScreen: {fileID: 2800000, guid: 1329ab253e24c4960be9754d50848a66,
+    type: 3}
   defaultScreenWidth: 1024
   defaultScreenHeight: 768
   defaultScreenWidthWeb: 960
@@ -66,7 +68,7 @@ PlayerSettings:
   defaultIsFullScreen: 1
   defaultIsNativeResolution: 1
   macRetinaSupport: 1
-  runInBackground: 0
+  runInBackground: 1
   captureSingleScreen: 0
   muteOtherAudioSources: 0
   Prepare IOS For Recording: 0
@@ -550,26 +552,46 @@ PlayerSettings:
     Metro: 2
   incrementalIl2cppBuild: {}
   additionalIl2CppArgs: 
-  scriptingRuntimeVersion: 0
+  scriptingRuntimeVersion: 1
   apiCompatibilityLevelPerPlatform:
-    Standalone: 1
+    Standalone: 3
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: immersive-ed
-  metroPackageVersion: 1.0.0.0
+  metroPackageName: PrismoFace
+  metroPackageVersion: 2.0.0.0
   metroCertificatePath: Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
   metroCertificateNotAfter: 00507255f3f5d401
-  metroApplicationDescription: immersive-ed
-  wsaImages: {}
-  metroTileShortName: 
+  metroApplicationDescription: Prismo
+  wsaImages:
+    720996: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_150.png
+    852016: 
+    852048: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_24.png
+    917584: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_56.png
+    917604: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_70.png
+    917644: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_98.png
+    917684: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_126.png
+    983120: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_248.png
+    983140: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_310.png
+    983180: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_434.png
+    983220: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_558.png
+    1376356: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_44.png
+    1441892: 
+    1507428: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_150.png
+    2031640: 
+    2031664: 
+    2031716: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_44.png
+    2097252: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_71.png
+    2162788: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_150.png
+    2228324: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_310.png
+  metroTileShortName: Prismo Face
   metroCommandLineArgsFile: 
   metroTileShowName: 0
-  metroMediumTileShowName: 0
-  metroLargeTileShowName: 0
-  metroWideTileShowName: 0
+  metroMediumTileShowName: 1
+  metroLargeTileShowName: 1
+  metroWideTileShowName: 1
   metroDefaultTileSize: 1
   metroTileForegroundText: 2
   metroTileBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21568628, a: 0}
@@ -662,7 +684,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 73c08f0d-a3ed-48a2-9302-3e847b8010b1
   projectName: immersive-ed
   organizationId: stermark

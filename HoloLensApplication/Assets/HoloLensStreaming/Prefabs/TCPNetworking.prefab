@@ -53,7 +53,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   receiverIPAddress: 192.168.137.1
   receiverPort: 8010
-  recevingBufferSize: 0
+  recevingBufferSize: 1
   latestByte: 
   enableLog: 1
   enableLogData: 1

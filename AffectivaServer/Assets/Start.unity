@@ -527,8 +527,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   uiManagerScript: {fileID: 871687471}
-  enableLog: 0
-  enableLogData: 0
+  enableLog: 1
+  enableLogData: 1
   receivedTexture: {fileID: 0}
   m_refreshTime: 5
   receiverPort: 8010

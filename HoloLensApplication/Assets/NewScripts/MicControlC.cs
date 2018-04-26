@@ -22,8 +22,9 @@ public class MicControlC : MonoBehaviour {
 
 	public string[] audBySec = new string[10];
 	public string tokenUrl = "https://token.beyondverbal.com/token";
-	private string[] apiKeyBucket = {"8f6d2151-d5b5-4928-bae7-a4febea3a4ea","412e16e9-e26c-4b9e-a018-3071ffbfad56","74b28335-c258-4cc9-98a3-2f02570a8827","22147938-29cc-4a2c-9720-2c4ddcb493e8","636ca4e3-d830-4f4d-9c30-30514817b0f0"};
-	private string apiKey = "8f6d2151-d5b5-4928-bae7-a4febea3a4ea";
+	//private string[] apiKeyBucket = {"8f6d2151-d5b5-4928-bae7-a4febea3a4ea","412e16e9-e26c-4b9e-a018-3071ffbfad56","74b28335-c258-4cc9-98a3-2f02570a8827","22147938-29cc-4a2c-9720-2c4ddcb493e8","636ca4e3-d830-4f4d-9c30-30514817b0f0"};
+	private string[] apiKeyBucket = {"5100c311-22f3-42ae-9f8e-dc86c942c084", "57c2bcb2-2a63-4ad3-99a6-bc793a9d31ad"};
+	private string apiKey = "5100c311-22f3-42ae-9f8e-dc86c942c084";
 	public int bucketIdx = 0;
 	private string startUrl = "https://apiv5.beyondverbal.com/v5/recording/";
 	public string wavFile;
@@ -153,12 +154,30 @@ public class MicControlC : MonoBehaviour {
 				yield return null;
 			} else {
 				currentAnalysis = JSON.Parse(res);
-				vocalToneResults.TemperVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Value"]);
-				vocalToneResults.ArousalVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Value"]);
-				vocalToneResults.ValenceVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Value"]);
-				vocalToneResults.TemperGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Group"];
-				vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
-				vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
+				if (currentAnalysis ["result"] ["analysisSegments"] [0] ["analysis"] ["Temper"] != null)
+					vocalToneResults.TemperVal = Single.Parse (currentAnalysis ["result"] ["analysisSegments"] [0] ["analysis"] ["Temper"] ["Value"]);
+				else
+					vocalToneResults.TemperVal = 0f;
+				if(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]!=null)
+					vocalToneResults.ArousalVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Value"]);
+				else
+					vocalToneResults.ArousalVal = 0f;
+				if(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]!=null)
+					vocalToneResults.ValenceVal = Single.Parse(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Value"]);
+				else
+					vocalToneResults.ValenceVal = 0f;
+				if(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]!=null)
+					vocalToneResults.TemperGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Temper"]["Group"];
+				else
+					vocalToneResults.TemperGroup = "null";
+				if(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]!=null)
+					vocalToneResults.ArousalGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Arousal"]["Group"];
+				else
+					vocalToneResults.ArousalGroup = "null";
+				if(currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]!=null)
+					vocalToneResults.ValenceGroup = currentAnalysis["result"]["analysisSegments"][0]["analysis"]["Valence"]["Group"];
+				else
+					vocalToneResults.ValenceGroup = "null";
 			}
 		}
 		StartCoroutine(CreateWebRequest(startUrl + "start", Encoding.UTF8.GetBytes("{ dataFormat: { type: \"WAV\" } }"), token));

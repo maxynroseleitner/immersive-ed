@@ -986,6 +986,14 @@ Prefab:
       propertyPath: LightningTintColor.b
       value: 0.8161765
       objectReference: {fileID: 0}
+    - target: {fileID: 487632, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 0.2623682
+      objectReference: {fileID: 0}
+    - target: {fileID: 4427233659249276, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0.06213123
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 66bd18e21212b8c4ab51a96f918b3197, type: 2}
   m_IsPrefabParent: 0
@@ -1404,11 +1412,6 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 114531640407323470, guid: b3f5b0420d73b834590f23a234d819aa,
-        type: 2}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b3f5b0420d73b834590f23a234d819aa, type: 2}
   m_IsPrefabParent: 0
@@ -1426,7 +1429,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1106132430}
-  - component: {fileID: 1106132431}
   m_Layer: 0
   m_Name: Facial Emotion Analyzer
   m_TagString: Untagged
@@ -1447,17 +1449,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1106132431
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1106132429}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 52bd319da13a04552bfc6573d5da0f9c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1001 &1118696039
 Prefab:
   m_ObjectHideFlags: 0
@@ -1514,7 +1505,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1560827851
 Transform:
   m_ObjectHideFlags: 0
