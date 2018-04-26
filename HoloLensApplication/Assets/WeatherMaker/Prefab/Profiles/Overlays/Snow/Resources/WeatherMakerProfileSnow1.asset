@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2a716a607b02a6945af8c614a6486e91, type: 3}
+  m_Name: WeatherMakerProfileSnow1
+  m_EditorClassIdentifier: 
+  Disabled: 0
+  OverlayIntensity: 0
+  OverlayMinimumIntensity: 0
+  AutoIntensityMultiplier: -0
+  OverlayNormalReducer: 0.5
+  OverlayTexture: {fileID: 2800000, guid: 453156b2b6f1dda46b4abeefd9747689, type: 3}
+  OverlayScale: 0.005
+  OverlayOffset: {x: 0, y: 0}
+  OverlayVelocity: {x: 0, y: 0}
+  OverlayColor: {r: 1, g: 1, b: 1, a: 1}
+  OverlaySpecularColor: {r: 0.875, g: 0.9637931, b: 1, a: 1}
+  OverlaySpecularIntensity: 2
+  OverlaySpecularPower: 4
+  OverlayNoiseTexture: {fileID: 2800000, guid: bb945c467160e8747912256f9a577020, type: 3}
+  OverlayNoiseMultiplier: 8
+  OverlayNoisePower: 1
+  OverlayNoiseAdder: 0
+  OverlayNoiseAdderIntensityPower: 0.5
+  OverlayNoiseScale: 0.0025
+  OverlayNoiseOffset: {x: 0, y: 0}
+  OverlayNoiseVelocity: {x: 0, y: 0}
+  OverlayMinHeight: 0
+  OverlayMinHeightNoiseMultiplier: 1
+  OverlayMinHeightFalloffMultiplier: 0.5
+  OverlayMinHeightFalloffPower: 16
+  OverlayNoiseHeightTexture: {fileID: 2800000, guid: 838b1e53e7a9d6a40b875d4eb20c8461,
+    type: 3}
+  OverlayMinHeightNoiseAdder: 2
+  OverlayMinHeightNoiseScale: 0.02
+  OverlayMinHeightNoiseOffset: {x: 0, y: 0}
+  OverlayMinHeightNoiseVelocity: {x: 0, y: 0}

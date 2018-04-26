@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b8b859745e454d74599904283ee6dcdb, type: 3}
+  m_Name: WeatherMakerCloudLayerProfile_PuffyLayer3
+  m_EditorClassIdentifier: 
+  CloudNoise: {fileID: 2800000, guid: 838b1e53e7a9d6a40b875d4eb20c8461, type: 3}
+  CloudNoiseScale: {x: 0.00015, y: 0.00008, z: 0.00006, w: 0.00005}
+  CloudNoiseMultiplier: {x: 0.4, y: 0.25, z: 0.2, w: 0.15}
+  CloudNoiseVelocity: {x: 0.08, y: 0, z: 0.06}
+  CloudNoiseRotation:
+    Minimum: 0
+    Maximum: 0
+  CloudNoiseMask: {fileID: 0}
+  CloudNoiseMaskScale: 0.0001
+  CloudNoiseMaskOffset: {x: 0, y: 0}
+  CloudNoiseMaskVelocity: {x: 0, y: 0, z: 0}
+  CloudNoiseMaskRotation:
+    Minimum: 0
+    Maximum: 0
+  CloudColor: {r: 1, g: 1, b: 1, a: 1}
+  CloudEmissionColor: {r: 0, g: 0, b: 0, a: 0}
+  CloudGradientColor:
+    serializedVersion: 2
+    key0: {r: 1, g: 1, b: 1, a: 1}
+    key1: {r: 1, g: 1, b: 1, a: 1}
+    key2: {r: 0.9411765, g: 0.5882353, b: 0.37254903, a: 0}
+    key3: {r: 0.9411765, g: 0.5870386, b: 0.37370244, a: 0}
+    key4: {r: 0.9764706, g: 0.9490196, b: 1, a: 0}
+    key5: {r: 1, g: 1, b: 1, a: 0}
+    key6: {r: 0, g: 0, b: 0, a: 0}
+    key7: {r: 0, g: 0, b: 0, a: 0}
+    ctime0: 0
+    ctime1: 17683
+    ctime2: 25694
+    ctime3: 34716
+    ctime4: 42655
+    ctime5: 65535
+    ctime6: 0
+    ctime7: 0
+    atime0: 0
+    atime1: 65535
+    atime2: 0
+    atime3: 0
+    atime4: 0
+    atime5: 0
+    atime6: 0
+    atime7: 0
+    m_Mode: 0
+    m_NumColorKeys: 6
+    m_NumAlphaKeys: 2
+  CloudAmbientMultiplier: 1
+  CloudHeight: 6000
+  CloudCover: 0.661
+  CloudDensity: 0.391
+  CloudLightAbsorption: 0.11
+  CloudSharpness: 0.209
+  CloudShadowThreshold: 0.1
+  CloudShadowPower: 0.5
+  CloudRayOffset: 0.2

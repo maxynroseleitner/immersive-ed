@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ba6d3094cf27f44781e52d9fd92adab, type: 3}
+  m_Name: WeatherMakerCloudProfile_Puffy
+  m_EditorClassIdentifier: 
+  CloudLayer1: {fileID: 11400000, guid: 50c9e631bde96fa49a35d3ebde303a54, type: 2}
+  CloudLayer2: {fileID: 11400000, guid: 5bca10ac9b8df10448600ea70e21adbf, type: 2}
+  CloudLayer3: {fileID: 11400000, guid: d46770527770a3f49a4f0f28dc713285, type: 2}
+  CloudLayer4: {fileID: 0}
+  DirectionalLightIntensityMultiplier: 1
+  DirectionalLightShadowStrengthMultiplier: 1
