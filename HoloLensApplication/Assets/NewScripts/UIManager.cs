@@ -147,11 +147,11 @@ public class UIManager : MonoBehaviour {
 		if (gameManagerScript.useFacialEmotion)
 		{
 			EmotionStruct face = gameManagerScript.getCurrentFacialEmotion();
-			aggregateEmotion.joy += face.joy;
-			aggregateEmotion.anger += face.anger;
-			aggregateEmotion.sadness += face.sadness;
-			aggregateEmotion.fear += face.fear;
-			numModalities++;
+			aggregateEmotion.joy += (face.joy * 2);
+			aggregateEmotion.anger += (face.anger * 2);
+			aggregateEmotion.sadness += (face.sadness * 2);
+			aggregateEmotion.fear += (face.fear * 2);
+			numModalities += 2;
 		}
 		if (gameManagerScript.useWordSentimentEmotion)
 		{
