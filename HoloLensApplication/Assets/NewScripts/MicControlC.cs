@@ -37,7 +37,7 @@ public class MicControlC : MonoBehaviour {
 	public AudioClip audClip;
 	public AudioClip audBuffer;
 	private ToneAnalysis vocalToneResults = new ToneAnalysis ();
-	private float timeIdx = 1.0f;
+	private float timeIdx = 5.0f;
 
 	public bool doNotDestroyOnLoad=false;
 

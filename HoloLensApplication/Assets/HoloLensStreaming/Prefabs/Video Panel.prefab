@@ -382,7 +382,7 @@ MonoBehaviour:
   resizeToWidth: 256
   resizeToHeight: 144
   requestedFrameRate: 5
-  reduceFrameRateTo: 1
+  reduceFrameRateTo: 2
   compressedImage: 
   compressedImageSize: 0
   resizedFrameTexture: {fileID: 0}

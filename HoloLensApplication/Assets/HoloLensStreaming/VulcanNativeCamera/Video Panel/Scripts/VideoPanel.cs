@@ -109,14 +109,21 @@ public class VideoPanel : MonoBehaviour
 	public void SetBytes(byte[] image)
     {			
 		++countOfFramesActual;
-		if(queueOfFrames.Count < bufferSize)
-			queueOfFrames.Enqueue (image);
-
 		++preProcessCounter;
 		if (preProcessCounter > finalFrameRate) {
 			preProcessCounter = 0;
 		}
 
+		if (queueOfFrames.Count < bufferSize) {
+//			if (preProcessCounter < reduceFrameRateTo) {
+//				queueOfFrames.Enqueue (image);
+//			}
+
+			if (preProcessCounter%frameReductionFactor  == 0) {
+				queueOfFrames.Enqueue (image);
+			}
+
+		}
     }
 
 	IEnumerator WorkOnTexture(){
@@ -249,11 +256,21 @@ public class VideoPanel : MonoBehaviour
 
 	}
 
+	int frameReductionFactor = 1;
 	void Update(){
 
-		if (preProcessCounter < reduceFrameRateTo) {
-			//PreProcessFrame();
-			//StartCoroutine(PreProcessFrameRoutine());
+		frameReductionFactor = finalFrameRate / reduceFrameRateTo;
+		if (frameReductionFactor == 0) {
+			frameReductionFactor = 1;	
+		}
+
+//		if (preProcessCounter < reduceFrameRateTo) {
+//			//PreProcessFrame();
+//			//StartCoroutine(PreProcessFrameRoutine());
+//			PreProcessFrameAsync();
+//		}
+
+		if ((preProcessCounter+1) % frameReductionFactor == 0) {
 			PreProcessFrameAsync();
 		}
 
@@ -285,7 +302,7 @@ public class VideoPanel : MonoBehaviour
 		if (queueOfFrames.Count > 0) {
 			await LoadTextureAsync();
 			status = "Texture Applied";
-			Debug.Log(status + " " + countOfFramesProcessed);
+			LOGDATA(status + " " + countOfFramesProcessed);
 
 
 			TextureResizePro.ResizePro(stackedFrameTexture, resizeToWidth, resizeToHeight, out resizedFrameTexture, false);
@@ -328,4 +345,12 @@ public class VideoPanel : MonoBehaviour
 		Resources.UnloadUnusedAssets();
 		return 1;
 	}
+
+	public bool enableLogData;
+	void LOGDATA(string messsage)
+	{
+		if (enableLogData)
+			Debug.Log(messsage);
+	}
 }
+

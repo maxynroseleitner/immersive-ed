@@ -40,6 +40,9 @@ public class GameManager : MonoBehaviour {
 	public EmotionStruct currentVocalEmotion = new EmotionStruct();
 	private float emotionThreshold = 10.0f;
 
+	private ArrayList facialEmotionWindow;
+	private int facialEmotionWindowSize = 5;
+
 	void Awake()
 	{
 		
@@ -57,6 +60,9 @@ public class GameManager : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		// Initialize the facial emotion window
+		facialEmotionWindow = new ArrayList ();
+		facialEmotionWindow.Capacity = facialEmotionWindowSize;
 
 		uiManagerScript = uiManager.GetComponent<UIManager> ();
 
@@ -378,13 +384,33 @@ public class GameManager : MonoBehaviour {
 	}
 		
 	private void SetEmotionStructFromRecievedData(float[] emotionData){
-		currentFacialEmotion.joy = emotionData[0];
-		currentFacialEmotion.fear = emotionData[1];
-		currentFacialEmotion.disgust = emotionData[2];
-		currentFacialEmotion.sadness = emotionData[3];
-		currentFacialEmotion.anger = emotionData[4];
-		currentFacialEmotion.surprise = emotionData[5];
-		Debug.Log ("Current Joy: " + currentFacialEmotion.joy + " | anger: " + currentFacialEmotion.anger + " | sadness: " + currentFacialEmotion.sadness + " | fear: " + currentFacialEmotion.fear);
+		// Create a new facial emotion struct based on the data received from the Affectiva Server app
+		EmotionStruct nextFacialEmotion = new EmotionStruct ();
+		nextFacialEmotion.joy = emotionData[0];
+		nextFacialEmotion.fear = emotionData[1];
+		nextFacialEmotion.disgust = emotionData[2];
+		nextFacialEmotion.sadness = emotionData[3];
+		nextFacialEmotion.anger = emotionData[4];
+		nextFacialEmotion.surprise = emotionData[5];
+		Debug.Log ("Current Joy: " + nextFacialEmotion.joy + " | anger: " + nextFacialEmotion.anger + " | sadness: " + nextFacialEmotion.sadness + " | fear: " + nextFacialEmotion.fear);
+
+		// Add in the next emotion captured by Affectiva
+		if (facialEmotionWindow.Count == facialEmotionWindowSize - 1)
+		{
+			// add the tenth analysis to complete the window
+			facialEmotionWindow.Add(nextFacialEmotion);
+
+			// calculate the currentEmotions for this window and assign the parameter
+			calculateCurrentFacialEmotion();
+
+			// shift the window back to prepare for the next emotion data
+			facialEmotionWindow.RemoveAt(0);
+		}
+		else
+		{
+			// add the next element
+			facialEmotionWindow.Add (nextFacialEmotion);
+		}
 	}
 
 	[HideInInspector] public Vector3 normalizedMoodTrackerCoordinates;
@@ -432,5 +458,34 @@ public class GameManager : MonoBehaviour {
 
 
 /////////////////////////////////////// SET/CALCULATE MOOD TRACKER COORDINATES END //////////////////////////////////////////////////
+
+	// Updates the currentFacialEmotion struct with an average of the values in the facialEmotionWindow list
+	private void calculateCurrentFacialEmotion()
+	{
+		if (facialEmotionWindow.Count > 0)
+		{
+			EmotionStruct emotionSum = new EmotionStruct();
+			foreach (EmotionStruct e in facialEmotionWindow)
+			{
+				emotionSum.anger += e.anger;
+				emotionSum.joy += e.joy;
+				emotionSum.fear += e.fear;
+				emotionSum.sadness += e.sadness;
+				emotionSum.disgust += e.disgust;
+				emotionSum.surprise += e.surprise;
+			}
+
+			currentFacialEmotion.anger = emotionSum.anger / (float) facialEmotionWindow.Count;
+			currentFacialEmotion.joy = emotionSum.joy / (float) facialEmotionWindow.Count;
+			currentFacialEmotion.fear = emotionSum.fear / (float) facialEmotionWindow.Count;
+			currentFacialEmotion.sadness = emotionSum.sadness / (float) facialEmotionWindow.Count;
+			currentFacialEmotion.disgust = emotionSum.disgust / (float) facialEmotionWindow.Count;
+			currentFacialEmotion.surprise = emotionSum.surprise / (float) facialEmotionWindow.Count;
+		}
+		else
+		{
+			currentFacialEmotion = new EmotionStruct();
+		}
+	}
 
 }

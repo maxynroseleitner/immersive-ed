@@ -513,7 +513,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startOnWake: 1
   discrete: 0
-  emotions: 63
+  emotions: 27
   expressions: 0
 --- !u!114 &1471319796
 MonoBehaviour:

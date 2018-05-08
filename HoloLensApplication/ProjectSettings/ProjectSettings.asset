@@ -564,7 +564,7 @@ PlayerSettings:
   metroCertificateSubject: DefaultCompany
   metroCertificateIssuer: DefaultCompany
   metroCertificateNotAfter: 00507255f3f5d401
-  metroApplicationDescription: Prismo
+  metroApplicationDescription: A mind reading app
   wsaImages:
     720996: Assets/Sprites/Unity_icons_pyramid/Prismo_Pyramid_150.png
     852016: 

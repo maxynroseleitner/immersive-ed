@@ -55,6 +55,6 @@ MonoBehaviour:
   receiverPort: 8010
   recevingBufferSize: 1
   latestByte: 
-  enableLog: 1
-  enableLogData: 1
-  enableLogWarning: 1
+  enableLog: 0
+  enableLogData: 0
+  enableLogWarning: 0

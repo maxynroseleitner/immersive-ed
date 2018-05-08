@@ -41,15 +41,23 @@ public class SentimentAnalyzer : MonoBehaviour
 	public string urlNLU = "https://gateway.watsonplatform.net/natural-language-understanding/api";
     public Text ResultsField;
 	//with new
-	private string[] usernameBucketSTT = { "f3f76893-bca7-4b12-b705-6ccbc940044", "24c64f6f-120d-4927-9333-a4a40d286af7"};
-	private string[] passwordBucketSTT = { "DvsYEvqg2JtX", "GyfsICyeaURt"};
+	//private string[] usernameBucketSTT = { "f3f76893-bca7-4b12-b705-6ccbc940044", "24c64f6f-120d-4927-9333-a4a40d286af7"};
+	//private string[] passwordBucketSTT = { "DvsYEvqg2JtX", "GyfsICyeaURt"};
+	// for demo
+	private string[] usernameBucketSTT = {"87db72bc-7a23-4247-a309-1a0c29c1e6e5"};
+	private string[] passwordBucketSTT = {"DQkxWW7crMSz"};
+
 	//old
 	//private string[] usernameBucketSTT = { "1be6af1c-4f90-4b61-8ff5-bf728aaceffe", "9ac56abf-4978-4d31-9870-18f6b4b7681c","59baba4f-060d-4017-b953-f16bfb11ef13"};
 	//private string[] passwordBucketSTT = { "ym6cAkzoa1Lh", "ue1EK5ODGS3j","wOZ5wMN2r4ui"};
 	public int idxSTT = 0;
 	//with new
-	private string[] usernameBucketNLU = { "c17c312c-cb7d-47df-85be-d5ec7c1e3318","7ed39b0a-1aa6-4518-81ee-c65ccd94909f"};
-	private string[] passwordBucketNLU = { "4kWhdjWWbej4", "Fe5Mfi2lCxFp"};
+	//private string[] usernameBucketNLU = { "c17c312c-cb7d-47df-85be-d5ec7c1e3318","7ed39b0a-1aa6-4518-81ee-c65ccd94909f"};
+	//private string[] passwordBucketNLU = { "4kWhdjWWbej4", "Fe5Mfi2lCxFp"};
+	//for demo
+	private string[] usernameBucketNLU = {"ad602178-16ed-480e-a5c0-2c284ea0e978"};
+	private string[] passwordBucketNLU = {"eO0pET6oPGS5"};
+
 	//old
 	//private string[] usernameBucketNLU = { "aa227d36-c925-4938-a9e2-72413473a407", "46636963-999f-462f-9ee5-859579c35999" };
 	//private string[] passwordBucketNLU = { "mzcgORwN52lD", "4fHdSguLMvhS" };
@@ -152,7 +160,7 @@ public class SentimentAnalyzer : MonoBehaviour
     IEnumerator coroutineA()
     {
 
-        int timeInt =10;
+        int timeInt =5;
         
         while (true)
         {
@@ -165,7 +173,7 @@ public class SentimentAnalyzer : MonoBehaviour
                 // Perform analysis of the current recorded 10 seconds
                 string analyseText="";
                 int index=0;
-                while(index<10)
+                while(index<5)
                 {
                     analyseText+=bufferfor10[index]+" ";
                     index++;

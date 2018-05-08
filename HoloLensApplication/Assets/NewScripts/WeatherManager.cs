@@ -159,7 +159,7 @@ public class WeatherManager : MonoBehaviour {
 			// Set the final cloud color and density
 			finalLightColor = new Color(1.0f, 1.0f, 1.0f, 1.0f);
 			finalShadowColor = new Color(0.9f, 0.9f, 0.9f, 1.0f);
-			finalCloudScale = 0.0f;
+			finalCloudScale = 0.4f;
 			finalSunScale = 1.0f;
 			finalMoonScale = 0.0f;
 			WeatherMakerScript.Instance.LightningScript.LightningBoltScript.enabled = false;
